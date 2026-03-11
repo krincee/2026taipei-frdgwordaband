@@ -730,6 +730,165 @@
           gap: 12px;
         }
       }
+.expense-top-card {
+  background: linear-gradient(135deg, rgba(108, 140, 208, 0.9), rgba(122, 154, 218, 0.82));
+  color: white;
+  border-radius: 30px;
+  padding: 22px 20px;
+  box-shadow: 0 18px 40px rgba(90, 120, 190, 0.22);
+  margin-bottom: 16px;
+}
+
+.expense-total-label {
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.expense-total-amount {
+  text-align: center;
+  font-size: 3.2rem;
+  font-weight: 900;
+  margin: 8px 0 4px;
+}
+
+.expense-total-sub {
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+.expense-line {
+  height: 1px;
+  background: rgba(255,255,255,0.22);
+  margin: 18px 0;
+}
+
+.expense-type-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.expense-type-box {
+  text-align: center;
+}
+
+.expense-type-box .label {
+  font-size: 0.95rem;
+  opacity: 0.95;
+  margin-bottom: 8px;
+}
+
+.expense-type-box .value {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.people-paid-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.people-paid-card {
+  background: rgba(255,255,255,0.8);
+  border-radius: 18px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(145,170,235,0.1);
+}
+
+.people-paid-card .name {
+  font-size: 0.9rem;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.people-paid-card .money {
+  margin-top: 4px;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text-strong);
+}
+
+.expense-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px 0 12px;
+}
+
+.expense-filter-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.expense-filter-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 12px 10px;
+  font: inherit;
+  font-weight: 700;
+  background: rgba(255,255,255,0.55);
+  color: #6d758a;
+  cursor: pointer;
+}
+
+.expense-filter-btn.active {
+  background: white;
+  color: var(--text-strong);
+  box-shadow: 0 8px 18px rgba(145,170,235,0.12);
+}
+
+.expense-entry-card {
+  background: rgba(255,255,255,0.84);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(145,170,235,0.1);
+}
+
+.expense-entry-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.expense-entry-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+.expense-entry-meta {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #8a92a8;
+}
+
+.expense-entry-amount {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.expense-entry-note {
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: #667085;
+  line-height: 1.6;
+}
+
+.expense-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
     </style>
   </head>
   <body>
@@ -917,7 +1076,8 @@
       ];
 
       let state = loadState();
-      let currentPage = "itinerary";
+let currentPage = "itinerary";
+let expenseFilter = "all";
 
       function buildChecklistDefault() {
         const checklistState = {};
@@ -1124,72 +1284,202 @@
         });
       }
 
-      function renderExpensesPage() {
-        const root = document.getElementById("page-expenses");
-        const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-        const averageSpent = Math.round(totalSpent / 3);
+    function renderExpensesPage() {
+  const root = document.getElementById("page-expenses");
 
-        root.innerHTML = `
-          <div class="stats-grid">
-            <div class="mini-card glass"><small>總花費</small><strong>NT$ ${totalSpent}</strong></div>
-            <div class="mini-card glass"><small>三人人均</small><strong>NT$ ${averageSpent}</strong></div>
-            <div class="mini-card glass"><small>記錄筆數</small><strong>${state.expenses.length}</strong></div>
-          </div>
+  const filteredExpenses = state.expenses.filter((item) => {
+    if (expenseFilter === "all") return true;
+    if (expenseFilter === "cash") return item.paymentType === "cash";
+    if (expenseFilter === "card") return item.paymentType === "card";
+    return true;
+  });
 
-          <div class="section-card glass">
-            <h3 class="panel-title">新增消費</h3>
-            <div class="input-grid four">
-              <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
-              <select id="expense-category" class="input">
-                <option>飲食</option><option>交通</option><option>購物</option><option>票券</option><option>珍奶</option>
-              </select>
-              <input id="expense-amount" class="input" placeholder="金額" />
-              <select id="expense-day" class="input">
-                <option>Day1</option><option>Day2</option><option>Day3</option><option>Day4</option><option>Day5</option>
-              </select>
-            </div>
-            <div style="margin-top:12px;"><button id="add-expense" class="btn">加入記帳</button></div>
-          </div>
+  const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const cashSpent = state.expenses
+    .filter((item) => item.paymentType === "cash")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const cardSpent = state.expenses
+    .filter((item) => item.paymentType === "card")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-          <div class="record-list">
-            ${state.expenses
-              .map((item) => `
-                <div class="row-card glass">
-                  <div class="row-top">
-                    <strong style="font-size:1rem;color:var(--text-strong);">${escapeHtml(item.title)}</strong>
-                    <div style="font-size:.92rem;color:#8a92a8;">${item.day} ・ ${item.category}</div>
+  const paidByYou = state.expenses
+    .filter((item) => item.payer === "你")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  const paidBySilke = state.expenses
+    .filter((item) => item.payer === "Silke")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  const paidByDiu = state.expenses
+    .filter((item) => item.payer === "吊哥哥")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+  root.innerHTML = `
+    <div class="expense-top-card">
+      <div class="expense-total-label">總支出 (TWD)</div>
+      <div class="expense-total-amount">$${totalSpent}</div>
+      <div class="expense-total-sub">已記錄 ${state.expenses.length} 筆支出</div>
+
+      <div class="expense-line"></div>
+
+      <div class="expense-type-row">
+        <div class="expense-type-box">
+          <div class="label">💵 現金</div>
+          <div class="value">$${cashSpent}</div>
+        </div>
+        <div class="expense-type-box">
+          <div class="label">💳 信用卡</div>
+          <div class="value">$${cardSpent}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="people-paid-row">
+      <div class="people-paid-card">
+        <div class="name">你已付</div>
+        <div class="money">$${paidByYou}</div>
+      </div>
+      <div class="people-paid-card">
+        <div class="name">Silke已付</div>
+        <div class="money">$${paidBySilke}</div>
+      </div>
+      <div class="people-paid-card">
+        <div class="name">吊哥哥已付</div>
+        <div class="money">$${paidByDiu}</div>
+      </div>
+    </div>
+
+    <div class="expense-header-row">
+      <h3 class="panel-title" style="margin:0;">支出明細</h3>
+      <button id="toggle-expense-form" class="btn">＋ 記一筆</button>
+    </div>
+
+    <div id="expense-form-wrap" class="section-card glass" style="display:none;">
+      <h3 class="panel-title">新增消費</h3>
+      <div class="input-grid four">
+        <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
+        <input id="expense-amount" class="input" placeholder="金額" />
+        <select id="expense-day" class="input">
+          <option>Day1</option><option>Day2</option><option>Day3</option><option>Day4</option><option>Day5</option>
+        </select>
+        <select id="expense-category" class="input">
+          <option>飲食</option><option>交通</option><option>購物</option><option>票券</option><option>珍奶</option>
+        </select>
+      </div>
+
+      <div class="input-grid three" style="margin-top:12px;">
+        <select id="expense-payment-type" class="input">
+          <option value="cash">現金</option>
+          <option value="card">信用卡</option>
+        </select>
+        <select id="expense-payer" class="input">
+          <option>你</option>
+          <option>Silke</option>
+          <option>吊哥哥</option>
+        </select>
+        <select id="expense-split-count" class="input">
+          <option value="1">自己</option>
+          <option value="2">2人平分</option>
+          <option value="3">3人平分</option>
+        </select>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button id="add-expense" class="btn">加入記帳</button>
+      </div>
+    </div>
+
+    <div class="expense-filter-row">
+      <button class="expense-filter-btn ${expenseFilter === "all" ? "active" : ""}" data-expense-filter="all">全部</button>
+      <button class="expense-filter-btn ${expenseFilter === "cash" ? "active" : ""}" data-expense-filter="cash">現金</button>
+      <button class="expense-filter-btn ${expenseFilter === "card" ? "active" : ""}" data-expense-filter="card">信用卡</button>
+    </div>
+
+    <div class="record-list">
+      ${
+        filteredExpenses.length === 0
+          ? `<div class="section-card glass" style="text-align:center;color:#8a92a8;">沒有相關的支出紀錄</div>`
+          : filteredExpenses
+              .map((item) => {
+                const splitCount = Number(item.splitCount || 1);
+                const eachShare = Math.round(Number(item.amount || 0) / splitCount);
+                const paymentText = item.paymentType === "cash" ? "現金" : "信用卡";
+                const splitText =
+                  splitCount === 1 ? "自己買，不用 split" : `${splitCount}人平分 → 每人 $${eachShare}`;
+                return `
+                  <div class="expense-entry-card">
+                    <div class="expense-entry-top">
+                      <div>
+                        <div class="expense-entry-title">${escapeHtml(item.title)}</div>
+                        <div class="expense-entry-meta">${item.day} · ${paymentText} · ${escapeHtml(item.payer)} 先付</div>
+                      </div>
+                      <div class="expense-entry-amount">$${item.amount}</div>
+                    </div>
+                    <div class="expense-entry-note">
+                      ${splitText}<br>
+                      分類：${escapeHtml(item.category)}
+                    </div>
+                    <div class="expense-actions">
+                      <button class="btn-outline btn" data-remove-expense="${item.id}">刪除</button>
+                    </div>
                   </div>
-                  <div style="display:flex;align-items:center;gap:12px;">
-                    <div class="amount-pill">NT$ ${item.amount}</div>
-                    <button class="btn-outline btn" data-remove-expense="${item.id}">刪除</button>
-                  </div>
-                </div>
-              `)
-              .join("")}
-          </div>
-        `;
-
-        document.getElementById("add-expense").addEventListener("click", () => {
-          const title = document.getElementById("expense-title").value.trim();
-          const category = document.getElementById("expense-category").value;
-          const amount = document.getElementById("expense-amount").value.trim();
-          const day = document.getElementById("expense-day").value;
-          if (!title || !amount) return;
-          state.expenses.push({ id: uid(), title, category, amount: Number(amount), day });
-          saveState();
-          renderExpensesPage();
-        });
-
-        root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.removeExpense);
-            state.expenses = state.expenses.filter((item) => item.id !== id);
-            saveState();
-            renderExpensesPage();
-          });
-        });
+                `;
+              })
+              .join("")
       }
+    </div>
+  `;
 
+  document.getElementById("toggle-expense-form").addEventListener("click", () => {
+    const form = document.getElementById("expense-form-wrap");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  });
+
+  const addBtn = document.getElementById("add-expense");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const title = document.getElementById("expense-title").value.trim();
+      const amount = document.getElementById("expense-amount").value.trim();
+      const day = document.getElementById("expense-day").value;
+      const category = document.getElementById("expense-category").value;
+      const paymentType = document.getElementById("expense-payment-type").value;
+      const payer = document.getElementById("expense-payer").value;
+      const splitCount = document.getElementById("expense-split-count").value;
+
+      if (!title || !amount) return;
+
+      state.expenses.push({
+        id: uid(),
+        title,
+        amount: Number(amount),
+        day,
+        category,
+        paymentType,
+        payer,
+        splitCount: Number(splitCount),
+      });
+
+      saveState();
+      renderExpensesPage();
+    });
+  }
+
+  root.querySelectorAll("[data-expense-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      expenseFilter = btn.dataset.expenseFilter;
+      renderExpensesPage();
+    });
+  });
+
+  root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = Number(btn.dataset.removeExpense);
+      state.expenses = state.expenses.filter((item) => item.id !== id);
+      saveState();
+      renderExpensesPage();
+    });
+  });
+}
       function renderShoppingPage() {
         const root = document.getElementById("page-shopping");
         const boughtCount = state.shoppingList.filter((item) => item.bought).length;
