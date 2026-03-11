@@ -746,7 +746,7 @@
           </div>
         </div>
 
-        <div id="day-row" class="day-row"></div>
+      <div id="day-row" class="day-row"></div>
       </section>
 
       <section id="page-itinerary" class="page active"></section>
@@ -1434,6 +1434,25 @@
       }
 
       function setPage(page) {
+
+currentPage = page;
+
+document.querySelectorAll(".page").forEach((el) =>
+  el.classList.remove("active")
+);
+
+document.getElementById(`page-${page}`).classList.add("active");
+
+document.querySelectorAll(".nav-btn").forEach((btn) =>
+  btn.classList.toggle("active", btn.dataset.page === page)
+);
+
+document.getElementById("day-row").style.display =
+  page === "itinerary" ? "flex" : "none";
+
+}
+document.getElementById("day-row").style.display =
+page === "itinerary" ? "flex" : "none";
         currentPage = page;
         document.querySelectorAll(".page").forEach((el) => el.classList.remove("active"));
         document.getElementById(`page-${page}`).classList.add("active");
