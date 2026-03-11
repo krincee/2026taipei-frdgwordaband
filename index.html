@@ -1254,22 +1254,27 @@ let expenseFilter = "all";
 }
 
 function subscribeTrip() {
-  db.collection("trips").doc(TRIP_CODE).onSnapshot((doc) => {
-    if (doc.exists) {
-      const remote = doc.data();
-      state = {
-        ...defaultData,
-        ...remote,
-        checklistState: {
-          ...buildChecklistDefault(),
-          ...(remote.checklistState || {})
-        }
-      };
-      renderAll();
-    } else {
-      db.collection("trips").doc(TRIP_CODE).set(state);
-    }
-  });
+  db.collection("trips").doc(TRIP_CODE).onSnapshot(
+    (doc) => {
+      if (doc.exists) {
+        const remote = doc.data();
+        state = {
+          ...defaultData,
+          ...remote,
+          checklistState: {
+            ...buildChecklistDefault(),
+            ...(remote.checklistState || {})
+          }
+        };
+        renderAll();
+      } else {
+        db.collection("trips").doc(TRIP_CODE).set(state);
+      }
+    },
+    (error) => {
+      console.error("Firestore 同步失敗：", error);
+    }
+  );
 }
 
 function uid() {
@@ -1833,15 +1838,15 @@ const paidByErnest = state.expenses
           </div>
         `;
 
-        let newTeaRating = 0;
-        const newStarsRoot = document.getElementById("new-tea-stars");
-        renderStars(newStarsRoot, newTeaRating, (value) => {
-          newTeaRating = value;
-          renderStars(newStarsRoot, newTeaRating, (v) => {
-            newTeaRating = v;
-            renderStars(newStarsRoot, newTeaRating, arguments.callee);
-          });
-        });
+      let newTeaRating = 0;
+const newStarsRoot = document.getElementById("new-tea-stars");
+
+function updateNewTeaStars(value) {
+  newTeaRating = value;
+  renderStars(newStarsRoot, newTeaRating, updateNewTeaStars);
+}
+
+updateNewTeaStars(0);
 
         const teaShop = document.getElementById("tea-shop");
         const teaCustom = document.getElementById("tea-custom-shop");
@@ -2011,7 +2016,8 @@ const paidByErnest = state.expenses
         return escapeHtml(str).replaceAll("`", "&#96;");
       }
 
-      subscribeTrip();
+      renderAll();
+subscribeTrip();
     </script>
   </body>
 </html>
