@@ -6,6 +6,18 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台北 frd 過打band 2026 三人成行之旅✦</title>
+    <meta name="theme-color" content="#f7d2e7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Taipei Trip">
+<meta name="description" content="Taipei trip planner with itinerary, expenses, shopping list, milk tea spots, and travel info.">
+
+<link rel="icon" type="image/svg+xml"
+  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E🧋%3C/text%3E%3C/svg%3E'>
+
+<link rel="apple-touch-icon"
+  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" rx="36" fill="%23ffe7f1"/%3E%3Ctext x="50%25" y="56%25" text-anchor="middle" font-size="96"%3E🧋%3C/text%3E%3C/svg%3E'>
+
     <style>
       :root {
         --bg1: #fff6fb;
@@ -891,6 +903,64 @@
   display: flex;
   justify-content: flex-end;
 }
+      .nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.nav-btn:hover {
+  transform: translateY(-1px);
+}
+
+.nav-icon {
+  display: block;
+  font-size: 1.18rem;
+  line-height: 1;
+  margin-bottom: 2px;
+  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+}
+
+.nav-label {
+  display: block;
+  font-size: 0.74rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+.nav-btn.active .nav-icon {
+  transform: scale(1.14);
+  filter: saturate(1.15);
+}
+
+.nav-btn.active .nav-label {
+  color: var(--text-strong);
+}
+
+@media (max-width: 520px) {
+  .bottom-grid {
+    gap: 6px;
+  }
+
+  .nav-btn {
+    min-height: 60px;
+    padding: 8px 4px;
+  }
+
+  .nav-icon {
+    font-size: 1.08rem;
+  }
+
+  .nav-label {
+    font-size: 0.7rem;
+  }
+}
+
+      
     </style>
   </head>
   <body>
@@ -898,7 +968,7 @@
       <section class="hero glass">
         <div class="hero-top">
           <div>
-            <h1 class="title">台北 frd 過打band 2026 三人成行之旅✦</h1>
+            <h1 class="title">🧋台北 frd 過打band 2026 三人成行之旅✦🧋</h1>
             <p class="sub">3 / 14 – 3 / 18<br />STARLUX JX234 / JX235 ・ Airbnb ・ 台北市松山區復興北路469號</p>
           </div>
           <div class="rate-box">
@@ -917,15 +987,35 @@
       <section id="page-info" class="page"></section>
     </div>
 
-    <nav class="bottom-nav">
-      <div class="bottom-grid">
-        <button class="nav-btn active" data-page="itinerary"><span class="nav-icon">🗓️</span>行程</button>
-        <button class="nav-btn" data-page="expenses"><span class="nav-icon">🧾</span>記帳</button>
-        <button class="nav-btn" data-page="shopping"><span class="nav-icon">🛍️</span>購物</button>
-        <button class="nav-btn" data-page="milktea"><span class="nav-icon">🧋</span>珍奶</button>
-        <button class="nav-btn" data-page="info"><span class="nav-icon">ℹ️</span>資訊</button>
-      </div>
-    </nav>
+<nav class="bottom-nav">
+  <div class="bottom-grid">
+    <button class="nav-btn active" data-page="itinerary" aria-label="Itinerary">
+      <span class="nav-icon">🗓️</span>
+      <span class="nav-label">Plan</span>
+    </button>
+
+    <button class="nav-btn" data-page="expenses" aria-label="Expenses">
+      <span class="nav-icon">💸</span>
+      <span class="nav-label">Spend</span>
+    </button>
+
+    <button class="nav-btn" data-page="shopping" aria-label="Shopping">
+      <span class="nav-icon">🛍️</span>
+      <span class="nav-label">Shop</span>
+    </button>
+
+    <button class="nav-btn" data-page="milktea" aria-label="Milk Tea">
+      <span class="nav-icon">🧋</span>
+      <span class="nav-label">Tea</span>
+    </button>
+
+    <button class="nav-btn" data-page="info" aria-label="Info">
+      <span class="nav-icon">📍</span>
+      <span class="nav-label">Info</span>
+    </button>
+  </div>
+</nav>
+
 
     <script>
 const firebaseConfig = {
