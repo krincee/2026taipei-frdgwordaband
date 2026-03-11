@@ -1010,10 +1010,10 @@
                           const key = `${category}-${item}`;
                           const done = !!state.checklistState[key];
                           return `
-                            <button class="check-item ${done ? "done" : ""}" data-check="${escapeHtml(key)}">
-                              <span class="checkbox">${done ? "✓" : ""}</span>
+                            <label class="check-item ${done ? "done" : ""}" data-check="${escapeHtml(key)}">
+                              <input type="checkbox" ${done ? "checked" : ""} style="width:18px;height:18px;accent-color:#ef78ab;flex-shrink:0;" />
                               <span>${escapeHtml(item)}</span>
-                            </button>
+                            </label>
                           `;
                         })
                         .join("")}
@@ -1024,15 +1024,17 @@
             </div>
           `;
 
-         root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const id = Number(btn.dataset.removeShopping);
-    state.shoppingList = state.shoppingList.filter((item) => item.id !== id);
-    saveState();
-    renderShoppingPage();
-  });
-});
-}
+          root.querySelectorAll("[data-check]").forEach((item) => {
+            item.addEventListener("click", (e) => {
+              e.preventDefault();
+              const key = item.dataset.check;
+              state.checklistState[key] = !state.checklistState[key];
+              saveState();
+              renderItineraryPage();
+            });
+          });
+          return;
+        }
 
         const day = itinerary[state.selectedDay];
         root.innerHTML = `
