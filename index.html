@@ -1145,29 +1145,6 @@ function subscribeTrip() {
   });
 }
 
-const CHECKLIST_USERS = [
-  { username: "ernest", password: "1234", name: "Ernest" },
-  { username: "krince", password: "1234", name: "Krince" },
-  { username: "silke", password: "1234", name: "Silke" },
-];
-
-function getChecklistUser() {
-  try {
-    return JSON.parse(sessionStorage.getItem("checklistUser") || "null");
-  } catch {
-    return null;
-  }
-}
-
-function setChecklistUser(user) {
-  sessionStorage.setItem("checklistUser", JSON.stringify(user));
-}
-
-function clearChecklistUser() {
-  sessionStorage.removeItem("checklistUser");
-}
-
-      
 function uid() {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
@@ -1205,85 +1182,16 @@ function renderDayRow() {
         const root = document.getElementById("page-itinerary");
 
         if (state.selectedDay === "pre") {
-            const checklistUser = getChecklistUser();
-
-    if (!checklistUser) {
-      root.innerHTML = `
-        <div class="section-card glass">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <div>
-              <h2 class="panel-title" style="margin-bottom:8px;">Checklist Login</h2>
-              <div style="font-size:.95rem;color:#8790a4;">
-                請先登入先可以查看及修改旅行 checklist
-              </div>
-            </div>
-
-            <div class="input-grid" style="gap:12px;">
-              <input id="checklist-username" class="input" placeholder="帳號">
-              <input id="checklist-password" class="input" type="password" placeholder="密碼">
-              <button id="checklist-login-btn" class="btn">登入</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById("checklist-login-btn").addEventListener("click", () => {
-        const username = document.getElementById("checklist-username").value.trim();
-        const password = document.getElementById("checklist-password").value;
-
-        if (!username && !password) {
-          alert("請輸入帳號及密碼");
-          return;
-        }
-
-        if (!username) {
-          alert("請輸入帳號");
-          return;
-        }
-
-        if (!password) {
-          alert("請輸入密碼");
-          return;
-        }
-
-        const matchedUser = CHECKLIST_USERS.find(
-          (user) => user.username === username && user.password === password
-        );
-
-        if (!matchedUser) {
-          alert("帳號或密碼錯誤");
-          return;
-        }
-
-        setChecklistUser({
-          username: matchedUser.username,
-          name: matchedUser.name,
-        });
-
-        renderItineraryPage();
-      });
-
-      return;
-    }
-
-
-          
           const totalChecklist = Object.keys(state.checklistState).length;
           const doneCount = Object.values(state.checklistState).filter(Boolean).length;
 
           root.innerHTML = `
             <div class="section-card glass">
               <div style="display:flex;flex-direction:column;gap:14px;">
-<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
-  <div>
-    <h2 class="panel-title" style="margin-bottom:8px;">Checklist</h2>
-    <div style="font-size:.95rem;color:#8790a4">
-      ${escapeHtml(checklistUser.name)} 已登入 · Ready to tick
-    </div>
-  </div>
-  <button id="checklist-logout-btn" class="btn-outline btn">登出</button>
-</div>
-
+                <div>
+                  <h2 class="panel-title" style="margin-bottom:8px;">旅行前 Checklist</h2>
+                  <div style="font-size:.95rem;color:#8790a4;">執行李之前可以逐項 tick，唔怕漏帶重要嘢。</div>
+                </div>
                 <div class="soft-pill" style="background:linear-gradient(90deg,#ffe5f0,#dff5ff);width:fit-content;">已完成 ${doneCount} / ${totalChecklist}</div>
               </div>
             </div>
@@ -1323,13 +1231,7 @@ function renderDayRow() {
           });
           return;
         }
-const logoutBtn = document.getElementById("checklist-logout-btn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        clearChecklistUser();
-        renderItineraryPage();
-      });
-    }
+
         const day = itinerary[state.selectedDay];
         root.innerHTML = `
           <div class="summary-card glass">
