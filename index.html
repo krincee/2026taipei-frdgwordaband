@@ -1024,16 +1024,15 @@
             </div>
           `;
 
-          root.querySelectorAll("[data-check]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              const key = btn.dataset.check;
-              state.checklistState[key] = !state.checklistState[key];
-              saveState();
-              renderItineraryPage();
-            });
-          });
-          return;
-        }
+         root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const id = Number(btn.dataset.removeShopping);
+    state.shoppingList = state.shoppingList.filter((item) => item.id !== id);
+    saveState();
+    renderShoppingPage();
+  });
+});
+}
 
         const day = itinerary[state.selectedDay];
         root.innerHTML = `
