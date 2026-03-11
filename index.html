@@ -1626,6 +1626,8 @@ const paidByErnest = state.expenses
         root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const id = Number(btn.dataset.removeShopping);
+            const confirmed = window.confirm("你係咪真係要刪除呢件 shopping item？");
+            if (!confirmed) return;
             state.shoppingList = state.shoppingList.filter((item) => item.id !== id);
             saveState();
             renderShoppingPage();
@@ -1749,7 +1751,10 @@ const paidByErnest = state.expenses
 
         root.querySelectorAll("[data-remove-tea]").forEach((btn) => {
           btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.removeTea);
+                const id = Number(btn.dataset.removeTea);
+                const confirmed = window.confirm("你係咪真係要刪除呢間奶茶店紀錄？");
+                if (!confirmed) return;
+
             state.milkTeaSpots = state.milkTeaSpots.filter((item) => item.id !== id);
             saveState();
             renderMilkTeaPage();
