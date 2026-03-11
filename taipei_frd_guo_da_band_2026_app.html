@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>台北frd過打band 2026三人成行之旅</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sand: '#F4EDE1',
+            clay: '#C8AE88',
+            bark: '#7A5C45',
+            moss: '#8F9A7A',
+            stone: '#DED6CA',
+            ink: '#4B4137',
+            oat: '#FBF8F3'
+          },
+          boxShadow: {
+            card: '0 10px 30px rgba(122, 92, 69, 0.10)',
+            soft: '0 6px 18px rgba(122, 92, 69, 0.08)'
+          },
+          borderRadius: {
+            app: '28px'
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body {
+      background:
+        radial-gradient(circle at top, rgba(200,174,136,.22), transparent 35%),
+        linear-gradient(180deg, #f8f4ee 0%, #f1e8da 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', Arial, sans-serif;
+    }
+    .phone-shell {
+      width: min(100%, 430px);
+      min-height: 100vh;
+      background: rgba(251,248,243,.88);
+      backdrop-filter: blur(16px);
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .glass {
+      background: rgba(255,255,255,.62);
+      backdrop-filter: blur(14px);
+    }
+  </style>
+</head>
+<body class="text-ink">
+  <div id="app" class="min-h-screen flex justify-center">
+    <main class="phone-shell shadow-2xl rounded-none sm:rounded-app overflow-hidden border border-white/50">
+      <header class="px-5 pt-6 pb-4 sticky top-0 z-20 bg-oat/90 backdrop-blur border-b border-bark/10">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-[11px] tracking-[0.24em] uppercase text-bark/70">Taipei Trip Planner</p>
+            <h1 class="mt-1 text-[24px] leading-tight font-semibold">✈️ 台北frd過打band<br>2026三人成行之旅</h1>
+            <p class="mt-2 text-sm text-bark/80">3 / 14 – 3 / 18 ・ STARLUX JX234 / JX235</p>
+          </div>
+          <div class="glass rounded-2xl px-3 py-2 text-right shadow-soft">
+            <p class="text-[11px] text-bark/70">住宿</p>
+            <p class="text-xs font-medium">Airbnb</p>
+            <p class="text-[11px] text-bark/80 leading-relaxed max-w-[116px]">台北市松山區復興北路469號</p>
+          </div>
+        </div>
+
+        <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
+          <button @click="tab='itinerary'" :class="tab==='itinerary' ? activeTab : inactiveTab" class="py-2.5 rounded-2xl transition">行程表</button>
+          <button @click="tab='weather'" :class="tab==='weather' ? activeTab : inactiveTab" class="py-2.5 rounded-2xl transition">每日天氣</button>
+          <button @click="tab='budget'" :class="tab==='budget' ? activeTab : inactiveTab" class="py-2.5 rounded-2xl transition">記帳</button>
+        </div>
+      </header>
+
+      <section v-if="tab==='itinerary'" class="px-4 pt-4 pb-24">
+        <div class="mb-4 glass rounded-3xl p-4 shadow-soft border border-white/50">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[11px] uppercase tracking-[0.24em] text-bark/70">Trip Notes</p>
+              <p class="mt-1 text-sm text-bark/90">火鍋只吃兩次、不連續重複類型、整體動線以順路為主。</p>
+            </div>
+            <span class="inline-flex items-center rounded-full bg-moss/15 px-3 py-1 text-[11px] text-moss font-medium">Muji mood</span>
+          </div>
+        </div>
+
+        <div v-for="day in itinerary" :key="day.date" class="mb-6">
+          <div class="flex items-end justify-between px-1 mb-3">
+            <div>
+              <h2 class="text-lg font-semibold">{{ day.title }}</h2>
+              <p class="text-xs text-bark/75">{{ day.subtitle }}</p>
+            </div>
+            <button class="text-xs text-bark/70 underline underline-offset-2" @click="toggleDay(day.date)">
+              {{ expandedDays.includes(day.date) ? '收起' : '展開' }}
+            </button>
+          </div>
+
+          <div class="glass rounded-3xl p-4 shadow-card border border-white/60">
+            <div class="grid grid-cols-3 gap-2 mb-4 text-center text-xs">
+              <div class="rounded-2xl bg-sand px-2 py-2">
+                <div class="text-[11px] text-bark/65">早</div>
+                <div class="font-medium">{{ day.weather.morning }}</div>
+              </div>
+              <div class="rounded-2xl bg-sand px-2 py-2">
+                <div class="text-[11px] text-bark/65">午</div>
+                <div class="font-medium">{{ day.weather.noon }}</div>
+              </div>
+              <div class="rounded-2xl bg-sand px-2 py-2">
+                <div class="text-[11px] text-bark/65">晚</div>
+                <div class="font-medium">{{ day.weather.night }}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-3 text-sm">
+              <div class="flex items-center gap-2 text-bark/80">
+                <span>☁️</span>
+                <span>{{ day.weather.summary }}</span>
+              </div>
+              <div class="text-bark/75">🚶 {{ day.steps }}</div>
+            </div>
+
+            <p v-if="day.note" class="mb-4 rounded-2xl bg-clay/15 px-3 py-2 text-xs leading-relaxed text-bark/85">{{ day.note }}</p>
+
+            <div v-show="expandedDays.includes(day.date)" class="space-y-4">
+              <template v-for="(stop, index) in day.stops" :key="stop.name">
+                <div class="rounded-3xl bg-white/70 border border-stone overflow-hidden shadow-soft">
+                  <img :src="stop.image" :alt="stop.name" class="w-full h-40 object-cover" />
+                  <div class="p-4">
+                    <div class="flex items-start justify-between gap-3">
+                      <div>
+                        <p class="text-xs tracking-[0.18em] uppercase text-bark/60">{{ day.date }} ・ 第{{ index + 1 }}站</p>
+                        <h3 class="mt-1 text-base font-semibold leading-snug">{{ stop.name }}</h3>
+                      </div>
+                      <a :href="stop.map" target="_blank" rel="noopener noreferrer" class="shrink-0 rounded-full bg-bark text-white text-[11px] px-3 py-1.5">Google Map</a>
+                    </div>
+
+                    <p v-if="stop.address" class="mt-2 text-xs text-bark/70 leading-relaxed">地址｜{{ stop.address }}</p>
+                    <p class="mt-3 text-sm leading-6 text-ink/90">{{ stop.description }}</p>
+
+                    <div v-if="stop.people" class="mt-3 rounded-2xl bg-sand px-3 py-2 text-xs text-bark/90">👥 {{ stop.people }}</div>
+
+                    <div class="mt-3 grid grid-cols-2 gap-2 text-xs">
+                      <div class="rounded-2xl bg-oat px-3 py-2 border border-stone/80">
+                        <div class="text-bark/60">時間</div>
+                        <div class="mt-1 font-medium">{{ stop.time }}</div>
+                      </div>
+                      <div v-if="stop.photoSpot" class="rounded-2xl bg-oat px-3 py-2 border border-stone/80">
+                        <div class="text-bark/60">📷 打卡</div>
+                        <div class="mt-1 font-medium">{{ stop.photoSpot }}</div>
+                      </div>
+                    </div>
+
+                    <div v-if="stop.nearbyDrinks && stop.nearbyDrinks.length" class="mt-3 rounded-2xl bg-moss/10 px-3 py-3 text-xs">
+                      <div class="font-medium text-bark">附近珍奶</div>
+                      <div class="mt-2 space-y-1.5 text-bark/85">
+                        <div v-for="drink in stop.nearbyDrinks" :key="drink.name">{{ drink.name }}｜{{ drink.walk }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="day.transit[index]" class="rounded-2xl bg-bark text-white px-4 py-3 shadow-soft">
+                  <p class="text-[11px] tracking-[0.2em] uppercase text-white/70">🚶 Transit</p>
+                  <p class="mt-1 text-sm font-medium">{{ day.transit[index].from }} → {{ day.transit[index].to }}</p>
+                  <div class="mt-2 text-xs leading-6 text-white/90 space-y-0.5">
+                    <p v-for="option in day.transit[index].options" :key="option.mode"><span class="font-medium">{{ option.mode }}：</span>{{ option.detail }}</p>
+                  </div>
+                </div>
+              </template>
+
+              <div v-if="day.specialRoute" class="rounded-3xl border border-dashed border-bark/25 bg-sand/70 p-4">
+                <p class="text-xs tracking-[0.2em] uppercase text-bark/60">特別路線</p>
+                <h4 class="mt-1 font-semibold">{{ day.specialRoute.title }}</h4>
+                <p class="mt-2 text-sm leading-6 text-ink/90">{{ day.specialRoute.description }}</p>
+                <div class="mt-3 rounded-2xl bg-white/70 px-3 py-3 text-sm leading-6">
+                  <div v-for="item in day.specialRoute.items" :key="item">{{ item }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section v-else-if="tab==='weather'" class="px-4 pt-4 pb-24">
+        <div class="space-y-4">
+          <div v-for="day in itinerary" :key="day.date + '-weather'" class="glass rounded-3xl p-4 shadow-card border border-white/60">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-[11px] uppercase tracking-[0.2em] text-bark/65">{{ day.date }}</p>
+                <h3 class="mt-1 text-lg font-semibold">{{ day.shortTitle }}</h3>
+              </div>
+              <div class="rounded-2xl bg-sand px-3 py-2 text-sm">{{ day.weather.summary }}</div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-3 text-center">
+              <div class="rounded-2xl bg-white/70 p-3 border border-stone">
+                <div class="text-xs text-bark/60">早上</div>
+                <div class="mt-1 text-base font-medium">{{ day.weather.morning }}</div>
+              </div>
+              <div class="rounded-2xl bg-white/70 p-3 border border-stone">
+                <div class="text-xs text-bark/60">中午</div>
+                <div class="mt-1 text-base font-medium">{{ day.weather.noon }}</div>
+              </div>
+              <div class="rounded-2xl bg-white/70 p-3 border border-stone">
+                <div class="text-xs text-bark/60">晚上</div>
+                <div class="mt-1 text-base font-medium">{{ day.weather.night }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section v-else class="px-4 pt-4 pb-28">
+        <div class="glass rounded-3xl p-4 shadow-card border border-white/60">
+          <div class="flex items-end justify-between gap-3">
+            <div>
+              <p class="text-[11px] tracking-[0.2em] uppercase text-bark/60">Trip Budget</p>
+              <h2 class="mt-1 text-xl font-semibold">旅行記帳</h2>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-bark/60">總支出</p>
+              <p class="text-2xl font-semibold">NT$ {{ totalAmount }}</p>
+            </div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+            <div class="rounded-2xl bg-sand px-3 py-3">
+              <div class="text-bark/60 text-xs">現金</div>
+              <div class="mt-1 font-semibold">NT$ {{ paymentTotals.cash }}</div>
+            </div>
+            <div class="rounded-2xl bg-sand px-3 py-3">
+              <div class="text-bark/60 text-xs">信用卡 / 電子支付</div>
+              <div class="mt-1 font-semibold">NT$ {{ paymentTotals.card }}</div>
+            </div>
+          </div>
+
+          <form @submit.prevent="addExpense" class="mt-5 space-y-3">
+            <input v-model.trim="expenseForm.name" placeholder="項目名稱，例如：問鼎、Uber、珍奶" class="w-full rounded-2xl border border-stone bg-white/80 px-4 py-3 text-sm outline-none focus:border-bark" />
+            <div class="grid grid-cols-2 gap-3">
+              <input v-model.number="expenseForm.amount" type="number" min="0" step="1" placeholder="金額 NT$" class="w-full rounded-2xl border border-stone bg-white/80 px-4 py-3 text-sm outline-none focus:border-bark" />
+              <select v-model="expenseForm.payment" class="w-full rounded-2xl border border-stone bg-white/80 px-4 py-3 text-sm outline-none focus:border-bark">
+                <option value="cash">現金</option>
+                <option value="card">信用卡</option>
+                <option value="card">Apple Pay</option>
+                <option value="card">電子支付</option>
+              </select>
+            </div>
+            <select v-model="expenseForm.day" class="w-full rounded-2xl border border-stone bg-white/80 px-4 py-3 text-sm outline-none focus:border-bark">
+              <option v-for="day in itinerary" :key="day.date + '-expense'" :value="day.date">{{ day.date }}｜{{ day.shortTitle }}</option>
+            </select>
+            <button type="submit" class="w-full rounded-2xl bg-bark py-3 text-sm font-medium text-white">新增記帳項目</button>
+          </form>
+        </div>
+
+        <div class="mt-4 space-y-3">
+          <div v-if="expenses.length===0" class="rounded-3xl bg-white/70 border border-stone p-5 text-center text-sm text-bark/70">
+            還未有支出紀錄，等你們開始記帳 ✍️
+          </div>
+          <div v-for="item in sortedExpenses" :key="item.id" class="glass rounded-3xl p-4 border border-white/60 shadow-soft">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-xs text-bark/60">{{ item.day }}</p>
+                <h3 class="mt-1 font-semibold">{{ item.name }}</h3>
+                <p class="mt-1 text-xs text-bark/75">{{ paymentLabel(item.payment) }}</p>
+              </div>
+              <div class="text-right">
+                <p class="font-semibold">NT$ {{ item.amount }}</p>
+                <button @click="removeExpense(item.id)" class="mt-2 text-xs text-bark/60 underline">刪除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          tab: 'itinerary',
+          activeTab: 'bg-bark text-white shadow-soft',
+          inactiveTab: 'bg-white/70 text-bark border border-stone',
+          expandedDays: ['3月14', '3月15', '3月16', '3月17', '3月18'],
+          expenseForm: {
+            name: '',
+            amount: null,
+            payment: 'cash',
+            day: '3月14'
+          },
+          expenses: [],
+          itinerary: [
+            {
+              date: '3月14',
+              shortTitle: '追星＋麻辣鍋',
+              title: '【3月14】輕鬆追星麻辣鍋日',
+              subtitle: '第一天節奏輕鬆，先 settle 再追星，再去東區慢慢逛，最後吃問鼎。',
+              steps: '約 4500 – 5500 步',
+              note: '👥 Silke + 吊哥哥必到 Sakura 應援。這一天最重要是唔趕，慢慢來就可以。',
+              weather: { morning: '17°C', noon: '23°C', night: '18°C', summary: '☁️ 多雲' },
+              stops: [
+                {
+                  name: 'Airbnb Check-in',
+                  address: '台北市松山區復興北路469號',
+                  description: '一下飛機先回 Airbnb 放行李。松山區位置其實很方便，到信義區和東區都很快。',
+                  time: '15:00 – 15:30',
+                  image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E6%9D%BE%E5%B1%B1%E5%8D%80%E5%BE%A9%E8%88%88%E5%8C%97%E8%B7%AF469%E8%99%9F',
+                  nearbyDrinks: [
+                    { name: '龜記茗品（南京三民店）', walk: '步行約6分鐘' }
+                  ]
+                },
+                {
+                  name: 'Sakura 應援',
+                  address: '110台北市信義區忠孝東路五段71巷26號',
+                  description: 'LE SSERAFIM Sakura 的粉絲應援活動地點。很多粉絲會來拍照打卡。',
+                  people: 'Silke + 吊哥哥必到',
+                  time: '16:10 – 16:50',
+                  photoSpot: '應援牆',
+                  image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=110%E5%8F%B0%E5%8C%97%E5%B8%82%E4%BF%A1%E7%BE%A9%E5%8D%80%E5%BF%A0%E5%AD%9D%E6%9D%B1%E8%B7%AF%E4%BA%94%E6%AE%B571%E5%B7%B726%E8%99%9F',
+                  nearbyDrinks: [
+                    { name: '五桐號（永春店）', walk: '步行約4分鐘' }
+                  ]
+                },
+                {
+                  name: '東區散步',
+                  address: '台北東區（忠孝復興 / 忠孝敦化一帶）',
+                  description: 'Sakura 應援結束後，可以搭捷運到忠孝復興 / 忠孝敦化。東區有很多 café、選物店和手搖飲，很適合第一天慢慢逛。',
+                  time: '17:20 – 19:00',
+                  photoSpot: '東區街景',
+                  image: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%BF%A0%E5%AD%9D%E5%BE%A9%E8%88%88%E7%AB%99',
+                  nearbyDrinks: [
+                    { name: '青山青茶（忠孝復興店）', walk: '步行約5分鐘' },
+                    { name: '一沐日（忠孝店）', walk: '步行約6分鐘' },
+                    { name: '約翰紅茶公司（忠孝店）', walk: '步行約8分鐘' }
+                  ]
+                },
+                {
+                  name: '問鼎 ‧ 皇上吉祥 麻辣養生鍋',
+                  address: '台北市大安區忠孝東路（忠孝店）',
+                  description: '宮廷風火鍋店，環境非常浮誇，很有旅行感。你們已預約 19:30。',
+                  time: '19:30 – 21:00',
+                  photoSpot: '宮廷風裝潢',
+                  image: 'https://images.unsplash.com/photo-1642941422169-c77077f4d208?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%95%8F%E9%BC%8E%20%E7%9A%87%E4%B8%8A%E5%90%89%E7%A5%A5%20%E9%BA%BB%E8%BE%A3%E9%A4%8A%E7%94%9F%E9%8D%8B%20%E5%BF%A0%E5%AD%9D%E5%BA%97',
+                  nearbyDrinks: [
+                    { name: '青山青茶（忠孝復興店）', walk: '步行約6分鐘' }
+                  ]
+                },
+                {
+                  name: '東區夜散步',
+                  address: '忠孝敦化 / 東區小巷',
+                  description: '吃完火鍋可以在東區附近慢慢散步消化一下。',
+                  time: '21:00 – 21:40',
+                  photoSpot: '東區夜街',
+                  image: 'https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%BF%A0%E5%AD%9D%E6%95%A6%E5%8C%96%E7%AB%99',
+                  nearbyDrinks: [
+                    { name: '一沐日（忠孝店）', walk: '步行約5分鐘' }
+                  ]
+                }
+              ],
+              transit: [
+                {
+                  from: 'Airbnb',
+                  to: 'Sakura 應援',
+                  options: [
+                    { mode: 'Uber', detail: '約 12 分鐘，NT$130–160' },
+                    { mode: '大眾交通', detail: '南京三民 → 永春，約 18 分鐘，車資 NT$20' },
+                    { mode: '步行', detail: '約 45 分鐘' }
+                  ]
+                },
+                {
+                  from: 'Sakura 應援',
+                  to: '東區散步',
+                  options: [
+                    { mode: '大眾交通', detail: '永春 → 忠孝復興，約 12 分鐘，車資 NT$20' },
+                    { mode: 'Uber', detail: '約 10 分鐘，NT$120–150' },
+                    { mode: '步行', detail: '約 35 分鐘' }
+                  ]
+                },
+                {
+                  from: '東區散步',
+                  to: '問鼎火鍋',
+                  options: [
+                    { mode: '步行', detail: '約 6–8 分鐘' },
+                    { mode: 'Uber', detail: '約 3 分鐘，NT$90 起跳' },
+                    { mode: '大眾交通', detail: '忠孝復興 → 忠孝敦化，約 4 分鐘，車資 NT$20' }
+                  ]
+                },
+                {
+                  from: '問鼎',
+                  to: '東區夜散步',
+                  options: [
+                    { mode: '步行', detail: '約 5 分鐘' }
+                  ]
+                },
+                {
+                  from: '東區',
+                  to: 'Airbnb',
+                  options: [
+                    { mode: 'Uber', detail: '約 12 分鐘，NT$150–180' },
+                    { mode: '大眾交通', detail: '忠孝敦化 → 南京三民，約 18 分鐘，車資 NT$20' },
+                    { mode: '步行', detail: '約 55 分鐘' }
+                  ]
+                }
+              ]
+            },
+            {
+              date: '3月15',
+              shortTitle: 'Chill Day',
+              title: '【3月15】Chill Day',
+              subtitle: '阿吊中午至傍晚去找親戚，今天節奏偏輕鬆。',
+              steps: '約 5500 步',
+              note: '👥 阿吊 12:00 – 18:00 去找親戚。今天不用排太滿，文青＋按摩＋餐酒館剛好。',
+              weather: { morning: '18°C', noon: '26°C', night: '21°C', summary: '☀️ 晴' },
+              stops: [
+                {
+                  name: 'PILLO Bakery & Cafe',
+                  address: '台北市中山區南京東路二段64巷24號',
+                  description: '評價非常高的 brunch café。',
+                  time: '12:00 – 13:00',
+                  image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=PILLO%20Bakery%20%26%20Cafe%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: [
+                    { name: '龜記茗品（南京店）', walk: '步行約5分鐘' }
+                  ]
+                },
+                {
+                  name: '臺北流行音樂中心',
+                  address: '台北市南港區市民大道八段99號',
+                  description: '北流是台北很重要的音樂地標，建築非常有未來感。很多人會來這裡拍照或看展覽，也有演唱會場館。',
+                  time: '13:30 – 15:00',
+                  photoSpot: '北流主建築 / 金屬幾何外觀',
+                  image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E8%87%BA%E5%8C%97%E6%B5%81%E8%A1%8C%E9%9F%B3%E6%A8%82%E4%B8%AD%E5%BF%83',
+                  nearbyDrinks: [
+                    { name: '五桐號（南港店）', walk: '步行約7分鐘' }
+                  ]
+                },
+                {
+                  name: 'True Massage',
+                  address: '南京三民一帶',
+                  description: '頭部與肩頸按摩。',
+                  time: '16:30 – 18:00',
+                  image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=True%20Massage%20%E5%8D%97%E4%BA%AC%E4%B8%89%E6%B0%91%E5%BA%97',
+                  nearbyDrinks: [
+                    { name: '龜記茗品（南京三民店）', walk: '步行約5分鐘' }
+                  ]
+                },
+                {
+                  name: '青樓中式餐酒館',
+                  address: '台北市大安區',
+                  description: '融合中式料理與調酒的餐酒館。你們已預約。',
+                  time: '19:30 – 21:00',
+                  image: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E9%9D%92%E6%A8%93%E4%B8%AD%E5%BC%8F%E9%A4%90%E9%85%92%E9%A4%A8%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                }
+              ],
+              transit: [
+                {
+                  from: 'PILLO',
+                  to: '臺北流行音樂中心',
+                  options: [
+                    { mode: 'Uber', detail: '約 15 分鐘，NT$180–220' },
+                    { mode: '大眾交通', detail: '南京三民 → 南港展覽館，約 25 分鐘，車資 NT$25' }
+                  ]
+                },
+                {
+                  from: '臺北流行音樂中心',
+                  to: 'True Massage',
+                  options: [
+                    { mode: 'Uber', detail: '約 15 分鐘，NT$180–220' },
+                    { mode: '大眾交通', detail: '南港 → 南京三民，約 25 分鐘，車資 NT$25' }
+                  ]
+                },
+                {
+                  from: 'True Massage',
+                  to: '青樓',
+                  options: [
+                    { mode: 'Uber', detail: '約 15 分鐘，NT$180–220' },
+                    { mode: '大眾交通', detail: '南京三民 → 忠孝復興，約 20 分鐘，車資 NT$20' }
+                  ]
+                }
+              ]
+            },
+            {
+              date: '3月16',
+              shortTitle: '赤峰街文青日',
+              title: '【3月16】赤峰街文青日',
+              subtitle: '這天幾乎都係步行，好適合慢慢逛、慢慢飲。',
+              steps: '約 7000 步',
+              note: '今天的重點是赤峰街、卜卜商店、Tart Club、伊良可樂，加埋《赤峰街珍奶挑戰路線》。',
+              weather: { morning: '18°C', noon: '25°C', night: '20°C', summary: '☀️ 晴' },
+              stops: [
+                {
+                  name: '赤峰街散步',
+                  address: '台北市大同區赤峰街',
+                  description: '台北最有名的文青街區之一。',
+                  time: '11:30 – 13:00',
+                  photoSpot: '老屋街道',
+                  image: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E8%B5%A4%E5%B3%B0%E8%A1%97%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: [
+                    { name: '約翰紅茶公司（中山南西店）', walk: '步行約6分鐘' }
+                  ]
+                },
+                {
+                  name: '麵線町',
+                  address: '台北市大同區赤峰街49巷25號',
+                  description: '台北人氣麵線。',
+                  time: '13:00 – 13:30',
+                  image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E9%BA%B5%E7%B7%9A%E7%94%BA%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: [
+                    { name: '一沐日（中山店）', walk: '步行約4分鐘' }
+                  ]
+                },
+                {
+                  name: '卜卜商店',
+                  address: '台北市大同區',
+                  description: '老屋茶屋咖啡廳。',
+                  time: '13:45 – 14:30',
+                  photoSpot: '老屋咖啡',
+                  image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%8D%9C%E5%8D%9C%E5%95%86%E5%BA%97%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                },
+                {
+                  name: 'Tart Club',
+                  address: '台北市大同區',
+                  description: '人氣蛋塔店。',
+                  time: '14:30 – 15:00',
+                  image: 'https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=Tart%20Club%20%E8%9B%8B%E5%A1%94%E4%BF%B1%E6%A8%82%E9%83%A8%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                },
+                {
+                  name: '伊良可樂',
+                  address: '赤峰街附近',
+                  description: '日本 craft cola。',
+                  people: '三人 share 一杯',
+                  time: '15:00 – 15:20',
+                  image: 'https://images.unsplash.com/photo-1622484212850-eb596d769edc?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E4%BC%8A%E8%89%AF%E5%8F%AF%E6%A8%82%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                },
+                {
+                  name: '映禪養生館',
+                  address: '台北市松山區',
+                  description: '按摩放鬆。',
+                  time: '20:30 – 21:30',
+                  image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E6%98%A0%E7%A6%AA%E9%A4%8A%E7%94%9F%E9%A4%A8%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                }
+              ],
+              transit: [
+                {
+                  from: '赤峰街',
+                  to: '麵線町',
+                  options: [
+                    { mode: '步行', detail: '約 3 分鐘' }
+                  ]
+                },
+                {
+                  from: '麵線町',
+                  to: '卜卜商店',
+                  options: [
+                    { mode: '步行', detail: '約 5 分鐘' }
+                  ]
+                },
+                {
+                  from: '卜卜商店',
+                  to: 'Tart Club',
+                  options: [
+                    { mode: '步行', detail: '約 3 分鐘' }
+                  ]
+                },
+                {
+                  from: 'Tart Club',
+                  to: '伊良可樂',
+                  options: [
+                    { mode: '步行', detail: '約 2 分鐘' }
+                  ]
+                },
+                {
+                  from: '赤峰街',
+                  to: '映禪養生館',
+                  options: [
+                    { mode: '大眾交通', detail: '中山 → 南京三民，約 12 分鐘，車資 NT$20' },
+                    { mode: 'Uber', detail: '約 10 分鐘，NT$120–150' }
+                  ]
+                }
+              ],
+              specialRoute: {
+                title: '🧋 赤峰街珍奶挑戰路線',
+                description: '600m 範圍內完成，三個人可以 share 或者分段飲。',
+                items: ['約翰紅茶公司', '↓', '一沐日', '↓', '青山青茶', '↓', '五桐號', '🚶 全程約 10 分鐘']
+              }
+            },
+            {
+              date: '3月17',
+              shortTitle: 'Brunch＋大峽谷',
+              title: '【3月17】Brunch＋大峽谷',
+              subtitle: 'M One brunch 之後去三鶯之心，晚上再吃八條老宅。',
+              steps: '約 4000 步',
+              note: '這天以搭車為主，步行量最低，最適合拍照＋大餐。',
+              weather: { morning: '17°C', noon: '24°C', night: '19°C', summary: '⛅ 多雲' },
+              stops: [
+                {
+                  name: 'M One Cafe',
+                  address: '台北市大安區仁愛路四段27巷6號',
+                  description: '台北最有名的 brunch 店之一。你們已訂 9:30。',
+                  time: '9:30 – 11:00',
+                  image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=M%20One%20Cafe%20%E5%A4%A7%E5%AE%89%E5%BA%97',
+                  nearbyDrinks: [
+                    { name: '青山青茶（忠孝復興店）', walk: '步行約8分鐘' }
+                  ]
+                },
+                {
+                  name: '三鶯之心',
+                  address: '新北市鶯歌區',
+                  description: '台版大峽谷打卡點。',
+                  time: '12:00 – 14:00',
+                  photoSpot: '沙丘地形',
+                  image: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E4%B8%89%E9%B6%AF%E4%B9%8B%E5%BF%83',
+                  nearbyDrinks: []
+                },
+                {
+                  name: '不老松足湯',
+                  address: '台北市松山區 / 信義附近',
+                  description: '按摩放鬆。',
+                  time: '16:30 – 18:00',
+                  image: 'https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E4%B8%8D%E8%80%81%E6%9D%BE%E8%B6%B3%E6%B9%AF%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: []
+                },
+                {
+                  name: '八條老宅麻辣鍋',
+                  address: '台北市中山區林森北路133巷3號',
+                  description: '台北人氣麻辣鍋。你們已預約 20:00。',
+                  time: '20:00 – 21:30',
+                  image: 'https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%85%AB%E6%A2%9D%E8%80%81%E5%AE%85%E9%BA%BB%E8%BE%A3%E9%8D%8B',
+                  nearbyDrinks: []
+                }
+              ],
+              transit: [
+                {
+                  from: 'M One',
+                  to: '三鶯之心',
+                  options: [
+                    { mode: 'Uber', detail: '約 40–45 分鐘，NT$700–900' },
+                    { mode: '大眾交通', detail: '忠孝復興 → 鶯歌，約 55–65 分鐘，車資 NT$45' }
+                  ]
+                },
+                {
+                  from: '三鶯之心',
+                  to: '不老松足湯',
+                  options: [
+                    { mode: 'Uber', detail: '約 45 分鐘，NT$700–900' },
+                    { mode: '大眾交通', detail: '鶯歌 → 南京三民，約 60 分鐘，車資 NT$50' }
+                  ]
+                },
+                {
+                  from: '不老松足湯',
+                  to: '八條老宅',
+                  options: [
+                    { mode: 'Uber', detail: '約 12 分鐘，NT$150–180' },
+                    { mode: '大眾交通', detail: '南京三民 → 中山，約 15 分鐘，車資 NT$20' }
+                  ]
+                }
+              ]
+            },
+            {
+              date: '3月18',
+              shortTitle: '最後一天',
+              title: '【3月18】最後一天',
+              subtitle: '最後一天以 café 同珍奶巡禮做收尾。',
+              steps: '約 3000 步',
+              note: '這天記得預留回機場時間，行程唔好排太趕。',
+              weather: { morning: '18°C', noon: '23°C', night: '20°C', summary: '☁️ 多雲' },
+              stops: [
+                {
+                  name: '好物 Spirit Cafe',
+                  address: '《想見你》拍攝地 café',
+                  description: '《想見你》拍攝地 café。',
+                  time: '11:00 – 12:00',
+                  photoSpot: '劇集場景',
+                  image: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%A5%BD%E7%89%A9%20spirit%20%E5%92%96%E5%95%A1%20%E5%8F%B0%E5%8C%97',
+                  nearbyDrinks: [
+                    { name: '一沐日（附近分店）', walk: '步行約5分鐘' }
+                  ]
+                },
+                {
+                  name: '珍奶巡禮',
+                  address: '可自由選擇附近分店',
+                  description: '可以選 約翰紅茶、青山青茶、一沐日。',
+                  time: '12:00 – 13:00',
+                  image: 'https://images.unsplash.com/photo-1558857563-b371033873b8?auto=format&fit=crop&w=1200&q=80',
+                  map: 'https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%20%E7%8F%8D%E5%A5%B6',
+                  nearbyDrinks: [
+                    { name: '約翰紅茶公司', walk: '依附近分店而定' },
+                    { name: '青山青茶', walk: '依附近分店而定' },
+                    { name: '一沐日', walk: '依附近分店而定' }
+                  ]
+                }
+              ],
+              transit: [
+                {
+                  from: '好物 Cafe',
+                  to: '機場',
+                  options: [
+                    { mode: 'Uber', detail: '約 40 分鐘，NT$900–1100' },
+                    { mode: '大眾交通', detail: '捷運轉機場捷運，約 60–70 分鐘，車資 NT$160' }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      computed: {
+        totalAmount() {
+          return this.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0).toLocaleString('en-US');
+        },
+        paymentTotals() {
+          const totals = { cash: 0, card: 0 };
+          this.expenses.forEach(item => {
+            if (item.payment === 'cash') totals.cash += Number(item.amount || 0);
+            else totals.card += Number(item.amount || 0);
+          });
+          return {
+            cash: totals.cash.toLocaleString('en-US'),
+            card: totals.card.toLocaleString('en-US')
+          };
+        },
+        sortedExpenses() {
+          const dayOrder = ['3月14', '3月15', '3月16', '3月17', '3月18'];
+          return [...this.expenses].sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+        }
+      },
+      methods: {
+        toggleDay(date) {
+          if (this.expandedDays.includes(date)) {
+            this.expandedDays = this.expandedDays.filter(d => d !== date);
+          } else {
+            this.expandedDays.push(date);
+          }
+        },
+        paymentLabel(payment) {
+          return payment === 'cash' ? '現金' : '信用卡 / 電子支付';
+        },
+        addExpense() {
+          if (!this.expenseForm.name || !this.expenseForm.amount) return;
+          const payment = this.expenseForm.payment === 'cash' ? 'cash' : 'card';
+          this.expenses.unshift({
+            id: Date.now(),
+            name: this.expenseForm.name,
+            amount: Number(this.expenseForm.amount),
+            payment,
+            day: this.expenseForm.day
+          });
+          this.saveExpenses();
+          this.expenseForm.name = '';
+          this.expenseForm.amount = null;
+          this.expenseForm.payment = 'cash';
+        },
+        removeExpense(id) {
+          this.expenses = this.expenses.filter(item => item.id !== id);
+          this.saveExpenses();
+        },
+        saveExpenses() {
+          localStorage.setItem('taipei-trip-expenses', JSON.stringify(this.expenses));
+        },
+        loadExpenses() {
+          const saved = localStorage.getItem('taipei-trip-expenses');
+          if (saved) this.expenses = JSON.parse(saved);
+        }
+      },
+      mounted() {
+        this.loadExpenses();
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
