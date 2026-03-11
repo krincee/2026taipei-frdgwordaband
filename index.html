@@ -1593,7 +1593,21 @@ const paidByErnest = state.expenses
         document.getElementById("add-shopping").addEventListener("click", () => {
           const name = document.getElementById("shopping-name").value.trim();
           const area = document.getElementById("shopping-area").value;
-          if (!name) return;
+          
+            if (!name && !area) {
+            alert("請填寫購物項目名稱及地區");
+            return;
+           }
+
+          if (!name) {
+          alert("請填寫購物項目名稱");
+          return;
+          }
+
+        if (!area) {
+          alert("請選擇地區");
+          return;
+        }
           state.shoppingList.push({ id: uid(), name, area, bought: false, image: "" });
           saveState();
           renderShoppingPage();
@@ -1718,7 +1732,31 @@ const paidByErnest = state.expenses
           const drink = teaDrink.value.trim();
           const price = document.getElementById("tea-price").value.trim();
           const notes = document.getElementById("tea-notes").value.trim();
-          if (!actualShop) return;
+            if (!actualShop && !drink && !price) {
+    alert("請填寫店名、飲品及價錢");
+    return;
+  }
+
+  if (!actualShop) {
+    alert("請選擇或輸入店名");
+    return;
+  }
+
+  if (!drink) {
+    alert("請輸入飲品名稱");
+    return;
+  }
+
+  if (!price) {
+    alert("請輸入價錢");
+    return;
+  }
+
+  const priceValue = Number(price);
+  if (Number.isNaN(priceValue) || priceValue <= 0) {
+    alert("請輸入有效價錢");
+    return;
+  }
           state.milkTeaSpots.push({ id: uid(), shop: actualShop, drink, price, rating: newTeaRating, notes });
           saveState();
           renderMilkTeaPage();
