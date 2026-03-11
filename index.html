@@ -2,6 +2,8 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台北 frd 過打band 2026 三人成行之旅✦</title>
     <style>
@@ -926,6 +928,20 @@
     </nav>
 
     <script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAbxUxzXOdfwgSI9Gy4HcgPTlHJaKoCFjE",
+  authDomain: "taipei-trip-app.firebaseapp.com",
+  projectId: "taipei-trip-app",
+  storageBucket: "taipei-trip-app.firebasestorage.app",
+  messagingSenderId: "567273297143",
+  appId: "1:567273297143:web:d97c0c2d53d12ea4e92ff2",
+  measurementId: "G-X3GF14KBMR"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+const TRIP_CODE = "FRDGWORDABAND";
       const STORAGE_KEY = "taipei_trip_app_html_v1";
 
       const defaultData = {
@@ -1105,15 +1121,35 @@ let expenseFilter = "all";
         }
       }
 
-      function saveState() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      }
+     async function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  await db.collection("trips").doc(TRIP_CODE).set(state);
+}
 
-      function uid() {
-        return Date.now() + Math.floor(Math.random() * 1000);
-      }
+function subscribeTrip() {
+  db.collection("trips").doc(TRIP_CODE).onSnapshot((doc) => {
+    if (doc.exists) {
+      const remote = doc.data();
+      state = {
+        ...defaultData,
+        ...remote,
+        checklistState: {
+          ...buildChecklistDefault(),
+          ...(remote.checklistState || {})
+        }
+      };
+      renderAll();
+    } else {
+      db.collection("trips").doc(TRIP_CODE).set(state);
+    }
+  });
+}
 
-      function renderDayRow() {
+function uid() {
+  return Date.now() + Math.floor(Math.random() * 1000);
+}
+
+function renderDayRow() {
         const dayRow = document.getElementById("day-row");
         const days = [
           ["pre", "旅行前", "✓"],
@@ -1302,17 +1338,17 @@ let expenseFilter = "all";
     .filter((item) => item.paymentType === "card")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const paidByYou = state.expenses
-    .filter((item) => item.payer === "你")
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+const paidByKrince = state.expenses
+  .filter((item) => item.payer === "Krince")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const paidBySilke = state.expenses
-    .filter((item) => item.payer === "Silke")
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+const paidBySilke = state.expenses
+  .filter((item) => item.payer === "Silke")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const paidByDiu = state.expenses
-    .filter((item) => item.payer === "吊哥哥")
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+const paidByErnest = state.expenses
+  .filter((item) => item.payer === "Ernest")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
   root.innerHTML = `
     <div class="expense-top-card">
@@ -1334,20 +1370,25 @@ let expenseFilter = "all";
       </div>
     </div>
 
-    <div class="people-paid-row">
-      <div class="people-paid-card">
-        <div class="name">你已付</div>
-        <div class="money">$${paidByYou}</div>
-      </div>
-      <div class="people-paid-card">
-        <div class="name">Silke已付</div>
-        <div class="money">$${paidBySilke}</div>
-      </div>
-      <div class="people-paid-card">
-        <div class="name">吊哥哥已付</div>
-        <div class="money">$${paidByDiu}</div>
-      </div>
-    </div>
+  <div class="people-paid-row">
+
+  <div class="people-paid-card">
+    <div class="name">Krince 已付</div>
+    <div class="money">$${paidByKrince}</div>
+  </div>
+
+  <div class="people-paid-card">
+    <div class="name">Silke 已付</div>
+    <div class="money">$${paidBySilke}</div>
+  </div>
+
+  <div class="people-paid-card">
+    <div class="name">Ernest 已付</div>
+    <div class="money">$${paidByErnest}</div>
+  </div>
+
+</div>
+   
 
     <div class="expense-header-row">
       <h3 class="panel-title" style="margin:0;">支出明細</h3>
@@ -1372,11 +1413,11 @@ let expenseFilter = "all";
           <option value="cash">現金</option>
           <option value="card">信用卡</option>
         </select>
-        <select id="expense-payer" class="input">
-          <option>你</option>
-          <option>Silke</option>
-          <option>吊哥哥</option>
-        </select>
+   <select id="expense-payer" class="input">
+  <option>Krince</option>
+  <option>Silke</option>
+  <option>Ernest</option>
+</select>
         <select id="expense-split-count" class="input">
           <option value="1">自己</option>
           <option value="2">2人平分</option>
@@ -1473,8 +1514,8 @@ let expenseFilter = "all";
 
   root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const id = Number(btn.dataset.removeExpense);
-      state.expenses = state.expenses.filter((item) => item.id !== id);
+  const id = Number(btn.dataset.removeExpense);
+state.expenses = state.expenses.filter((item) => item.id !== id);
       saveState();
       renderExpensesPage();
     });
@@ -1779,7 +1820,7 @@ let expenseFilter = "all";
         return escapeHtml(str).replaceAll("`", "&#96;");
       }
 
-      renderAll();
+      subscribeTrip();
     </script>
   </body>
 </html>
