@@ -1513,11 +1513,12 @@ const paidByErnest = state.expenses
   });
 
   root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-  const id = Number(btn.dataset.removeExpense);
-state.expenses = state.expenses.filter((item) => item.id !== id);
-      saveState();
-      renderExpensesPage();
+  btn.addEventListener("click", () => {
+    if (!confirm("確定要刪除呢條記錄？")) return;
+    const id = Number(btn.dataset.removeExpense);
+    state.expenses = state.expenses.filter(item => item.id !== id);
+    saveState();
+    renderExpensesPage();
     });
   });
 }
