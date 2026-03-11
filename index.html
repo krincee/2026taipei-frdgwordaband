@@ -1,916 +1,953 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="UTF-8" />
+  <head>
+    <meta charset="UTF-8" />
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>台北 frd 過打band 2026 三人成行之旅✦</title>
-    <meta name="theme-color" content="#f7d2e7">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台北 frd 過打band 2026 三人成行之旅✦</title>
+    <meta name="theme-color" content="#f7d2e7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Taipei Trip">
 <meta name="description" content="Taipei trip planner with itinerary, expenses, shopping list, milk tea spots, and travel info.">
 
 <link rel="icon" type="image/svg+xml"
-  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E🧋%3C/text%3E%3C/svg%3E'>
+  href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E🧋%3C/text%3E%3C/svg%3E'>
 
 <link rel="apple-touch-icon"
-  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" rx="36" fill="%23ffe7f1"/%3E%3Ctext x="50%25" y="56%25" text-anchor="middle" font-size="96"%3E🧋%3C/text%3E%3C/svg%3E'>
-
-    <style>
-      :root {
-        --bg1: #fff6fb;
-        --bg2: #eef7ff;
-        --bg3: #f1eeff;
-        --card: rgba(255, 255, 255, 0.78);
-        --card-strong: rgba(255, 255, 255, 0.9);
-        --text: #4c5566;
-        --text-strong: #2e3440;
-        --pink: #f8bfd6;
-        --pink-strong: #ef78ab;
-        --blue: #b9dcff;
-        --blue-strong: #6f9fdf;
-        --cyan: #c7f0ff;
-        --yellow: #ffe9a8;
-        --shadow: 0 18px 50px rgba(137, 167, 220, 0.16);
-        --radius: 28px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-          "Segoe UI", sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(circle at top, rgba(255,255,255,0.98), rgba(255,237,248,0.95), rgba(232,243,255,0.95), rgba(232,229,255,0.93));
-        min-height: 100vh;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .app {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 20px 16px 110px;
-      }
-
-      .glass {
-        background: var(--card);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(18px);
-        -webkit-backdrop-filter: blur(18px);
-        box-shadow: var(--shadow);
-      }
-
-      .hero {
-        position: relative;
-        overflow: hidden;
-        border-radius: 34px;
-        padding: 24px;
-      }
-
-      .hero::before,
-      .hero::after {
-        content: "";
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(44px);
-        pointer-events: none;
-      }
-
-      .hero::before {
-        width: 160px;
-        height: 160px;
-        top: -20px;
-        right: -40px;
-        background: rgba(255, 191, 214, 0.4);
-      }
-
-      .hero::after {
-        width: 140px;
-        height: 140px;
-        left: -24px;
-        bottom: -24px;
-        background: rgba(185, 220, 255, 0.45);
-      }
-
-      .hero-top {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-
-      .title {
-        margin: 0;
-        font-size: clamp(1.9rem, 4vw, 3.5rem);
-        line-height: 1.1;
-        color: var(--text-strong);
-        letter-spacing: 0.02em;
-        font-weight: 900;
-      }
-
-      .sub {
-        margin-top: 12px;
-        font-size: 0.98rem;
-        line-height: 1.7;
-      }
-
-      .rate-box {
-        align-self: flex-start;
-        background: rgba(255, 255, 255, 0.75);
-        border-radius: 24px;
-        padding: 14px 16px;
-        box-shadow: 0 10px 26px rgba(145, 170, 235, 0.12);
-      }
-
-      .rate-box small {
-        display: block;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #94a0b8;
-        font-weight: 700;
-        font-size: 0.72rem;
-      }
-
-      .rate-box strong {
-        display: block;
-        margin-top: 8px;
-        color: var(--text-strong);
-        font-size: 1.6rem;
-      }
-
-      .day-row {
-        display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        padding: 18px 2px 2px;
-      }
-
-      .day-chip {
-        min-width: 94px;
-        border: 1px solid rgba(255,255,255,0.75);
-        background: rgba(255,255,255,0.82);
-        border-radius: 24px;
-        padding: 14px 16px;
-        text-align: center;
-        color: #6c7386;
-        box-shadow: 0 10px 28px rgba(145, 170, 235, 0.1);
-        cursor: pointer;
-      }
-
-      .day-chip.active {
-        color: #fff;
-        border-color: #b7d7ff;
-        background: linear-gradient(180deg, #8ab6ff 0%, #6d95dc 100%);
-        box-shadow: 0 14px 30px rgba(109, 149, 220, 0.3);
-      }
-
-      .day-chip .label {
-        font-size: 0.92rem;
-        font-weight: 700;
-      }
-
-      .day-chip .num {
-        margin-top: 2px;
-        font-size: 1.6rem;
-        font-weight: 900;
-      }
-
-      .page {
-        display: none;
-        margin-top: 18px;
-      }
-
-      .page.active {
-        display: block;
-      }
-
-      .section-card {
-        border-radius: 30px;
-        padding: 20px;
-        margin-bottom: 18px;
-      }
-
-      .summary-card {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        border-radius: 30px;
-        padding: 20px;
-        background: linear-gradient(135deg, rgba(218,242,255,0.95), rgba(255,242,248,0.95));
-      }
-
-      .summary-head {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .summary-head h2 {
-        margin: 0;
-        font-size: 2rem;
-        color: var(--text-strong);
-      }
-
-      .date-pill {
-        display: inline-flex;
-        align-items: center;
-        border-radius: 999px;
-        background: rgba(255,255,255,0.78);
-        padding: 6px 12px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        box-shadow: 0 6px 18px rgba(145,170,235,0.12);
-        width: fit-content;
-      }
-
-      .weather-box {
-        border-radius: 24px;
-        background: rgba(255,255,255,0.82);
-        padding: 16px 18px;
-        box-shadow: 0 10px 24px rgba(145, 170, 235, 0.12);
-      }
-
-      .weather-main {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: var(--text-strong);
-      }
-
-      .weather-sub {
-        margin-top: 8px;
-        font-size: 0.92rem;
-        color: #7b8399;
-      }
-
-      .itinerary-list,
-      .record-list,
-      .checklist-grid,
-      .milk-list {
-        display: grid;
-        gap: 16px;
-      }
-
-      .itinerary-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 30px;
-        padding: 20px;
-      }
-
-      .stop-tag {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        padding: 7px 12px;
-        border-radius: 999px;
-        background: rgba(255, 232, 241, 0.95);
-        color: #d35e8c;
-        font-size: 0.76rem;
-        font-weight: 800;
-      }
-
-      .time-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        color: #7a8297;
-        font-weight: 700;
-        font-size: 0.9rem;
-      }
-
-      .itinerary-card h3 {
-        margin: 14px 0 0;
-        font-size: 1.75rem;
-        line-height: 1.15;
-        color: var(--text-strong);
-      }
-
-      .desc {
-        margin-top: 12px;
-        line-height: 1.75;
-        font-size: 0.95rem;
-      }
-
-      .info-blocks {
-        display: grid;
-        gap: 12px;
-        margin-top: 16px;
-      }
-
-      .info-line,
-      .milk-box,
-      .transit-box,
-      .photo-box,
-      .check-item,
-      .row-card,
-      .mini-card,
-      .input,
-      .btn,
-      .king-card,
-      .challenge-card {
-        border-radius: 20px;
-      }
-
-      .info-line,
-      .photo-box,
-      .row-card,
-      .mini-card,
-      .input {
-        background: rgba(255,255,255,0.75);
-      }
-
-      .info-line,
-      .photo-box,
-      .row-card,
-      .transit-box,
-      .milk-box,
-      .challenge-card,
-      .king-card,
-      .mini-card {
-        box-shadow: 0 10px 24px rgba(145,170,235,0.1);
-      }
-
-      .info-line,
-      .photo-box,
-      .row-card,
-      .transit-box,
-      .milk-box,
-      .challenge-card,
-      .king-card {
-        padding: 14px 16px;
-      }
-
-      .info-line {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .map-link span {
-        text-decoration: underline;
-        text-decoration-color: #8fd8ff;
-        text-underline-offset: 3px;
-      }
-
-      .milk-box {
-        background: linear-gradient(90deg, #fff4f9, #ffffff, #f7f3ff);
-      }
-
-      .block-title {
-        font-size: 0.9rem;
-        font-weight: 800;
-        color: var(--text-strong);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 10px;
-      }
-
-      .milk-items,
-      .transit-items,
-      .challenge-items {
-        display: grid;
-        gap: 8px;
-      }
-
-      .pill {
-        padding: 10px 12px;
-        background: rgba(255,255,255,0.74);
-        border-radius: 16px;
-        font-size: 0.92rem;
-      }
-
-      .transit-box {
-        background: #f7fbff;
-      }
-
-      .return-card,
-      .walk-card {
-        border-radius: 28px;
-        padding: 18px;
-      }
-
-      .walk-card {
-        font-weight: 700;
-      }
-
-      .checklist-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .check-group h3,
-      .panel-title {
-        margin: 0 0 14px;
-        font-size: 1.2rem;
-        color: var(--text-strong);
-      }
-
-      .check-items {
-        display: grid;
-        gap: 10px;
-      }
-
-      .check-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 13px 14px;
-        background: rgba(255,255,255,0.75);
-        cursor: pointer;
-      }
-
-      .check-item.done span:last-child {
-        text-decoration: line-through;
-        color: #a0a7ba;
-      }
-
-      .checkbox {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid #c7cde0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 0.78rem;
-        flex-shrink: 0;
-      }
-
-      .check-item.done .checkbox {
-        background: var(--pink-strong);
-        border-color: var(--pink-strong);
-      }
-
-      .stats-grid,
-      .info-grid {
-        display: grid;
-        gap: 14px;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .mini-card {
-        padding: 18px;
-        border: 1px solid rgba(255,255,255,0.65);
-      }
-
-      .mini-card small {
-        display: block;
-        color: #9ba3b8;
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        font-weight: 800;
-      }
-
-      .mini-card strong {
-        display: block;
-        margin-top: 10px;
-        font-size: 1.95rem;
-        color: var(--text-strong);
-      }
-
-      .input-grid {
-        display: grid;
-        gap: 12px;
-      }
-
-      .input,
-      select,
-      textarea {
-        width: 100%;
-        border: 1px solid rgba(255,255,255,0.7);
-        padding: 13px 14px;
-        font: inherit;
-        color: var(--text);
-        background: rgba(255,255,255,0.8);
-        outline: none;
-      }
-
-      textarea {
-        min-height: 88px;
-        resize: vertical;
-      }
-
-      .btn {
-        border: none;
-        cursor: pointer;
-        padding: 13px 16px;
-        font: inherit;
-        font-weight: 800;
-        color: var(--text-strong);
-        background: linear-gradient(90deg, #f7c6dd, #c8efff);
-      }
-
-      .btn-outline {
-        background: rgba(255,255,255,0.85);
-        border: 1px solid #dbe2f0;
-        font-weight: 700;
-      }
-
-      .row-card {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 16px;
-      }
-
-      .row-top {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .amount-pill,
-      .king-badge,
-      .rank-dot,
-      .soft-pill {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .amount-pill,
-      .soft-pill {
-        border-radius: 999px;
-        padding: 10px 14px;
-        font-weight: 800;
-      }
-
-      .amount-pill {
-        background: #fff1f7;
-      }
-
-      .king-card {
-        background: linear-gradient(90deg, #fff3ad, #ffe8f2, #dff7ff);
-      }
-
-      .king-title {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.18em;
-        font-size: 0.8rem;
-        font-weight: 800;
-      }
-
-      .king-card h2 {
-        margin: 14px 0 0;
-        color: var(--text-strong);
-        font-size: 2rem;
-      }
-
-      .rank-item {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .rank-head {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .rank-dot {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(90deg, #f6c8dd, #c8efff);
-        font-weight: 800;
-        color: var(--text-strong);
-      }
-
-      .king-badge {
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: #fff3ae;
-        color: #8e6700;
-        font-size: 0.72rem;
-        font-weight: 800;
-      }
-
-      .stars {
-        display: flex;
-        gap: 6px;
-      }
-
-      .star-btn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 1.15rem;
-        color: #d4d7e2;
-        padding: 0;
-      }
-
-      .star-btn.active {
-        color: #f6b41b;
-      }
-
-      .bottom-nav {
-        position: fixed;
-        left: 50%;
-        bottom: 14px;
-        transform: translateX(-50%);
-        width: min(92%, 980px);
-        padding: 8px;
-        border-radius: 30px;
-        background: rgba(255,255,255,0.82);
-        border: 1px solid rgba(255,255,255,0.75);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 20px 60px rgba(145,170,235,0.2);
-        z-index: 50;
-      }
-
-      .bottom-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 8px;
-      }
-
-      .nav-btn {
-        border: none;
-        border-radius: 22px;
-        padding: 10px 6px;
-        background: rgba(255,255,255,0.55);
-        color: #6d758a;
-        cursor: pointer;
-        font: inherit;
-        font-size: 0.78rem;
-        font-weight: 700;
-      }
-
-      .nav-btn.active {
-        background: linear-gradient(180deg, #f7d2e7, #fceef8, #dbf5ff);
-        color: var(--text-strong);
-        box-shadow: 0 10px 20px rgba(145,170,235,0.12);
-      }
-
-      .nav-icon {
-        display: block;
-        font-size: 1rem;
-        margin-bottom: 4px;
-      }
-
-      .hidden {
-        display: none !important;
-      }
-
-      .photo-preview {
-        margin-top: 10px;
-        width: 100%;
-        border-radius: 20px;
-        overflow: hidden;
-        background: #f8fbff;
-        border: 1px solid rgba(255,255,255,0.75);
-      }
-
-      .photo-preview img {
-        display: block;
-        width: 100%;
-        max-height: 240px;
-        object-fit: cover;
-      }
-
-      @media (min-width: 760px) {
-        .hero-top {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: flex-start;
-        }
-
-        .summary-head {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .checklist-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .stats-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-
-        .info-grid {
-          grid-template-columns: repeat(5, 1fr);
-        }
-
-        .input-grid.two {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        .input-grid.three {
-          grid-template-columns: repeat(3, 1fr);
-        }
-
-        .input-grid.four {
-          grid-template-columns: repeat(4, 1fr);
-        }
-
-        .row-card {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: flex-start;
-        }
-
-        .row-top {
-          flex: 1;
-        }
-
-        .row-side {
-          width: 280px;
-          display: grid;
-          gap: 12px;
-        }
-      }
+  href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" rx="36" fill="%23ffe7f1"/%3E%3Ctext x="50%25" y="56%25" text-anchor="middle" font-size="96"%3E🧋%3C/text%3E%3C/svg%3E'>
+
+    <style>
+    :root {
+  --bg-main: #f8dcec;
+  --bg-grid: #efb9d5;
+
+  --window: #f6f6f6;
+  --window-2: #fffdfd;
+  --panel: #fff6fb;
+
+  --text: #42506a;
+  --text-strong: #26344f;
+
+  --line: #4b587c;
+  --line-soft: #8e9abb;
+
+  --pink: #f6bfdc;
+  --pink-strong: #ef8fbe;
+  --blue: #b9caff;
+  --blue-strong: #6e85da;
+  --yellow: #f5c97b;
+  --cream: #fff5d8;
+
+  --shadow-hard: 4px 4px 0 rgba(88, 101, 148, 0.28);
+  --shadow-soft: 0 8px 18px rgba(120, 135, 190, 0.16);
+
+  --radius: 10px;
+}
+      * {
+        box-sizing: border-box;
+      }
+
+    body {
+  margin: 0;
+  font-family: "Trebuchet MS", "Arial Rounded MT Bold", "Segoe UI", sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  background-image:
+    linear-gradient(rgba(239,185,213,0.7) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239,185,213,0.7) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+    .app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px 16px 110px;
+  position: relative;
+}
+
+.app::after {
+  content: "";
+  position: fixed;
+  width: 180px;
+  height: 180px;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, rgba(255,193,224,0.65), rgba(170,197,255,0.7), rgba(255,231,185,0.55));
+  filter: blur(22px);
+  opacity: 0.65;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app > * {
+  position: relative;
+  z-index: 1;
+}
+    .glass {
+  background: var(--window);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-hard);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, #fff7fb 0%, #f4f7ff 100%);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: 40px;
+  top: 30px;
+  background: linear-gradient(135deg, rgba(247,182,216,0.7), rgba(173,197,255,0.7), rgba(255,235,198,0.5));
+  filter: blur(26px);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  left: 10px;
+  bottom: 10px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(190,214,255,0.35));
+  filter: blur(24px);
+  pointer-events: none;
+}
+
+      .hero-top {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+.title {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  color: var(--text-strong);
+  letter-spacing: 0.01em;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 rgba(255,255,255,0.8);
+}
+
+    .sub {
+  margin-top: 12px;
+  font-size: 0.96rem;
+  line-height: 1.7;
+  color: #55627e;
+}
+
+    .rate-box {
+align-self: flex-start;
+background: #fffdfd;
+border: 2px solid var(--line);
+border-radius: 8px;
+padding: 12px 14px;
+box-shadow: var(--shadow-hard);
+}
+
+.rate-box small {
+display: block;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: #6f7a97;
+font-weight: 800;
+font-size: 0.68rem;
+}
+
+.rate-box strong {
+display: block;
+margin-top: 8px;
+color: var(--text-strong);
+font-size: 1.25rem;
+}
+    .day-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 16px 2px 2px;
+}
+
+.day-chip {
+  min-width: 88px;
+  border: 2px solid var(--line);
+  background: linear-gradient(180deg, #fff7df 0%, #ffd8eb 100%);
+  border-radius: 8px 8px 0 0;
+  padding: 10px 14px;
+  text-align: center;
+  color: var(--text-strong);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.18);
+  cursor: pointer;
+}
+
+.day-chip.active {
+  color: var(--text-strong);
+  border-color: var(--line);
+  background: linear-gradient(180deg, #adc2ff 0%, #dce7ff 100%);
+  transform: translateY(-2px);
+}
+
+.day-chip .label {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.day-chip .num {
+  margin-top: 3px;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+      .page {
+        display: none;
+        margin-top: 18px;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+  .section-card {
+border-radius: 10px;
+padding: 18px;
+margin-bottom: 18px;
+}
+
+     .summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 10px;
+  padding: 18px;
+  background: linear-gradient(135deg, #dfe8ff, #ffe6f2 60%, #fff7de);
+}
+
+      .summary-head {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .summary-head h2 {
+        margin: 0;
+        font-size: 2rem;
+        color: var(--text-strong);
+      }
+
+ .date-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  background: #fffdfd;
+  border: 2px solid var(--line);
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.14);
+  width: fit-content;
+}
+
+     .weather-box {
+border-radius: 8px;
+background: #ffffff;
+border: 2px solid var(--line);
+padding: 14px 16px;
+box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.18);
+}
+
+      .weather-main {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--text-strong);
+      }
+
+      .weather-sub {
+        margin-top: 8px;
+        font-size: 0.92rem;
+        color: #7b8399;
+      }
+
+      .itinerary-list,
+      .record-list,
+      .checklist-grid,
+      .milk-list {
+        display: grid;
+        gap: 16px;
+      }
+
+    .itinerary-card {
+position: relative;
+overflow: hidden;
+border-radius: 10px;
+padding: 18px;
+}
+
+      .stop-tag {
+position: absolute;
+top: 14px;
+right: 14px;
+padding: 6px 10px;
+border-radius: 6px;
+background: linear-gradient(180deg, #ffd7eb, #ffc1df);
+color: var(--text-strong);
+font-size: 0.72rem;
+font-weight: 900;
+border: 2px solid var(--line);
+}
+
+      .time-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #7a8297;
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .itinerary-card h3 {
+        margin: 14px 0 0;
+        font-size: 1.75rem;
+        line-height: 1.15;
+        color: var(--text-strong);
+      }
+
+      .desc {
+        margin-top: 12px;
+        line-height: 1.75;
+        font-size: 0.95rem;
+      }
+
+      .info-blocks {
+        display: grid;
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+
+     .info-line,
+.photo-box,
+.row-card,
+.transit-box,
+.milk-box,
+.challenge-card,
+.mini-card,
+.return-card,
+.walk-card {
+  background: #fffdfd;
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.15);
+  border-radius: 10px;
+}
+
+
+.transit-box {
+  background: linear-gradient(180deg, #f8fbff, #fffdfd);
+}
+
+.walk-card {
+  font-weight: 800;
+  color: var(--text-strong);
+}
+
+      .info-line,
+      .photo-box,
+      .row-card,
+      .transit-box,
+      .milk-box,
+      .challenge-card,
+      .king-card {
+        padding: 14px 16px;
+      }
+
+      .info-line {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .map-link span {
+        text-decoration: underline;
+        text-decoration-color: #8fd8ff;
+        text-underline-offset: 3px;
+      }
+
+    .milk-box {
+  background: linear-gradient(90deg, #fff8e8, #fff2f7, #edf3ff);
+}
+
+      .block-title {
+        font-size: 0.9rem;
+        font-weight: 800;
+        color: var(--text-strong);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .milk-items,
+      .transit-items,
+      .challenge-items {
+        display: grid;
+        gap: 8px;
+      }
+
+.pill {
+  padding: 8px 10px;
+  background: #fffdfd;
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  box-shadow: 2px 2px 0 rgba(88, 101, 148, 0.12);
+}
+
+
+      .checklist-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .check-group h3,
+      .panel-title {
+        margin: 0 0 14px;
+        font-size: 1.2rem;
+        color: var(--text-strong);
+      }
+
+      .check-items {
+        display: grid;
+        gap: 10px;
+      }
+
+      .check-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 14px;
+        background: rgba(255,255,255,0.75);
+        cursor: pointer;
+      }
+
+      .check-item.done span:last-child {
+        text-decoration: line-through;
+        color: #a0a7ba;
+      }
+
+      .checkbox {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #c7cde0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 0.78rem;
+        flex-shrink: 0;
+      }
+
+      .check-item.done .checkbox {
+        background: var(--pink-strong);
+        border-color: var(--pink-strong);
+      }
+
+      .stats-grid,
+      .info-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+  .mini-card {
+  padding: 18px;
+}
+
+      .mini-card small {
+        display: block;
+        color: #9ba3b8;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-weight: 800;
+      }
+
+      .mini-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.95rem;
+        color: var(--text-strong);
+      }
+
+      .input-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+  .input,
+select,
+textarea {
+  width: 100%;
+  border: 2px solid var(--line);
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--text);
+  background: #ffffff;
+  outline: none;
+  border-radius: 6px;
+  box-shadow: inset 1px 1px 0 #d7def5;
+}
+
+.input:focus,
+select:focus,
+textarea:focus {
+  background: #fffdf2;
+}
+
+      textarea {
+        min-height: 88px;
+        resize: vertical;
+      }
+
+ .btn {
+  border: 2px solid var(--line);
+  cursor: pointer;
+  padding: 11px 14px;
+  font: inherit;
+  font-weight: 800;
+  color: var(--text-strong);
+  background: linear-gradient(180deg, #ffd7ea 0%, #ffc8df 48%, #bdd4ff 100%);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.18);
+  border-radius: 8px;
+}
+
+.btn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0 rgba(88, 101, 148, 0.18);
+}
+
+.btn-outline {
+  background: #fffdfd;
+  border: 2px solid var(--line);
+  font-weight: 700;
+  color: var(--text-strong);
+  border-radius: 8px;
+}
+      .row-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+      }
+
+      .row-top {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .amount-pill,
+      .king-badge,
+      .rank-dot,
+      .soft-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .amount-pill,
+      .soft-pill {
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-weight: 800;
+      }
+
+      .amount-pill {
+        background: #fff1f7;
+      }
+
+     .king-card {
+  background: linear-gradient(90deg, #fff2af, #ffd8ea, #dbe8ff);
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow-hard);
+  border-radius: 10px;
+}
+
+      .king-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.8rem;
+        font-weight: 800;
+      }
+
+      .king-card h2 {
+        margin: 14px 0 0;
+        color: var(--text-strong);
+        font-size: 2rem;
+      }
+
+      .rank-item {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .rank-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+     .rank-dot {
+width: 30px;
+height: 30px;
+border-radius: 50%;
+background: linear-gradient(180deg, #ffd6ea, #c7d9ff);
+font-weight: 900;
+color: var(--text-strong);
+border: 2px solid var(--line);
+}
+
+      .king-badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #fff3ae;
+        color: #8e6700;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .stars {
+        display: flex;
+        gap: 6px;
+      }
+
+      .star-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.15rem;
+        color: #d4d7e2;
+        padding: 0;
+      }
+
+      .star-btn.active {
+        color: #f6b41b;
+      }
+
+     .bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: min(92%, 980px);
+  padding: 8px;
+  border-radius: 12px;
+  background: #f7f4fb;
+  border: 2px solid var(--line);
+  box-shadow: 4px 4px 0 rgba(88, 101, 148, 0.22);
+  z-index: 50;
+  backdrop-filter: none;
+}
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+    .photo-preview {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fffdfd;
+  border: 2px solid var(--line);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.15);
+}
+
+      .photo-preview img {
+        display: block;
+        width: 100%;
+        max-height: 240px;
+        object-fit: cover;
+      }
+
+      @media (min-width: 760px) {
+        .hero-top {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .summary-head {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .checklist-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .info-grid {
+          grid-template-columns: repeat(5, 1fr);
+        }
+
+        .input-grid.two {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .input-grid.three {
+          grid-template-columns: repeat(3, 1fr);
+        }
+
+        .input-grid.four {
+          grid-template-columns: repeat(4, 1fr);
+        }
+
+        .row-card {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .row-top {
+          flex: 1;
+        }
+
+        .row-side {
+          width: 280px;
+          display: grid;
+          gap: 12px;
+        }
+      }
 .expense-top-card {
-  background: linear-gradient(135deg, rgba(108, 140, 208, 0.9), rgba(122, 154, 218, 0.82));
-  color: white;
-  border-radius: 30px;
-  padding: 22px 20px;
-  box-shadow: 0 18px 40px rgba(90, 120, 190, 0.22);
+  background: linear-gradient(135deg, #8ea8f0 0%, #b8c9ff 48%, #ffd8eb 100%);
+  color: var(--text-strong);
+  border-radius: 10px;
+  padding: 20px 18px;
+  box-shadow: var(--shadow-hard);
+  border: 2px solid var(--line);
   margin-bottom: 16px;
 }
 
 .expense-total-label {
-  text-align: center;
-  font-size: 0.95rem;
-  opacity: 0.9;
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.9;
 }
 
 .expense-total-amount {
-  text-align: center;
-  font-size: 3.2rem;
-  font-weight: 900;
-  margin: 8px 0 4px;
+  text-align: center;
+  font-size: 3.2rem;
+  font-weight: 900;
+  margin: 8px 0 4px;
 }
 
 .expense-total-sub {
-  text-align: center;
-  font-size: 0.95rem;
-  opacity: 0.85;
+  text-align: center;
+  font-size: 0.95rem;
+  opacity: 0.85;
 }
 
 .expense-line {
-  height: 1px;
-  background: rgba(255,255,255,0.22);
-  margin: 18px 0;
+  height: 1px;
+  background: rgba(255,255,255,0.22);
+  margin: 18px 0;
 }
 
 .expense-type-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
 
 .expense-type-box {
-  text-align: center;
+  text-align: center;
 }
 
 .expense-type-box .label {
-  font-size: 0.95rem;
-  opacity: 0.95;
-  margin-bottom: 8px;
+  font-size: 0.95rem;
+  opacity: 0.95;
+  margin-bottom: 8px;
 }
 
 .expense-type-box .value {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 2rem;
+  font-weight: 800;
 }
 
 .people-paid-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin: 16px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 16px 0;
 }
 
 .people-paid-card {
-  background: rgba(255,255,255,0.8);
-  border-radius: 18px;
+  background: #fffdfd;
+  border-radius: 8px;
   padding: 12px;
   text-align: center;
-  box-shadow: 0 10px 24px rgba(145,170,235,0.1);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.15);
+  border: 2px solid var(--line);
 }
 
 .people-paid-card .name {
-  font-size: 0.9rem;
-  color: var(--text-strong);
-  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-strong);
+  font-weight: 700;
 }
 
 .people-paid-card .money {
-  margin-top: 4px;
-  font-size: 1.15rem;
-  font-weight: 900;
-  color: var(--text-strong);
+  margin-top: 4px;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text-strong);
 }
 
 .expense-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 18px 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 18px 0 12px;
 }
 
 .expense-filter-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
 .expense-filter-btn {
-  border: none;
-  border-radius: 16px;
-  padding: 12px 10px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 10px;
   font: inherit;
-  font-weight: 700;
-  background: rgba(255,255,255,0.55);
-  color: #6d758a;
+  font-weight: 800;
+  background: #fffdfd;
+  color: var(--text-strong);
   cursor: pointer;
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.15);
 }
 
 .expense-filter-btn.active {
-  background: white;
+  background: linear-gradient(180deg, #aebfff 0%, #d9e4ff 55%, #ffe0ef 100%);
   color: var(--text-strong);
-  box-shadow: 0 8px 18px rgba(145,170,235,0.12);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.18);
 }
 
 .expense-entry-card {
-  background: rgba(255,255,255,0.84);
-  border-radius: 24px;
+  background: #fffdfd;
+  border-radius: 10px;
   padding: 16px;
-  box-shadow: 0 10px 24px rgba(145,170,235,0.1);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.15);
+  border: 2px solid var(--line);
 }
 
 .expense-entry-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
 }
 
 .expense-entry-title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--text-strong);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-strong);
 }
 
 .expense-entry-meta {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  color: #8a92a8;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #8a92a8;
 }
 
 .expense-entry-amount {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: var(--text-strong);
-  white-space: nowrap;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text-strong);
+  white-space: nowrap;
 }
 
 .expense-entry-note {
-  margin-top: 10px;
-  font-size: 0.92rem;
-  color: #667085;
-  line-height: 1.6;
+  margin-top: 10px;
+  font-size: 0.92rem;
+  color: #667085;
+  line-height: 1.6;
 }
 
 .expense-actions {
-  margin-top: 12px;
-  display: flex;
-  justify-content: flex-end;
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
 }
-      .nav-btn {
+    .nav-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  min-height: 64px;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  gap: 3px;
+  min-height: 62px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 8px 4px;
+  background: linear-gradient(180deg, #fff7fb 0%, #ffe6f1 55%, #e6efff 100%);
+  color: #5d6783;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 800;
+  transition: transform 0.15s ease;
+}
+
+.nav-btn.active {
+  background: linear-gradient(180deg, #aebfff 0%, #d9e4ff 55%, #ffe0ef 100%);
+  color: var(--text-strong);
+  border-color: var(--line);
+  box-shadow: 3px 3px 0 rgba(88, 101, 148, 0.18);
 }
 
 .nav-btn:hover {
@@ -918,1063 +955,1066 @@
 }
 
 .nav-icon {
-  display: block;
-  font-size: 1.18rem;
-  line-height: 1;
-  margin-bottom: 2px;
-  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
+  display: block;
+  font-size: 1.18rem;
+  line-height: 1;
+  margin-bottom: 2px;
+  transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
 }
 
 .nav-label {
-  display: block;
-  font-size: 0.74rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
+  display: block;
+  font-size: 0.74rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
 }
 
 .nav-btn.active .nav-icon {
-  transform: scale(1.14);
-  filter: saturate(1.15);
+  transform: scale(1.14);
+  filter: saturate(1.15);
 }
 
 .nav-btn.active .nav-label {
-  color: var(--text-strong);
+  color: var(--text-strong);
 }
 
 @media (max-width: 520px) {
-  .bottom-grid {
-    gap: 6px;
-  }
+  .bottom-grid {
+    gap: 6px;
+  }
 
-  .nav-btn {
-    min-height: 60px;
-    padding: 8px 4px;
-  }
+  .nav-btn {
+    min-height: 60px;
+    padding: 8px 4px;
+  }
 
-  .nav-icon {
-    font-size: 1.08rem;
-  }
+  .nav-icon {
+    font-size: 1.08rem;
+  }
 
-  .nav-label {
-    font-size: 0.7rem;
-  }
+  .nav-label {
+    font-size: 0.7rem;
+  }
 }
 
-      
-    </style>
-  </head>
-  <body>
-    <div class="app">
-      <section class="hero glass">
-        <div class="hero-top">
-          <div>
-            <h1 class="title">🧋台北 frd 過打band 2026 三人成行之旅✦🧋</h1>
-            <p class="sub">3 / 14 – 3 / 18<br />STARLUX JX234 / JX235 ・ Airbnb ・ 台北市松山區復興北路469號</p>
-          </div>
-          <div class="rate-box">
-            <small>目前匯率</small>
-            <strong id="exchange-rate">1 TWD ≈ 0.24 HKD</strong>
-          </div>
-        </div>
+      
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section class="hero glass">
+        <div class="hero-top">
+          <div>
+            <h1 class="title">🧋台北 frd 過打band 2026 三人成行之旅✦🧋</h1>
+            <p class="sub">3 / 14 – 3 / 18<br />STARLUX JX234 / JX235 ・ Airbnb ・ 台北市松山區復興北路469號</p>
+          </div>
+          <div class="rate-box">
+            <small>目前匯率</small>
+            <strong id="exchange-rate">1 TWD ≈ 0.24 HKD</strong>
+          </div>
+        </div>
 
-      <div id="day-row" class="day-row"></div>
-      </section>
+      <div id="day-row" class="day-row"></div>
+      </section>
 
-      <section id="page-itinerary" class="page active"></section>
-      <section id="page-expenses" class="page"></section>
-      <section id="page-shopping" class="page"></section>
-      <section id="page-milktea" class="page"></section>
-      <section id="page-info" class="page"></section>
-    </div>
+      <section id="page-itinerary" class="page active"></section>
+      <section id="page-expenses" class="page"></section>
+      <section id="page-shopping" class="page"></section>
+      <section id="page-milktea" class="page"></section>
+      <section id="page-info" class="page"></section>
+    </div>
 
 <nav class="bottom-nav">
-  <div class="bottom-grid">
-    <button class="nav-btn active" data-page="itinerary" aria-label="Itinerary">
-      <span class="nav-icon">🗓️</span>
-      <span class="nav-label">Plan</span>
-    </button>
+  <div class="bottom-grid">
+    <button class="nav-btn active" data-page="itinerary" aria-label="Itinerary">
+      <span class="nav-icon">🗓️</span>
+      <span class="nav-label">Plan</span>
+    </button>
 
-    <button class="nav-btn" data-page="expenses" aria-label="Expenses">
-      <span class="nav-icon">💸</span>
-      <span class="nav-label">Spend</span>
-    </button>
+    <button class="nav-btn" data-page="expenses" aria-label="Expenses">
+      <span class="nav-icon">💸</span>
+      <span class="nav-label">Spend</span>
+    </button>
 
-    <button class="nav-btn" data-page="shopping" aria-label="Shopping">
-      <span class="nav-icon">🛍️</span>
-      <span class="nav-label">Shop</span>
-    </button>
+    <button class="nav-btn" data-page="shopping" aria-label="Shopping">
+      <span class="nav-icon">🛍️</span>
+      <span class="nav-label">Shop</span>
+    </button>
 
-    <button class="nav-btn" data-page="milktea" aria-label="Milk Tea">
-      <span class="nav-icon">🧋</span>
-      <span class="nav-label">Tea</span>
-    </button>
+    <button class="nav-btn" data-page="milktea" aria-label="Milk Tea">
+      <span class="nav-icon">🧋</span>
+      <span class="nav-label">Tea</span>
+    </button>
 
-    <button class="nav-btn" data-page="info" aria-label="Info">
-      <span class="nav-icon">📍</span>
-      <span class="nav-label">Info</span>
-    </button>
-  </div>
+    <button class="nav-btn" data-page="info" aria-label="Info">
+      <span class="nav-icon">📍</span>
+      <span class="nav-label">Info</span>
+    </button>
+  </div>
 </nav>
 
 
-    <script>
+    <script>
 const firebaseConfig = {
-  apiKey: "AIzaSyAbxUxzXOdfwgSI9Gy4HcgPTlHJaKoCFjE",
-  authDomain: "taipei-trip-app.firebaseapp.com",
-  projectId: "taipei-trip-app",
-  storageBucket: "taipei-trip-app.firebasestorage.app",
-  messagingSenderId: "567273297143",
-  appId: "1:567273297143:web:d97c0c2d53d12ea4e92ff2",
-  measurementId: "G-X3GF14KBMR"
+  apiKey: "AIzaSyAbxUxzXOdfwgSI9Gy4HcgPTlHJaKoCFjE",
+  authDomain: "taipei-trip-app.firebaseapp.com",
+  projectId: "taipei-trip-app",
+  storageBucket: "taipei-trip-app.firebasestorage.app",
+  messagingSenderId: "567273297143",
+  appId: "1:567273297143:web:d97c0c2d53d12ea4e92ff2",
+  measurementId: "G-X3GF14KBMR"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 const TRIP_CODE = "FRDGWORDABAND";
-      const STORAGE_KEY = "taipei_trip_app_html_v1";
+      const STORAGE_KEY = "taipei_trip_app_html_v1";
 
-      const defaultData = {
-        selectedDay: "pre",
-        checklistState: {},
-        expenses: [],
-        shoppingList: [],
-        milkTeaSpots: [
-          { id: 1, shop: "青山青茶", drink: "青茶", price: "75", rating: 5, notes: "目前第一位" },
-          { id: 2, shop: "五桐號", drink: "杏仁凍五桐茶", price: "70", rating: 4, notes: "好香" },
-          { id: 3, shop: "龜記茗品", drink: "紅柚翡翠", price: "65", rating: 4, notes: "穩陣型" },
-        ],
-      };
+      const defaultData = {
+        selectedDay: "pre",
+        checklistState: {},
+        expenses: [],
+        shoppingList: [],
+        milkTeaSpots: [
+          { id: 1, shop: "青山青茶", drink: "青茶", price: "75", rating: 5, notes: "目前第一位" },
+          { id: 2, shop: "五桐號", drink: "杏仁凍五桐茶", price: "70", rating: 4, notes: "好香" },
+          { id: 3, shop: "龜記茗品", drink: "紅柚翡翠", price: "65", rating: 4, notes: "穩陣型" },
+        ],
+      };
 
-      const milkTeaMapList = [
-        "青山青茶","五桐號","再睡5分鐘","得正","可不可熟成紅茶","迷客夏","麻古茶坊",
-        "先喝道","一沐日","鶴茶樓","珍煮丹","春水堂","50嵐","龜記茗品","老賴茶棧","約翰紅茶公司","UG","新增別家"
-      ];
+      const milkTeaMapList = [
+        "青山青茶","五桐號","再睡5分鐘","得正","可不可熟成紅茶","迷客夏","麻古茶坊",
+        "先喝道","一沐日","鶴茶樓","珍煮丹","春水堂","50嵐","龜記茗品","老賴茶棧","約翰紅茶公司","UG","新增別家"
+      ];
 
-      const packingChecklistData = {
-        "證件與財務": ["身分證","護照","簽證","銀包","當地流通貨幣","信用卡","提款卡（記得開通海外提款）"],
-        "電子用品": ["當地通用電話卡","iPhone SIM 卡針","充電線","轉插","拖板","尿袋","耳機","手提電腦 / 平板 / 電子書閱讀器","相機"],
-        "盥洗與日用品": ["口罩","紙巾","潤唇膏","牙膏","牙刷","毛巾","枕頭袋","指甲鉗","遮"],
-        "衣物與外出用品": ["外出衣物","出街用袋仔","帽","睡衣褲","內衣褲","M巾","襪","拖鞋"],
-        "保養與清潔": ["護膚品","化妝品","油","身體 lotion","portable 花灑"],
-        "醫藥與急救": ["藥品","包紮傷口需要用的"]
-      };
+      const packingChecklistData = {
+        "證件與財務": ["身分證","護照","簽證","銀包","當地流通貨幣","信用卡","提款卡（記得開通海外提款）"],
+        "電子用品": ["當地通用電話卡","iPhone SIM 卡針","充電線","轉插","拖板","尿袋","耳機","手提電腦 / 平板 / 電子書閱讀器","相機"],
+        "盥洗與日用品": ["口罩","紙巾","潤唇膏","牙膏","牙刷","毛巾","枕頭袋","指甲鉗","遮"],
+        "衣物與外出用品": ["外出衣物","出街用袋仔","帽","睡衣褲","內衣褲","M巾","襪","拖鞋"],
+        "保養與清潔": ["護膚品","化妝品","油","身體 lotion","portable 花灑"],
+        "醫藥與急救": ["藥品","包紮傷口需要用的"]
+      };
 
-      const itinerary = {
-        pre: { label: "旅行前" },
-        Day1: {
-          dateLabel: "3 / 14",
-          weather: { icon: "☁️", summary: "多雲", morning: "17°C", noon: "23°C", night: "18°C" },
-          stepCount: "約 4500 – 5500 步",
-          places: [
-            {
-              title: "Airbnb Check-in",
-              address: "台北市松山區復興北路469號",
-              time: "15:00 – 15:30",
-              desc: "一下飛機先回 Airbnb 放行李。",
-              map: "https://maps.google.com/?q=台北市松山區復興北路469號",
-              photoSpot: "入住照",
-              nearbyMilkTea: ["龜記茗品（南京三民店） ・ 步行約6分鐘"],
-              transit: { from: "機場", to: "Airbnb", methods: ["Uber：約 40 分鐘", "大眾交通：機場捷運 + 捷運，約 55–65 分鐘"] },
-              image: ""
-            },
-            {
-              title: "Sakura 應援",
-              address: "110台北市信義區忠孝東路五段71巷26號",
-              time: "16:10 – 16:50",
-              desc: "LE SSERAFIM Sakura 的粉絲應援活動地點。很多粉絲會來拍照打卡。Silke + 吊哥哥必到。",
-              map: "https://maps.google.com/?q=110台北市信義區忠孝東路五段71巷26號",
-              photoSpot: "應援牆",
-              nearbyMilkTea: ["五桐號（永春店） ・ 步行約4分鐘"],
-              transit: { from: "Airbnb", to: "Sakura 應援", methods: ["Uber：約 12 分鐘，NT$130–160", "大眾交通：南京三民 → 永春，約 18 分鐘，車資 NT$20", "步行：約 45 分鐘"] },
-              image: ""
-            },
-            {
-              title: "東區散步",
-              address: "忠孝復興 / 忠孝敦化一帶",
-              time: "17:20 – 19:00",
-              desc: "Sakura 應援結束後，可以搭捷運到忠孝復興 / 忠孝敦化。東區有很多 café、選物店和手搖飲，很適合第一天慢慢逛。",
-              map: "https://maps.google.com/?q=忠孝復興",
-              photoSpot: "東區街景",
-              nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約5分鐘", "一沐日（忠孝店） ・ 步行約6分鐘", "約翰紅茶公司（忠孝店） ・ 步行約8分鐘"],
-              transit: { from: "Sakura 應援", to: "東區散步", methods: ["大眾交通：永春 → 忠孝復興，約 12 分鐘，車資 NT$20", "Uber：約 10 分鐘，NT$120–150", "步行：約 35 分鐘"] },
-              image: ""
-            },
-            {
-              title: "問鼎 ‧ 皇上吉祥 麻辣養生鍋",
-              address: "台北市大安區忠孝東路",
-              time: "預約 19:30",
-              desc: "宮廷風火鍋店，環境非常浮誇，很有旅行感。",
-              map: "https://maps.google.com/?q=問鼎 皇上吉祥 麻辣養生鍋 台北",
-              photoSpot: "宮廷風裝潢",
-              nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約6分鐘"],
-              transit: { from: "東區散步", to: "問鼎火鍋", methods: ["步行：約 6–8 分鐘", "Uber：約 3 分鐘，NT$90 起跳", "大眾交通：忠孝復興 → 忠孝敦化，約 4 分鐘，車資 NT$20"] },
-              image: ""
-            },
-            {
-              title: "東區夜散步",
-              address: "東區夜街",
-              time: "21:00 – 21:40",
-              desc: "吃完火鍋可以在東區附近慢慢散步消化一下。",
-              map: "https://maps.google.com/?q=東區夜街 台北",
-              photoSpot: "東區夜街",
-              nearbyMilkTea: ["一沐日（忠孝店） ・ 步行約5分鐘"],
-              transit: { from: "問鼎", to: "東區夜散步", methods: ["步行：約 5 分鐘"] },
-              image: ""
-            }
-          ],
-          returnTransit: { from: "東區", to: "Airbnb", methods: ["Uber：約 12 分鐘，NT$150–180", "大眾交通：忠孝敦化 → 南京三民，約 18 分鐘，車資 NT$20", "步行：約 55 分鐘"] }
-        },
-        Day2: {
-          dateLabel: "3 / 15",
-          weather: { icon: "☀️", summary: "晴", morning: "18°C", noon: "26°C", night: "21°C" },
-          stepCount: "約 5500 步",
-          note: "阿吊 12:00 – 18:00 去找親戚。今天行程比較 chill。",
-          places: [
-            { title: "PILLO Bakery & Cafe", address: "台北市中山區南京東路二段64巷24號", time: "已預約 12:00 – 13:00", desc: "評價非常高的 brunch café。", map: "https://maps.google.com/?q=台北市中山區南京東路二段64巷24號", photoSpot: "Brunch 桌面", nearbyMilkTea: ["龜記茗品（南京店） ・ 步行約5分鐘"], transit: { from: "Airbnb / 出發點", to: "PILLO Bakery & Cafe", methods: ["自由出發"] }, image: "" },
-            { title: "臺北流行音樂中心", address: "台北市南港區市民大道八段99號", time: "13:30 – 15:00", desc: "北流是台北很重要的音樂地標，建築非常有未來感。", map: "https://maps.google.com/?q=台北市南港區市民大道八段99號", photoSpot: "北流主建築 / 金屬幾何外觀", nearbyMilkTea: ["五桐號（南港店） ・ 步行約7分鐘"], transit: { from: "PILLO", to: "臺北流行音樂中心", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南京三民 → 南港展覽館，約 25 分鐘，車資 NT$25"] }, image: "" },
-            { title: "True Massage", address: "南京三民一帶", time: "16:30 – 18:00", desc: "頭部與肩頸按摩。", map: "https://maps.google.com/?q=True Massage Taipei", photoSpot: "放鬆 moment", nearbyMilkTea: ["龜記茗品（南京三民店） ・ 步行約5分鐘"], transit: { from: "北流", to: "True Massage", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南港 → 南京三民，約 25 分鐘，車資 NT$25"] }, image: "" },
-            { title: "青樓中式餐酒館", address: "忠孝復興一帶", time: "已預約 19:30 – 21:00", desc: "融合中式料理與調酒的餐酒館。", map: "https://maps.google.com/?q=青樓中式餐酒館 台北", photoSpot: "餐酒館氣氛照", nearbyMilkTea: [], transit: { from: "True Massage", to: "青樓", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南京三民 → 忠孝復興，約 20 分鐘，車資 NT$20"] }, image: "" }
-          ]
-        },
-        Day3: {
-          dateLabel: "3 / 16",
-          weather: { icon: "☀️", summary: "晴", morning: "18°C", noon: "25°C", night: "20°C" },
-          stepCount: "約 7000 步",
-          places: [
-            { title: "赤峰街散步", address: "台北市大同區赤峰街", time: "11:30 – 13:00", desc: "台北最有名的文青街區之一。", map: "https://maps.google.com/?q=台北市大同區赤峰街", photoSpot: "老屋街道", nearbyMilkTea: ["約翰紅茶公司（中山南西店） ・ 步行約6分鐘"], transit: { from: "Airbnb / 出發點", to: "赤峰街", methods: ["自由出發"] }, image: "" },
-            { title: "麵線町", address: "台北市大同區赤峰街49巷25號", time: "13:00 – 13:30", desc: "台北人氣麵線。", map: "https://maps.google.com/?q=台北市大同區赤峰街49巷25號", photoSpot: "小店門口", nearbyMilkTea: ["一沐日（中山店） ・ 步行約4分鐘"], transit: { from: "赤峰街", to: "麵線町", methods: ["步行：約 3 分鐘"] }, image: "" },
-            { title: "卜卜商店", address: "赤峰街一帶", time: "13:45 – 14:30", desc: "老屋茶屋咖啡廳。", map: "https://maps.google.com/?q=卜卜商店 台北", photoSpot: "老屋咖啡", nearbyMilkTea: [], transit: { from: "麵線町", to: "卜卜商店", methods: ["步行：約 5 分鐘"] }, image: "" },
-            { title: "Tart Club", address: "赤峰街一帶", time: "14:30 – 15:00", desc: "人氣蛋塔店。", map: "https://maps.google.com/?q=Tart Club Taipei", photoSpot: "蛋塔 close-up", nearbyMilkTea: [], transit: { from: "卜卜商店", to: "Tart Club", methods: ["步行：約 3 分鐘"] }, image: "" },
-            { title: "伊良可樂", address: "赤峰街一帶", time: "15:00 – 15:20", desc: "日本 craft cola。三人 share 一杯。", map: "https://maps.google.com/?q=伊良可樂 台北", photoSpot: "可樂杯", nearbyMilkTea: [], transit: { from: "Tart Club", to: "伊良可樂", methods: ["步行：約 2 分鐘"] }, image: "" },
-            { title: "映禪養生館", address: "南京三民一帶", time: "20:30 – 21:30", desc: "按摩放鬆。", map: "https://maps.google.com/?q=映禪養生館 台北", photoSpot: "按摩後放空照", nearbyMilkTea: [], transit: { from: "赤峰街", to: "映禪養生館", methods: ["大眾交通：中山 → 南京三民，約 12 分鐘，車資 NT$20", "Uber：約 10 分鐘，NT$120–150"] }, image: "" }
-          ],
-          milkTeaChallenge: ["約翰紅茶公司", "一沐日", "青山青茶", "五桐號"]
-        },
-        Day4: {
-          dateLabel: "3 / 17",
-          weather: { icon: "⛅", summary: "多雲", morning: "17°C", noon: "24°C", night: "19°C" },
-          stepCount: "約 4000 步",
-          places: [
-            { title: "M One Cafe", address: "台北市大安區仁愛路四段27巷6號", time: "已訂位 9:30 – 11:00", desc: "台北最有名的 brunch 店之一。", map: "https://maps.google.com/?q=台北市大安區仁愛路四段27巷6號", photoSpot: "Brunch 桌面", nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約8分鐘"], transit: { from: "Airbnb / 出發點", to: "M One Cafe", methods: ["自由出發"] }, image: "" },
-            { title: "三鶯之心", address: "新北市鶯歌區", time: "12:00 – 14:00", desc: "台版大峽谷打卡點。", map: "https://maps.google.com/?q=三鶯之心", photoSpot: "沙丘地形", nearbyMilkTea: [], transit: { from: "M One", to: "三鶯之心", methods: ["Uber：約 40–45 分鐘，NT$700–900", "大眾交通：忠孝復興 → 鶯歌，約 55–65 分鐘，車資 NT$45"] }, image: "" },
-            { title: "不老松足湯", address: "南京三民一帶", time: "16:30 – 18:00", desc: "按摩放鬆。", map: "https://maps.google.com/?q=不老松足湯 台北", photoSpot: "足湯 relax 照", nearbyMilkTea: [], transit: { from: "三鶯之心", to: "不老松足湯", methods: ["Uber：約 45 分鐘，NT$700–900", "大眾交通：鶯歌 → 南京三民，約 60 分鐘，車資 NT$50"] }, image: "" },
-            { title: "八條老宅麻辣鍋", address: "中山一帶", time: "已預約 20:00", desc: "台北人氣麻辣鍋。", map: "https://maps.google.com/?q=八條老宅麻辣鍋 台北", photoSpot: "老宅鍋物感", nearbyMilkTea: [], transit: { from: "不老松足湯", to: "八條老宅", methods: ["Uber：約 12 分鐘，NT$150–180", "大眾交通：南京三民 → 中山，約 15 分鐘，車資 NT$20"] }, image: "" }
-          ]
-        },
-        Day5: {
-          dateLabel: "3 / 18",
-          weather: { icon: "☁️", summary: "多雲", morning: "18°C", noon: "23°C", night: "20°C" },
-          stepCount: "約 3000 步",
-          places: [
-            { title: "好物 Spirit Cafe", address: "《想見你》拍攝地 café", time: "11:00 – 12:00", desc: "《想見你》拍攝地 café。", map: "https://maps.google.com/?q=好物 Spirit Cafe 台北", photoSpot: "劇集場景", nearbyMilkTea: ["一沐日（附近分店） ・ 步行約5分鐘"], transit: { from: "Airbnb / 出發點", to: "好物 Spirit Cafe", methods: ["自由出發"] }, image: "" },
-            { title: "回機場 ✈️", address: "桃園機場", time: "STARLUX JX235", desc: "最後衝刺後準備返港。", map: "https://maps.google.com/?q=桃園國際機場", photoSpot: "登機前最後自拍", nearbyMilkTea: [], transit: { from: "好物 Cafe", to: "機場", methods: ["Uber：約 40 分鐘，NT$900–1100", "大眾交通：捷運轉機場捷運，約 60–70 分鐘，車資 NT$160"] }, image: "" }
-          ]
-        }
-      };
+      const itinerary = {
+        pre: { label: "旅行前" },
+        Day1: {
+          dateLabel: "3 / 14",
+          weather: { icon: "☁️", summary: "多雲", morning: "17°C", noon: "23°C", night: "18°C" },
+          stepCount: "約 4500 – 5500 步",
+          places: [
+            {
+              title: "Airbnb Check-in",
+              address: "台北市松山區復興北路469號",
+              time: "15:00 – 15:30",
+              desc: "一下飛機先回 Airbnb 放行李。",
+              map: "https://maps.google.com/?q=台北市松山區復興北路469號",
+              photoSpot: "入住照",
+              nearbyMilkTea: ["龜記茗品（南京三民店） ・ 步行約6分鐘"],
+              transit: { from: "機場", to: "Airbnb", methods: ["Uber：約 40 分鐘", "大眾交通：機場捷運 + 捷運，約 55–65 分鐘"] },
+              image: ""
+            },
+            {
+              title: "Sakura 應援",
+              address: "110台北市信義區忠孝東路五段71巷26號",
+              time: "16:10 – 16:50",
+              desc: "LE SSERAFIM Sakura 的粉絲應援活動地點。很多粉絲會來拍照打卡。Silke + 吊哥哥必到。",
+              map: "https://maps.google.com/?q=110台北市信義區忠孝東路五段71巷26號",
+              photoSpot: "應援牆",
+              nearbyMilkTea: ["五桐號（永春店） ・ 步行約4分鐘"],
+              transit: { from: "Airbnb", to: "Sakura 應援", methods: ["Uber：約 12 分鐘，NT$130–160", "大眾交通：南京三民 → 永春，約 18 分鐘，車資 NT$20", "步行：約 45 分鐘"] },
+              image: ""
+            },
+            {
+              title: "東區散步",
+              address: "忠孝復興 / 忠孝敦化一帶",
+              time: "17:20 – 19:00",
+              desc: "Sakura 應援結束後，可以搭捷運到忠孝復興 / 忠孝敦化。東區有很多 café、選物店和手搖飲，很適合第一天慢慢逛。",
+              map: "https://maps.google.com/?q=忠孝復興",
+              photoSpot: "東區街景",
+              nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約5分鐘", "一沐日（忠孝店） ・ 步行約6分鐘", "約翰紅茶公司（忠孝店） ・ 步行約8分鐘"],
+              transit: { from: "Sakura 應援", to: "東區散步", methods: ["大眾交通：永春 → 忠孝復興，約 12 分鐘，車資 NT$20", "Uber：約 10 分鐘，NT$120–150", "步行：約 35 分鐘"] },
+              image: ""
+            },
+            {
+              title: "問鼎 ‧ 皇上吉祥 麻辣養生鍋",
+              address: "台北市大安區忠孝東路",
+              time: "預約 19:30",
+              desc: "宮廷風火鍋店，環境非常浮誇，很有旅行感。",
+              map: "https://maps.google.com/?q=問鼎 皇上吉祥 麻辣養生鍋 台北",
+              photoSpot: "宮廷風裝潢",
+              nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約6分鐘"],
+              transit: { from: "東區散步", to: "問鼎火鍋", methods: ["步行：約 6–8 分鐘", "Uber：約 3 分鐘，NT$90 起跳", "大眾交通：忠孝復興 → 忠孝敦化，約 4 分鐘，車資 NT$20"] },
+              image: ""
+            },
+            {
+              title: "東區夜散步",
+              address: "東區夜街",
+              time: "21:00 – 21:40",
+              desc: "吃完火鍋可以在東區附近慢慢散步消化一下。",
+              map: "https://maps.google.com/?q=東區夜街 台北",
+              photoSpot: "東區夜街",
+              nearbyMilkTea: ["一沐日（忠孝店） ・ 步行約5分鐘"],
+              transit: { from: "問鼎", to: "東區夜散步", methods: ["步行：約 5 分鐘"] },
+              image: ""
+            }
+          ],
+          returnTransit: { from: "東區", to: "Airbnb", methods: ["Uber：約 12 分鐘，NT$150–180", "大眾交通：忠孝敦化 → 南京三民，約 18 分鐘，車資 NT$20", "步行：約 55 分鐘"] }
+        },
+        Day2: {
+          dateLabel: "3 / 15",
+          weather: { icon: "☀️", summary: "晴", morning: "18°C", noon: "26°C", night: "21°C" },
+          stepCount: "約 5500 步",
+          note: "阿吊 12:00 – 18:00 去找親戚。今天行程比較 chill。",
+          places: [
+            { title: "PILLO Bakery & Cafe", address: "台北市中山區南京東路二段64巷24號", time: "已預約 12:00 – 13:00", desc: "評價非常高的 brunch café。", map: "https://maps.google.com/?q=台北市中山區南京東路二段64巷24號", photoSpot: "Brunch 桌面", nearbyMilkTea: ["龜記茗品（南京店） ・ 步行約5分鐘"], transit: { from: "Airbnb / 出發點", to: "PILLO Bakery & Cafe", methods: ["自由出發"] }, image: "" },
+            { title: "臺北流行音樂中心", address: "台北市南港區市民大道八段99號", time: "13:30 – 15:00", desc: "北流是台北很重要的音樂地標，建築非常有未來感。", map: "https://maps.google.com/?q=台北市南港區市民大道八段99號", photoSpot: "北流主建築 / 金屬幾何外觀", nearbyMilkTea: ["五桐號（南港店） ・ 步行約7分鐘"], transit: { from: "PILLO", to: "臺北流行音樂中心", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南京三民 → 南港展覽館，約 25 分鐘，車資 NT$25"] }, image: "" },
+            { title: "True Massage", address: "南京三民一帶", time: "16:30 – 18:00", desc: "頭部與肩頸按摩。", map: "https://maps.google.com/?q=True Massage Taipei", photoSpot: "放鬆 moment", nearbyMilkTea: ["龜記茗品（南京三民店） ・ 步行約5分鐘"], transit: { from: "北流", to: "True Massage", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南港 → 南京三民，約 25 分鐘，車資 NT$25"] }, image: "" },
+            { title: "青樓中式餐酒館", address: "忠孝復興一帶", time: "已預約 19:30 – 21:00", desc: "融合中式料理與調酒的餐酒館。", map: "https://maps.google.com/?q=青樓中式餐酒館 台北", photoSpot: "餐酒館氣氛照", nearbyMilkTea: [], transit: { from: "True Massage", to: "青樓", methods: ["Uber：約 15 分鐘，NT$180–220", "大眾交通：南京三民 → 忠孝復興，約 20 分鐘，車資 NT$20"] }, image: "" }
+          ]
+        },
+        Day3: {
+          dateLabel: "3 / 16",
+          weather: { icon: "☀️", summary: "晴", morning: "18°C", noon: "25°C", night: "20°C" },
+          stepCount: "約 7000 步",
+          places: [
+            { title: "赤峰街散步", address: "台北市大同區赤峰街", time: "11:30 – 13:00", desc: "台北最有名的文青街區之一。", map: "https://maps.google.com/?q=台北市大同區赤峰街", photoSpot: "老屋街道", nearbyMilkTea: ["約翰紅茶公司（中山南西店） ・ 步行約6分鐘"], transit: { from: "Airbnb / 出發點", to: "赤峰街", methods: ["自由出發"] }, image: "" },
+            { title: "麵線町", address: "台北市大同區赤峰街49巷25號", time: "13:00 – 13:30", desc: "台北人氣麵線。", map: "https://maps.google.com/?q=台北市大同區赤峰街49巷25號", photoSpot: "小店門口", nearbyMilkTea: ["一沐日（中山店） ・ 步行約4分鐘"], transit: { from: "赤峰街", to: "麵線町", methods: ["步行：約 3 分鐘"] }, image: "" },
+            { title: "卜卜商店", address: "赤峰街一帶", time: "13:45 – 14:30", desc: "老屋茶屋咖啡廳。", map: "https://maps.google.com/?q=卜卜商店 台北", photoSpot: "老屋咖啡", nearbyMilkTea: [], transit: { from: "麵線町", to: "卜卜商店", methods: ["步行：約 5 分鐘"] }, image: "" },
+            { title: "Tart Club", address: "赤峰街一帶", time: "14:30 – 15:00", desc: "人氣蛋塔店。", map: "https://maps.google.com/?q=Tart Club Taipei", photoSpot: "蛋塔 close-up", nearbyMilkTea: [], transit: { from: "卜卜商店", to: "Tart Club", methods: ["步行：約 3 分鐘"] }, image: "" },
+            { title: "伊良可樂", address: "赤峰街一帶", time: "15:00 – 15:20", desc: "日本 craft cola。三人 share 一杯。", map: "https://maps.google.com/?q=伊良可樂 台北", photoSpot: "可樂杯", nearbyMilkTea: [], transit: { from: "Tart Club", to: "伊良可樂", methods: ["步行：約 2 分鐘"] }, image: "" },
+            { title: "映禪養生館", address: "南京三民一帶", time: "20:30 – 21:30", desc: "按摩放鬆。", map: "https://maps.google.com/?q=映禪養生館 台北", photoSpot: "按摩後放空照", nearbyMilkTea: [], transit: { from: "赤峰街", to: "映禪養生館", methods: ["大眾交通：中山 → 南京三民，約 12 分鐘，車資 NT$20", "Uber：約 10 分鐘，NT$120–150"] }, image: "" }
+          ],
+          milkTeaChallenge: ["約翰紅茶公司", "一沐日", "青山青茶", "五桐號"]
+        },
+        Day4: {
+          dateLabel: "3 / 17",
+          weather: { icon: "⛅", summary: "多雲", morning: "17°C", noon: "24°C", night: "19°C" },
+          stepCount: "約 4000 步",
+          places: [
+            { title: "M One Cafe", address: "台北市大安區仁愛路四段27巷6號", time: "已訂位 9:30 – 11:00", desc: "台北最有名的 brunch 店之一。", map: "https://maps.google.com/?q=台北市大安區仁愛路四段27巷6號", photoSpot: "Brunch 桌面", nearbyMilkTea: ["青山青茶（忠孝復興店） ・ 步行約8分鐘"], transit: { from: "Airbnb / 出發點", to: "M One Cafe", methods: ["自由出發"] }, image: "" },
+            { title: "三鶯之心", address: "新北市鶯歌區", time: "12:00 – 14:00", desc: "台版大峽谷打卡點。", map: "https://maps.google.com/?q=三鶯之心", photoSpot: "沙丘地形", nearbyMilkTea: [], transit: { from: "M One", to: "三鶯之心", methods: ["Uber：約 40–45 分鐘，NT$700–900", "大眾交通：忠孝復興 → 鶯歌，約 55–65 分鐘，車資 NT$45"] }, image: "" },
+            { title: "不老松足湯", address: "南京三民一帶", time: "16:30 – 18:00", desc: "按摩放鬆。", map: "https://maps.google.com/?q=不老松足湯 台北", photoSpot: "足湯 relax 照", nearbyMilkTea: [], transit: { from: "三鶯之心", to: "不老松足湯", methods: ["Uber：約 45 分鐘，NT$700–900", "大眾交通：鶯歌 → 南京三民，約 60 分鐘，車資 NT$50"] }, image: "" },
+            { title: "八條老宅麻辣鍋", address: "中山一帶", time: "已預約 20:00", desc: "台北人氣麻辣鍋。", map: "https://maps.google.com/?q=八條老宅麻辣鍋 台北", photoSpot: "老宅鍋物感", nearbyMilkTea: [], transit: { from: "不老松足湯", to: "八條老宅", methods: ["Uber：約 12 分鐘，NT$150–180", "大眾交通：南京三民 → 中山，約 15 分鐘，車資 NT$20"] }, image: "" }
+          ]
+        },
+        Day5: {
+          dateLabel: "3 / 18",
+          weather: { icon: "☁️", summary: "多雲", morning: "18°C", noon: "23°C", night: "20°C" },
+          stepCount: "約 3000 步",
+          places: [
+            { title: "好物 Spirit Cafe", address: "《想見你》拍攝地 café", time: "11:00 – 12:00", desc: "《想見你》拍攝地 café。", map: "https://maps.google.com/?q=好物 Spirit Cafe 台北", photoSpot: "劇集場景", nearbyMilkTea: ["一沐日（附近分店） ・ 步行約5分鐘"], transit: { from: "Airbnb / 出發點", to: "好物 Spirit Cafe", methods: ["自由出發"] }, image: "" },
+            { title: "回機場 ✈️", address: "桃園機場", time: "STARLUX JX235", desc: "最後衝刺後準備返港。", map: "https://maps.google.com/?q=桃園國際機場", photoSpot: "登機前最後自拍", nearbyMilkTea: [], transit: { from: "好物 Cafe", to: "機場", methods: ["Uber：約 40 分鐘，NT$900–1100", "大眾交通：捷運轉機場捷運，約 60–70 分鐘，車資 NT$160"] }, image: "" }
+          ]
+        }
+      };
 
-      const walkingStats = [
-        { day: "Day1", steps: "4500" },
-        { day: "Day2", steps: "5500" },
-        { day: "Day3", steps: "7000" },
-        { day: "Day4", steps: "4000" },
-        { day: "Day5", steps: "3000" },
-      ];
+      const walkingStats = [
+        { day: "Day1", steps: "4500" },
+        { day: "Day2", steps: "5500" },
+        { day: "Day3", steps: "7000" },
+        { day: "Day4", steps: "4000" },
+        { day: "Day5", steps: "3000" },
+      ];
 
-      let state = loadState();
+      let state = loadState();
 let currentPage = "itinerary";
 let expenseFilter = "all";
 
-      function buildChecklistDefault() {
-        const checklistState = {};
-        Object.entries(packingChecklistData).forEach(([category, items]) => {
-          items.forEach((item) => {
-            checklistState[`${category}-${item}`] = false;
-          });
-        });
-        return checklistState;
-      }
+      function buildChecklistDefault() {
+        const checklistState = {};
+        Object.entries(packingChecklistData).forEach(([category, items]) => {
+          items.forEach((item) => {
+            checklistState[`${category}-${item}`] = false;
+          });
+        });
+        return checklistState;
+      }
 
-      function loadState() {
-        const checklistState = buildChecklistDefault();
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (!raw) return { ...defaultData, checklistState };
-          const saved = JSON.parse(raw);
-          return {
-            ...defaultData,
-            ...saved,
-            checklistState: { ...checklistState, ...(saved.checklistState || {}) },
-          };
-        } catch {
-          return { ...defaultData, checklistState };
-        }
-      }
+      function loadState() {
+        const checklistState = buildChecklistDefault();
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return { ...defaultData, checklistState };
+          const saved = JSON.parse(raw);
+          return {
+            ...defaultData,
+            ...saved,
+            checklistState: { ...checklistState, ...(saved.checklistState || {}) },
+          };
+        } catch {
+          return { ...defaultData, checklistState };
+        }
+      }
 
-     async function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  await db.collection("trips").doc(TRIP_CODE).set(state);
+     async function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  await db.collection("trips").doc(TRIP_CODE).set(state);
 }
 
 function subscribeTrip() {
-  db.collection("trips").doc(TRIP_CODE).onSnapshot((doc) => {
-    if (doc.exists) {
-      const remote = doc.data();
-      state = {
-        ...defaultData,
-        ...remote,
-        checklistState: {
-          ...buildChecklistDefault(),
-          ...(remote.checklistState || {})
-        }
-      };
-      renderAll();
-    } else {
-      db.collection("trips").doc(TRIP_CODE).set(state);
-    }
-  });
+  db.collection("trips").doc(TRIP_CODE).onSnapshot((doc) => {
+    if (doc.exists) {
+      const remote = doc.data();
+      state = {
+        ...defaultData,
+        ...remote,
+        checklistState: {
+          ...buildChecklistDefault(),
+          ...(remote.checklistState || {})
+        }
+      };
+      renderAll();
+    } else {
+      db.collection("trips").doc(TRIP_CODE).set(state);
+    }
+  });
 }
 
 function uid() {
-  return Date.now() + Math.floor(Math.random() * 1000);
+  return Date.now() + Math.floor(Math.random() * 1000);
 }
 
 function renderDayRow() {
-        const dayRow = document.getElementById("day-row");
-        const days = [
-          ["pre", "旅行前", "✓"],
-          ["Day1", "Day 1", "14"],
-          ["Day2", "Day 2", "15"],
-          ["Day3", "Day 3", "16"],
-          ["Day4", "Day 4", "17"],
-          ["Day5", "Day 5", "18"],
-        ];
+        const dayRow = document.getElementById("day-row");
+        const days = [
+          ["pre", "旅行前", "✓"],
+          ["Day1", "Day 1", "14"],
+          ["Day2", "Day 2", "15"],
+          ["Day3", "Day 3", "16"],
+          ["Day4", "Day 4", "17"],
+          ["Day5", "Day 5", "18"],
+        ];
 
-        dayRow.innerHTML = days
-          .map(([key, label, num]) => `
-            <button class="day-chip ${state.selectedDay === key ? "active" : ""}" data-day="${key}">
-              <div class="label">${label}</div>
-              <div class="num">${num}</div>
-            </button>
-          `)
-          .join("");
+        dayRow.innerHTML = days
+          .map(([key, label, num]) => `
+            <button class="day-chip ${state.selectedDay === key ? "active" : ""}" data-day="${key}">
+              <div class="label">${label}</div>
+              <div class="num">${num}</div>
+            </button>
+          `)
+          .join("");
 
-        dayRow.querySelectorAll(".day-chip").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            state.selectedDay = btn.dataset.day;
-            saveState();
-            renderAll();
-          });
-        });
-      }
+        dayRow.querySelectorAll(".day-chip").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            state.selectedDay = btn.dataset.day;
+            saveState();
+            renderAll();
+          });
+        });
+      }
 
-      function renderItineraryPage() {
-        const root = document.getElementById("page-itinerary");
+      function renderItineraryPage() {
+        const root = document.getElementById("page-itinerary");
 
-        if (state.selectedDay === "pre") {
-          const totalChecklist = Object.keys(state.checklistState).length;
-          const doneCount = Object.values(state.checklistState).filter(Boolean).length;
+        if (state.selectedDay === "pre") {
+          const totalChecklist = Object.keys(state.checklistState).length;
+          const doneCount = Object.values(state.checklistState).filter(Boolean).length;
 
-          root.innerHTML = `
-            <div class="section-card glass">
-              <div style="display:flex;flex-direction:column;gap:14px;">
-                <div>
-                  <h2 class="panel-title" style="margin-bottom:8px;">旅行前 Checklist</h2>
-                  <div style="font-size:.95rem;color:#8790a4;">執行李之前可以逐項 tick，唔怕漏帶重要嘢。</div>
-                </div>
-                <div class="soft-pill" style="background:linear-gradient(90deg,#ffe5f0,#dff5ff);width:fit-content;">已完成 ${doneCount} / ${totalChecklist}</div>
-              </div>
-            </div>
-            <div class="checklist-grid">
-              ${Object.entries(packingChecklistData)
-                .map(([category, items]) => `
-                  <div class="section-card glass check-group">
-                    <h3>${category}</h3>
-                    <div class="check-items">
-                      ${items
-                        .map((item) => {
-                          const key = `${category}-${item}`;
-                          const done = !!state.checklistState[key];
-                          return `
-                            <label class="check-item ${done ? "done" : ""}" data-check="${escapeHtml(key)}">
-                              <input type="checkbox" ${done ? "checked" : ""} style="width:18px;height:18px;accent-color:#ef78ab;flex-shrink:0;" />
-                              <span>${escapeHtml(item)}</span>
-                            </label>
-                          `;
-                        })
-                        .join("")}
-                    </div>
-                  </div>
-                `)
-                .join("")}
-            </div>
-          `;
+          root.innerHTML = `
+            <div class="section-card glass">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <h2 class="panel-title" style="margin-bottom:8px;">旅行前 Checklist</h2>
+                  <div style="font-size:.95rem;color:#8790a4;">執行李之前可以逐項 tick，唔怕漏帶重要嘢。</div>
+                </div>
+                <div class="soft-pill" style="background:linear-gradient(90deg,#ffe5f0,#dff5ff);width:fit-content;">已完成 ${doneCount} / ${totalChecklist}</div>
+              </div>
+            </div>
+            <div class="checklist-grid">
+              ${Object.entries(packingChecklistData)
+                .map(([category, items]) => `
+                  <div class="section-card glass check-group">
+                    <h3>${category}</h3>
+                    <div class="check-items">
+                      ${items
+                        .map((item) => {
+                          const key = `${category}-${item}`;
+                          const done = !!state.checklistState[key];
+                          return `
+                            <label class="check-item ${done ? "done" : ""}" data-check="${escapeHtml(key)}">
+                              <input type="checkbox" ${done ? "checked" : ""} style="width:18px;height:18px;accent-color:#ef78ab;flex-shrink:0;" />
+                              <span>${escapeHtml(item)}</span>
+                            </label>
+                          `;
+                        })
+                        .join("")}
+                    </div>
+                  </div>
+                `)
+                .join("")}
+            </div>
+          `;
 
-          root.querySelectorAll("[data-check]").forEach((item) => {
-            item.addEventListener("click", (e) => {
-              e.preventDefault();
-              const key = item.dataset.check;
-              state.checklistState[key] = !state.checklistState[key];
-              saveState();
-              renderItineraryPage();
-            });
-          });
-          return;
-        }
+          root.querySelectorAll("[data-check]").forEach((item) => {
+            item.addEventListener("click", (e) => {
+              e.preventDefault();
+              const key = item.dataset.check;
+              state.checklistState[key] = !state.checklistState[key];
+              saveState();
+              renderItineraryPage();
+            });
+          });
+          return;
+        }
 
-        const day = itinerary[state.selectedDay];
-        root.innerHTML = `
-          <div class="summary-card glass">
-            <div class="summary-head">
-              <div>
-                <div class="date-pill">${day.dateLabel}</div>
-                <h2>${state.selectedDay}</h2>
-                ${day.note ? `<div style="font-size:.95rem;color:#6c7488;line-height:1.7;">${escapeHtml(day.note)}</div>` : ""}
-              </div>
-              <div class="weather-box">
-                <div class="weather-main">
-                  <span style="font-size:1.4rem;">${day.weather.icon}</span>
-                  <span>${day.weather.summary}</span>
-                </div>
-                <div class="weather-sub">早：${day.weather.morning} ・ 午：${day.weather.noon} ・ 晚：${day.weather.night}</div>
-              </div>
-            </div>
-          </div>
+        const day = itinerary[state.selectedDay];
+        root.innerHTML = `
+          <div class="summary-card glass">
+            <div class="summary-head">
+              <div>
+                <div class="date-pill">${day.dateLabel}</div>
+                <h2>${state.selectedDay}</h2>
+                ${day.note ? `<div style="font-size:.95rem;color:#6c7488;line-height:1.7;">${escapeHtml(day.note)}</div>` : ""}
+              </div>
+              <div class="weather-box">
+                <div class="weather-main">
+                  <span style="font-size:1.4rem;">${day.weather.icon}</span>
+                  <span>${day.weather.summary}</span>
+                </div>
+                <div class="weather-sub">早：${day.weather.morning} ・ 午：${day.weather.noon} ・ 晚：${day.weather.night}</div>
+              </div>
+            </div>
+          </div>
 
-          <div class="itinerary-list">
-            ${day.places
-              .map((item, index) => `
-                <div class="itinerary-card glass">
-                  <div class="stop-tag">Stop ${index + 1}</div>
-                  <div class="time-row">⏰ <span>${escapeHtml(item.time)}</span></div>
-                  <h3>${escapeHtml(item.title)}</h3>
-                  <div class="desc">${escapeHtml(item.desc)}</div>
-                  <div class="info-blocks">
-                    <a class="info-line map-link" href="${item.map}" target="_blank" rel="noreferrer">
-                      <span>📍 ${escapeHtml(item.address)}</span>
-                    </a>
-                    <div class="photo-box">📷 打卡：${escapeHtml(item.photoSpot)}</div>
-                    
-                    ${item.nearbyMilkTea.length ? `
-                      <div class="milk-box">
-                        <div class="block-title">🧋 附近珍奶</div>
-                        <div class="milk-items">
-                          ${item.nearbyMilkTea.map((tea) => `<div>${escapeHtml(tea)}</div>`).join("")}
-                        </div>
-                      </div>
-                    ` : ""}
-                    <div class="transit-box">
-                      <div class="block-title">🚆 ${escapeHtml(item.transit.from)} → ${escapeHtml(item.transit.to)}</div>
-                      <div class="transit-items">
-                        ${item.transit.methods.map((m) => `<div class="pill">${escapeHtml(m)}</div>`).join("")}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              `)
-              .join("")}
-          </div>
-          ${day.milkTeaChallenge ? `
-            <div class="challenge-card glass">
-              <div class="block-title">🧋 赤峰街珍奶挑戰路線</div>
-              <div style="font-size:.9rem;color:#8a92a8;margin-bottom:12px;">600m 範圍，約 10 分鐘。</div>
-              <div class="challenge-items">
-                ${day.milkTeaChallenge.map((name, i) => `<div style="display:flex;align-items:center;gap:10px;"><span class="rank-dot">${i + 1}</span><span>${escapeHtml(name)}</span></div>`).join("")}
-              </div>
-            </div>
-          ` : ""}
-          ${day.returnTransit ? `
-            <div class="return-card glass">
-              <div class="block-title">🚆 ${escapeHtml(day.returnTransit.from)} → ${escapeHtml(day.returnTransit.to)}</div>
-              <div class="transit-items">
-                ${day.returnTransit.methods.map((m) => `<div class="pill">${escapeHtml(m)}</div>`).join("")}
-              </div>
-            </div>
-          ` : ""}
-          <div class="walk-card glass">🚶 今日步行量：${escapeHtml(day.stepCount)}</div>
-        `;
+          <div class="itinerary-list">
+            ${day.places
+              .map((item, index) => `
+                <div class="itinerary-card glass">
+                  <div class="stop-tag">Stop ${index + 1}</div>
+                  <div class="time-row">⏰ <span>${escapeHtml(item.time)}</span></div>
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <div class="desc">${escapeHtml(item.desc)}</div>
+                  <div class="info-blocks">
+                    <a class="info-line map-link" href="${item.map}" target="_blank" rel="noreferrer">
+                      <span>📍 ${escapeHtml(item.address)}</span>
+                    </a>
+                    <div class="photo-box">📷 打卡：${escapeHtml(item.photoSpot)}</div>
+                    
+                    ${item.nearbyMilkTea.length ? `
+                      <div class="milk-box">
+                        <div class="block-title">🧋 附近珍奶</div>
+                        <div class="milk-items">
+                          ${item.nearbyMilkTea.map((tea) => `<div>${escapeHtml(tea)}</div>`).join("")}
+                        </div>
+                      </div>
+                    ` : ""}
+                    <div class="transit-box">
+                      <div class="block-title">🚆 ${escapeHtml(item.transit.from)} → ${escapeHtml(item.transit.to)}</div>
+                      <div class="transit-items">
+                        ${item.transit.methods.map((m) => `<div class="pill">${escapeHtml(m)}</div>`).join("")}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `)
+              .join("")}
+          </div>
+          ${day.milkTeaChallenge ? `
+            <div class="challenge-card glass">
+              <div class="block-title">🧋 赤峰街珍奶挑戰路線</div>
+              <div style="font-size:.9rem;color:#8a92a8;margin-bottom:12px;">600m 範圍，約 10 分鐘。</div>
+              <div class="challenge-items">
+                ${day.milkTeaChallenge.map((name, i) => `<div style="display:flex;align-items:center;gap:10px;"><span class="rank-dot">${i + 1}</span><span>${escapeHtml(name)}</span></div>`).join("")}
+              </div>
+            </div>
+          ` : ""}
+          ${day.returnTransit ? `
+            <div class="return-card glass">
+              <div class="block-title">🚆 ${escapeHtml(day.returnTransit.from)} → ${escapeHtml(day.returnTransit.to)}</div>
+              <div class="transit-items">
+                ${day.returnTransit.methods.map((m) => `<div class="pill">${escapeHtml(m)}</div>`).join("")}
+              </div>
+            </div>
+          ` : ""}
+          <div class="walk-card glass">🚶 今日步行量：${escapeHtml(day.stepCount)}</div>
+        `;
 
-        root.querySelectorAll("input[type='file'][data-photo-day]").forEach((input) => {
-          input.addEventListener("change", (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = () => {
-              const dayKey = e.target.dataset.photoDay;
-              const idx = Number(e.target.dataset.photoIndex);
-              itinerary[dayKey].places[idx].image = reader.result;
-              renderItineraryPage();
-            };
-            reader.readAsDataURL(file);
-          });
-        });
-      }
+        root.querySelectorAll("input[type='file'][data-photo-day]").forEach((input) => {
+          input.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+              const dayKey = e.target.dataset.photoDay;
+              const idx = Number(e.target.dataset.photoIndex);
+              itinerary[dayKey].places[idx].image = reader.result;
+              renderItineraryPage();
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+      }
 
-    function renderExpensesPage() {
-  const root = document.getElementById("page-expenses");
+    function renderExpensesPage() {
+  const root = document.getElementById("page-expenses");
 
-  const filteredExpenses = state.expenses.filter((item) => {
-    if (expenseFilter === "all") return true;
-    if (expenseFilter === "cash") return item.paymentType === "cash";
-    if (expenseFilter === "card") return item.paymentType === "card";
-    return true;
-  });
+  const filteredExpenses = state.expenses.filter((item) => {
+    if (expenseFilter === "all") return true;
+    if (expenseFilter === "cash") return item.paymentType === "cash";
+    if (expenseFilter === "card") return item.paymentType === "card";
+    return true;
+  });
 
-  const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const cashSpent = state.expenses
-    .filter((item) => item.paymentType === "cash")
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const cardSpent = state.expenses
-    .filter((item) => item.paymentType === "card")
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const cashSpent = state.expenses
+    .filter((item) => item.paymentType === "cash")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  const cardSpent = state.expenses
+    .filter((item) => item.paymentType === "card")
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
 const paidByKrince = state.expenses
-  .filter((item) => item.payer === "Krince")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  .filter((item) => item.payer === "Krince")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
 const paidBySilke = state.expenses
-  .filter((item) => item.payer === "Silke")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  .filter((item) => item.payer === "Silke")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
 const paidByErnest = state.expenses
-  .filter((item) => item.payer === "Ernest")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  .filter((item) => item.payer === "Ernest")
+  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  root.innerHTML = `
-    <div class="expense-top-card">
-      <div class="expense-total-label">總支出 (TWD)</div>
-      <div class="expense-total-amount">$${totalSpent}</div>
-      <div class="expense-total-sub">已記錄 ${state.expenses.length} 筆支出</div>
+  root.innerHTML = `
+    <div class="expense-top-card">
+      <div class="expense-total-label">總支出 (TWD)</div>
+      <div class="expense-total-amount">$${totalSpent}</div>
+      <div class="expense-total-sub">已記錄 ${state.expenses.length} 筆支出</div>
 
-      <div class="expense-line"></div>
+      <div class="expense-line"></div>
 
-      <div class="expense-type-row">
-        <div class="expense-type-box">
-          <div class="label">💵 現金</div>
-          <div class="value">$${cashSpent}</div>
-        </div>
-        <div class="expense-type-box">
-          <div class="label">💳 信用卡</div>
-          <div class="value">$${cardSpent}</div>
-        </div>
-      </div>
-    </div>
+      <div class="expense-type-row">
+        <div class="expense-type-box">
+          <div class="label">💵 現金</div>
+          <div class="value">$${cashSpent}</div>
+        </div>
+        <div class="expense-type-box">
+          <div class="label">💳 信用卡</div>
+          <div class="value">$${cardSpent}</div>
+        </div>
+      </div>
+    </div>
 
-  <div class="people-paid-row">
+  <div class="people-paid-row">
 
-  <div class="people-paid-card">
-    <div class="name">Krince 已付</div>
-    <div class="money">$${paidByKrince}</div>
-  </div>
+  <div class="people-paid-card">
+    <div class="name">Krince 已付</div>
+    <div class="money">$${paidByKrince}</div>
+  </div>
 
-  <div class="people-paid-card">
-    <div class="name">Silke 已付</div>
-    <div class="money">$${paidBySilke}</div>
-  </div>
+  <div class="people-paid-card">
+    <div class="name">Silke 已付</div>
+    <div class="money">$${paidBySilke}</div>
+  </div>
 
-  <div class="people-paid-card">
-    <div class="name">Ernest 已付</div>
-    <div class="money">$${paidByErnest}</div>
-  </div>
+  <div class="people-paid-card">
+    <div class="name">Ernest 已付</div>
+    <div class="money">$${paidByErnest}</div>
+  </div>
 
 </div>
-   
+   
 
-    <div class="expense-header-row">
-      <h3 class="panel-title" style="margin:0;">支出明細</h3>
-      <button id="toggle-expense-form" class="btn">＋ 記一筆</button>
-    </div>
+    <div class="expense-header-row">
+      <h3 class="panel-title" style="margin:0;">支出明細</h3>
+      <button id="toggle-expense-form" class="btn">＋ 記一筆</button>
+    </div>
 
-    <div id="expense-form-wrap" class="section-card glass" style="display:none;">
-      <h3 class="panel-title">新增消費</h3>
-      <div class="input-grid four">
-        <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
-        <input id="expense-amount" class="input" placeholder="金額" />
-        <select id="expense-day" class="input">
-          <option>Day1</option><option>Day2</option><option>Day3</option><option>Day4</option><option>Day5</option>
-        </select>
-        <select id="expense-category" class="input">
-          <option>飲食</option><option>交通</option><option>購物</option><option>票券</option><option>珍奶</option>
-        </select>
-      </div>
+    <div id="expense-form-wrap" class="section-card glass" style="display:none;">
+      <h3 class="panel-title">新增消費</h3>
+      <div class="input-grid four">
+        <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
+        <input id="expense-amount" class="input" placeholder="金額" />
+        <select id="expense-day" class="input">
+          <option>Day1</option><option>Day2</option><option>Day3</option><option>Day4</option><option>Day5</option>
+        </select>
+        <select id="expense-category" class="input">
+          <option>飲食</option><option>交通</option><option>購物</option><option>票券</option><option>珍奶</option>
+        </select>
+      </div>
 
-      <div class="input-grid three" style="margin-top:12px;">
-        <select id="expense-payment-type" class="input">
-          <option value="cash">現金</option>
-          <option value="card">信用卡</option>
-        </select>
-   <select id="expense-payer" class="input">
-  <option>Krince</option>
-  <option>Silke</option>
-  <option>Ernest</option>
+      <div class="input-grid three" style="margin-top:12px;">
+        <select id="expense-payment-type" class="input">
+          <option value="cash">現金</option>
+          <option value="card">信用卡</option>
+        </select>
+   <select id="expense-payer" class="input">
+  <option>Krince</option>
+  <option>Silke</option>
+  <option>Ernest</option>
 </select>
-        <select id="expense-split-count" class="input">
-          <option value="1">自己</option>
-          <option value="2">2人平分</option>
-          <option value="3">3人平分</option>
-        </select>
-      </div>
+        <select id="expense-split-count" class="input">
+          <option value="1">自己</option>
+          <option value="2">2人平分</option>
+          <option value="3">3人平分</option>
+        </select>
+      </div>
 
-      <div style="margin-top:12px;">
-        <button id="add-expense" class="btn">加入記帳</button>
-      </div>
-    </div>
+      <div style="margin-top:12px;">
+        <button id="add-expense" class="btn">加入記帳</button>
+      </div>
+    </div>
 
-    <div class="expense-filter-row">
-      <button class="expense-filter-btn ${expenseFilter === "all" ? "active" : ""}" data-expense-filter="all">全部</button>
-      <button class="expense-filter-btn ${expenseFilter === "cash" ? "active" : ""}" data-expense-filter="cash">現金</button>
-      <button class="expense-filter-btn ${expenseFilter === "card" ? "active" : ""}" data-expense-filter="card">信用卡</button>
-    </div>
+    <div class="expense-filter-row">
+      <button class="expense-filter-btn ${expenseFilter === "all" ? "active" : ""}" data-expense-filter="all">全部</button>
+      <button class="expense-filter-btn ${expenseFilter === "cash" ? "active" : ""}" data-expense-filter="cash">現金</button>
+      <button class="expense-filter-btn ${expenseFilter === "card" ? "active" : ""}" data-expense-filter="card">信用卡</button>
+    </div>
 
-    <div class="record-list">
-      ${
-        filteredExpenses.length === 0
-          ? `<div class="section-card glass" style="text-align:center;color:#8a92a8;">沒有相關的支出紀錄</div>`
-          : filteredExpenses
-              .map((item) => {
-                const splitCount = Number(item.splitCount || 1);
-                const eachShare = Math.round(Number(item.amount || 0) / splitCount);
-                const paymentText = item.paymentType === "cash" ? "現金" : "信用卡";
-                const splitText =
-                  splitCount === 1 ? "自己買，不用 split" : `${splitCount}人平分 → 每人 $${eachShare}`;
-                return `
-                  <div class="expense-entry-card">
-                    <div class="expense-entry-top">
-                      <div>
-                        <div class="expense-entry-title">${escapeHtml(item.title)}</div>
-                        <div class="expense-entry-meta">${item.day} · ${paymentText} · ${escapeHtml(item.payer)} 先付</div>
-                      </div>
-                      <div class="expense-entry-amount">$${item.amount}</div>
-                    </div>
-                    <div class="expense-entry-note">
-                      ${splitText}<br>
-                      分類：${escapeHtml(item.category)}
-                    </div>
-                    <div class="expense-actions">
-                      <button class="btn-outline btn" data-remove-expense="${item.id}">刪除</button>
-                    </div>
-                  </div>
-                `;
-              })
-              .join("")
-      }
-    </div>
-  `;
+    <div class="record-list">
+      ${
+        filteredExpenses.length === 0
+          ? `<div class="section-card glass" style="text-align:center;color:#8a92a8;">沒有相關的支出紀錄</div>`
+          : filteredExpenses
+              .map((item) => {
+                const splitCount = Number(item.splitCount || 1);
+                const eachShare = Math.round(Number(item.amount || 0) / splitCount);
+                const paymentText = item.paymentType === "cash" ? "現金" : "信用卡";
+                const splitText =
+                  splitCount === 1 ? "自己買，不用 split" : `${splitCount}人平分 → 每人 $${eachShare}`;
+                return `
+                  <div class="expense-entry-card">
+                    <div class="expense-entry-top">
+                      <div>
+                        <div class="expense-entry-title">${escapeHtml(item.title)}</div>
+                        <div class="expense-entry-meta">${item.day} · ${paymentText} · ${escapeHtml(item.payer)} 先付</div>
+                      </div>
+                      <div class="expense-entry-amount">$${item.amount}</div>
+                    </div>
+                    <div class="expense-entry-note">
+                      ${splitText}<br>
+                      分類：${escapeHtml(item.category)}
+                    </div>
+                    <div class="expense-actions">
+                      <button class="btn-outline btn" data-remove-expense="${item.id}">刪除</button>
+                    </div>
+                  </div>
+                `;
+              })
+              .join("")
+      }
+    </div>
+  `;
 
-  document.getElementById("toggle-expense-form").addEventListener("click", () => {
-    const form = document.getElementById("expense-form-wrap");
-    form.style.display = form.style.display === "none" ? "block" : "none";
-  });
+  document.getElementById("toggle-expense-form").addEventListener("click", () => {
+    const form = document.getElementById("expense-form-wrap");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+  });
 
-  const addBtn = document.getElementById("add-expense");
-  if (addBtn) {
-    addBtn.addEventListener("click", () => {
-      const title = document.getElementById("expense-title").value.trim();
-      const amount = document.getElementById("expense-amount").value.trim();
-      const day = document.getElementById("expense-day").value;
-      const category = document.getElementById("expense-category").value;
-      const paymentType = document.getElementById("expense-payment-type").value;
-      const payer = document.getElementById("expense-payer").value;
-      const splitCount = document.getElementById("expense-split-count").value;
+  const addBtn = document.getElementById("add-expense");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const title = document.getElementById("expense-title").value.trim();
+      const amount = document.getElementById("expense-amount").value.trim();
+      const day = document.getElementById("expense-day").value;
+      const category = document.getElementById("expense-category").value;
+      const paymentType = document.getElementById("expense-payment-type").value;
+      const payer = document.getElementById("expense-payer").value;
+      const splitCount = document.getElementById("expense-split-count").value;
 
-      if (!title && !amount) {
-      alert("請輸入項目名稱及金額");
-      return;
-      }
+      if (!title && !amount) {
+      alert("請輸入項目名稱及金額");
+      return;
+      }
 
-      if (!title) {
-      alert("請輸入項目名稱");
-      return;
-      }
+      if (!title) {
+      alert("請輸入項目名稱");
+      return;
+      }
 
-      if (!amount) {
-      alert("請輸入金額");
-      return;
-      }
-      
-      const amountValue = Number(amount);
-      if (Number.isNaN(amountValue) || amountValue <= 0) {
-      alert("請輸入有效金額");
-      return;
-      }
+      if (!amount) {
+      alert("請輸入金額");
+      return;
+      }
+      
+      const amountValue = Number(amount);
+      if (Number.isNaN(amountValue) || amountValue <= 0) {
+      alert("請輸入有效金額");
+      return;
+      }
 
 
-      state.expenses.push({
-        id: uid(),
-        title,
-        amount: Number(amount),
-        day,
-        category,
-        paymentType,
-        payer,
-        splitCount: Number(splitCount),
-      });
+      state.expenses.push({
+        id: uid(),
+        title,
+        amount: Number(amount),
+        day,
+        category,
+        paymentType,
+        payer,
+        splitCount: Number(splitCount),
+      });
 
-      saveState();
-      renderExpensesPage();
-    });
-  }
+      saveState();
+      renderExpensesPage();
+    });
+  }
 
-  root.querySelectorAll("[data-expense-filter]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      expenseFilter = btn.dataset.expenseFilter;
-      renderExpensesPage();
-    });
-  });
+  root.querySelectorAll("[data-expense-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      expenseFilter = btn.dataset.expenseFilter;
+      renderExpensesPage();
+    });
+  });
 
-  root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (!confirm("確定要刪除呢條記錄？")) return;
-    const id = Number(btn.dataset.removeExpense);
-    state.expenses = state.expenses.filter(item => item.id !== id);
-    saveState();
-    renderExpensesPage();
-    });
-  });
+  root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    if (!confirm("確定要刪除呢條記錄？")) return;
+    const id = Number(btn.dataset.removeExpense);
+    state.expenses = state.expenses.filter(item => item.id !== id);
+    saveState();
+    renderExpensesPage();
+    });
+  });
 }
-      function renderShoppingPage() {
-        const root = document.getElementById("page-shopping");
-        const boughtCount = state.shoppingList.filter((item) => item.bought).length;
+      function renderShoppingPage() {
+        const root = document.getElementById("page-shopping");
+        const boughtCount = state.shoppingList.filter((item) => item.bought).length;
 
-        root.innerHTML = `
-          <div class="stats-grid">
-            <div class="mini-card glass"><small>總項目</small><strong>${state.shoppingList.length}</strong></div>
-            <div class="mini-card glass"><small>已買</small><strong>${boughtCount}</strong></div>
-            <div class="mini-card glass"><small>未買</small><strong>${state.shoppingList.length - boughtCount}</strong></div>
-          </div>
+        root.innerHTML = `
+          <div class="stats-grid">
+            <div class="mini-card glass"><small>總項目</small><strong>${state.shoppingList.length}</strong></div>
+            <div class="mini-card glass"><small>已買</small><strong>${boughtCount}</strong></div>
+            <div class="mini-card glass"><small>未買</small><strong>${state.shoppingList.length - boughtCount}</strong></div>
+          </div>
 
-          <div class="section-card glass" style="margin-top: 16px;">
-            <h3 class="panel-title">新增購物項目</h3>
-            <div class="input-grid three">
-              <input id="shopping-name" class="input" placeholder="例如：鳳梨酥 / 面膜 / 小廢包" />
-              <select id="shopping-area" class="input">
-                <option>手信</option><option>藥妝</option><option>演出</option><option>穿搭</option><option>雜貨</option>
-              </select>
-              <button id="add-shopping" class="btn">加入清單</button>
-            </div>
-          </div>
+          <div class="section-card glass" style="margin-top: 16px;">
+            <h3 class="panel-title">新增購物項目</h3>
+            <div class="input-grid three">
+              <input id="shopping-name" class="input" placeholder="例如：鳳梨酥 / 面膜 / 小廢包" />
+              <select id="shopping-area" class="input">
+                <option>手信</option><option>藥妝</option><option>演出</option><option>穿搭</option><option>雜貨</option>
+              </select>
+              <button id="add-shopping" class="btn">加入清單</button>
+            </div>
+          </div>
 
-          <div class="record-list">
-            ${state.shoppingList
-              .map((item) => `
-                <div class="row-card glass">
-                  <div class="row-top">
-                    <div style="display:flex;align-items:center;gap:10px;">
-                      <button class="btn-outline btn" data-toggle-shopping="${item.id}">${item.bought ? "✓" : "○"}</button>
-                      <div style="flex:1;">
-                        <div style="font-weight:800;color:var(--text-strong);${item.bought ? "text-decoration:line-through;color:#a2a9bb;" : ""}">${escapeHtml(item.name)}</div>
-                        <div style="font-size:.92rem;color:#8a92a8;">${escapeHtml(item.area)}</div>
-                        <div style="margin-top:12px;display:grid;gap:10px;">
-                          <label class="btn-outline btn" style="width:fit-content;cursor:pointer;">新增圖片
-                            <input type="file" accept="image/*" data-shopping-photo="${item.id}" class="hidden" />
-                          </label>
-                          ${item.image ? `<div class="photo-preview" style="max-width:260px;"><img src="${item.image}" alt="${escapeHtml(item.name)}" /></div>` : ""}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button class="btn-outline btn" data-remove-shopping="${item.id}">刪除</button>
-                </div>
-              `)
-              .join("")}
-          </div>
-        `;
+          <div class="record-list">
+            ${state.shoppingList
+              .map((item) => `
+                <div class="row-card glass">
+                  <div class="row-top">
+                    <div style="display:flex;align-items:center;gap:10px;">
+                      <button class="btn-outline btn" data-toggle-shopping="${item.id}">${item.bought ? "✓" : "○"}</button>
+                      <div style="flex:1;">
+                        <div style="font-weight:800;color:var(--text-strong);${item.bought ? "text-decoration:line-through;color:#a2a9bb;" : ""}">${escapeHtml(item.name)}</div>
+                        <div style="font-size:.92rem;color:#8a92a8;">${escapeHtml(item.area)}</div>
+                        <div style="margin-top:12px;display:grid;gap:10px;">
+                          <label class="btn-outline btn" style="width:fit-content;cursor:pointer;">新增圖片
+                            <input type="file" accept="image/*" data-shopping-photo="${item.id}" class="hidden" />
+                          </label>
+                          ${item.image ? `<div class="photo-preview" style="max-width:260px;"><img src="${item.image}" alt="${escapeHtml(item.name)}" /></div>` : ""}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="btn-outline btn" data-remove-shopping="${item.id}">刪除</button>
+                </div>
+              `)
+              .join("")}
+          </div>
+        `;
 
-        document.getElementById("add-shopping").addEventListener("click", () => {
-          const name = document.getElementById("shopping-name").value.trim();
-          const area = document.getElementById("shopping-area").value;
-          
-            if (!name && !area) {
-            alert("請填寫購物項目名稱及地區");
-            return;
-           }
+        document.getElementById("add-shopping").addEventListener("click", () => {
+          const name = document.getElementById("shopping-name").value.trim();
+          const area = document.getElementById("shopping-area").value;
+          
+            if (!name && !area) {
+            alert("請填寫購物項目名稱及地區");
+            return;
+           }
 
-          if (!name) {
-          alert("請填寫購物項目名稱");
-          return;
-          }
+          if (!name) {
+          alert("請填寫購物項目名稱");
+          return;
+          }
 
-        if (!area) {
-          alert("請選擇地區");
-          return;
-        }
-          state.shoppingList.push({ id: uid(), name, area, bought: false, image: "" });
-          saveState();
-          renderShoppingPage();
-        });
+        if (!area) {
+          alert("請選擇地區");
+          return;
+        }
+          state.shoppingList.push({ id: uid(), name, area, bought: false, image: "" });
+          saveState();
+          renderShoppingPage();
+        });
 
-        root.querySelectorAll("[data-toggle-shopping]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.toggleShopping);
-            state.shoppingList = state.shoppingList.map((item) => item.id === id ? { ...item, bought: !item.bought } : item);
-            saveState();
-            renderShoppingPage();
-          });
-        });
+        root.querySelectorAll("[data-toggle-shopping]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = Number(btn.dataset.toggleShopping);
+            state.shoppingList = state.shoppingList.map((item) => item.id === id ? { ...item, bought: !item.bought } : item);
+            saveState();
+            renderShoppingPage();
+          });
+        });
 
-        root.querySelectorAll("[data-shopping-photo]").forEach((input) => {
-          input.addEventListener("change", (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file) return;
-            const id = Number(e.target.dataset.shoppingPhoto);
-            const reader = new FileReader();
-            reader.onload = () => {
-              state.shoppingList = state.shoppingList.map((item) => item.id === id ? { ...item, image: reader.result } : item);
-              saveState();
-              renderShoppingPage();
-            };
-            reader.readAsDataURL(file);
-          });
-        });
+        root.querySelectorAll("[data-shopping-photo]").forEach((input) => {
+          input.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            const id = Number(e.target.dataset.shoppingPhoto);
+            const reader = new FileReader();
+            reader.onload = () => {
+              state.shoppingList = state.shoppingList.map((item) => item.id === id ? { ...item, image: reader.result } : item);
+              saveState();
+              renderShoppingPage();
+            };
+            reader.readAsDataURL(file);
+          });
+        });
 
-        root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const id = Number(btn.dataset.removeShopping);
-            const confirmed = window.confirm("你係咪真係要刪除呢件 shopping item？");
-            if (!confirmed) return;
-            state.shoppingList = state.shoppingList.filter((item) => item.id !== id);
-            saveState();
-            renderShoppingPage();
-          });
-        });
-      }
+        root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const id = Number(btn.dataset.removeShopping);
+            const confirmed = window.confirm("你係咪真係要刪除呢件 shopping item？");
+            if (!confirmed) return;
+            state.shoppingList = state.shoppingList.filter((item) => item.id !== id);
+            saveState();
+            renderShoppingPage();
+          });
+        });
+      }
 
-      function renderMilkTeaPage() {
-        const root = document.getElementById("page-milktea");
-        const ranking = [...state.milkTeaSpots].sort((a, b) => (b.rating !== a.rating ? b.rating - a.rating : (Number(a.price) || 9999) - (Number(b.price) || 9999)));
-        const king = ranking.find((item) => item.rating > 0);
+      function renderMilkTeaPage() {
+        const root = document.getElementById("page-milktea");
+        const ranking = [...state.milkTeaSpots].sort((a, b) => (b.rating !== a.rating ? b.rating - a.rating : (Number(a.price) || 9999) - (Number(b.price) || 9999)));
+        const king = ranking.find((item) => item.rating > 0);
 
-        root.innerHTML = `
-          ${king ? `
-            <div class="king-card glass">
-              <div class="king-title">👑 珍奶之王</div>
-              <h2>#1 ${escapeHtml(king.shop)}</h2>
-              <div style="margin-top:8px;font-size:.95rem;">${king.drink ? `目前領先飲品：${escapeHtml(king.drink)}` : "目前衝上第一位"}</div>
-            </div>
-          ` : ""}
+        root.innerHTML = `
+          ${king ? `
+            <div class="king-card glass">
+              <div class="king-title">👑 珍奶之王</div>
+              <h2>#1 ${escapeHtml(king.shop)}</h2>
+              <div style="margin-top:8px;font-size:.95rem;">${king.drink ? `目前領先飲品：${escapeHtml(king.drink)}` : "目前衝上第一位"}</div>
+            </div>
+          ` : ""}
 
-          <div class="section-card glass">
-            <h3 class="panel-title">新增珍奶店</h3>
-            <div class="input-grid two">
-              <select id="tea-shop" class="input">
-                <option value="">請選擇珍奶地圖名單</option>
-                ${milkTeaMapList.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("")}
-              </select>
-              <input id="tea-custom-shop" class="input hidden" placeholder="輸入偶遇到的好店名字" />
-              <input id="tea-drink" class="input" placeholder="你買咗咩，例如 烏龍珍奶" />
-              <input id="tea-price" class="input" placeholder="價錢 NT$" />
-              <textarea id="tea-notes" class="input" placeholder="備註（可留空）"></textarea>
-            </div>
-            <div style="margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:#fff4f9;padding:14px 16px;border-radius:18px;">
-              <span style="font-size:.92rem;font-weight:700;">先比個初始評分</span>
-              <div id="new-tea-stars" class="stars"></div>
-            </div>
-            <div style="margin-top:12px;"><button id="add-tea" class="btn">加入排行榜</button></div>
-          </div>
+          <div class="section-card glass">
+            <h3 class="panel-title">新增珍奶店</h3>
+            <div class="input-grid two">
+              <select id="tea-shop" class="input">
+                <option value="">請選擇珍奶地圖名單</option>
+                ${milkTeaMapList.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join("")}
+              </select>
+              <input id="tea-custom-shop" class="input hidden" placeholder="輸入偶遇到的好店名字" />
+              <input id="tea-drink" class="input" placeholder="你買咗咩，例如 烏龍珍奶" />
+              <input id="tea-price" class="input" placeholder="價錢 NT$" />
+              <textarea id="tea-notes" class="input" placeholder="備註（可留空）"></textarea>
+            </div>
+            <div style="margin-top:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:#fff4f9;padding:14px 16px;border-radius:18px;">
+              <span style="font-size:.92rem;font-weight:700;">先比個初始評分</span>
+              <div id="new-tea-stars" class="stars"></div>
+            </div>
+            <div style="margin-top:12px;"><button id="add-tea" class="btn">加入排行榜</button></div>
+          </div>
 
-          <div class="milk-list">
-            ${ranking
-              .map((spot, index) => `
-                <div class="row-card glass rank-item">
-                  <div class="row-top">
-                    <div class="rank-head">
-                      <div class="rank-dot">${index + 1}</div>
-                      <strong style="font-size:1.08rem;color:var(--text-strong);">${escapeHtml(spot.shop)}</strong>
-                      ${index === 0 && spot.rating > 0 ? `<span class="king-badge">珍奶之王</span>` : ""}
-                    </div>
-                    <div style="font-size:.95rem;line-height:1.7;">${spot.drink ? `你買咗：${escapeHtml(spot.drink)}` : "未寫飲品"}<br />價錢：NT$ ${escapeHtml(spot.price || "--")} ${spot.notes ? `<br />備註：${escapeHtml(spot.notes)}` : ""}</div>
-                  </div>
-                  <div class="row-side">
-                    <div class="stars" data-rating-id="${spot.id}"></div>
-                    <input class="input" data-edit-drink="${spot.id}" value="${escapeAttr(spot.drink || "")}" placeholder="更新飲品名稱" />
-                    <input class="input" data-edit-price="${spot.id}" value="${escapeAttr(spot.price || "")}" placeholder="更新價錢" />
-                    <button class="btn-outline btn" data-remove-tea="${spot.id}">刪除</button>
-                  </div>
-                </div>
-              `)
-              .join("")}
-          </div>
-        `;
+          <div class="milk-list">
+            ${ranking
+              .map((spot, index) => `
+                <div class="row-card glass rank-item">
+                  <div class="row-top">
+                    <div class="rank-head">
+                      <div class="rank-dot">${index + 1}</div>
+                      <strong style="font-size:1.08rem;color:var(--text-strong);">${escapeHtml(spot.shop)}</strong>
+                      ${index === 0 && spot.rating > 0 ? `<span class="king-badge">珍奶之王</span>` : ""}
+                    </div>
+                    <div style="font-size:.95rem;line-height:1.7;">${spot.drink ? `你買咗：${escapeHtml(spot.drink)}` : "未寫飲品"}<br />價錢：NT$ ${escapeHtml(spot.price || "--")} ${spot.notes ? `<br />備註：${escapeHtml(spot.notes)}` : ""}</div>
+                  </div>
+                  <div class="row-side">
+                    <div class="stars" data-rating-id="${spot.id}"></div>
+                    <input class="input" data-edit-drink="${spot.id}" value="${escapeAttr(spot.drink || "")}" placeholder="更新飲品名稱" />
+                    <input class="input" data-edit-price="${spot.id}" value="${escapeAttr(spot.price || "")}" placeholder="更新價錢" />
+                    <button class="btn-outline btn" data-remove-tea="${spot.id}">刪除</button>
+                  </div>
+                </div>
+              `)
+              .join("")}
+          </div>
+        `;
 
-        let newTeaRating = 0;
-        const newStarsRoot = document.getElementById("new-tea-stars");
-        renderStars(newStarsRoot, newTeaRating, (value) => {
-          newTeaRating = value;
-          renderStars(newStarsRoot, newTeaRating, (v) => {
-            newTeaRating = v;
-            renderStars(newStarsRoot, newTeaRating, arguments.callee);
-          });
-        });
+        let newTeaRating = 0;
+        const newStarsRoot = document.getElementById("new-tea-stars");
+        renderStars(newStarsRoot, newTeaRating, (value) => {
+          newTeaRating = value;
+          renderStars(newStarsRoot, newTeaRating, (v) => {
+            newTeaRating = v;
+            renderStars(newStarsRoot, newTeaRating, arguments.callee);
+          });
+        });
 
-        const teaShop = document.getElementById("tea-shop");
-        const teaCustom = document.getElementById("tea-custom-shop");
-        const teaDrink = document.getElementById("tea-drink");
+        const teaShop = document.getElementById("tea-shop");
+        const teaCustom = document.getElementById("tea-custom-shop");
+        const teaDrink = document.getElementById("tea-drink");
 
-        teaShop.addEventListener("change", () => {
-          const isCustom = teaShop.value === "新增別家";
-          teaCustom.classList.toggle("hidden", !isCustom);
-          teaDrink.placeholder = isCustom ? "你買咗咩，例如 絲襪奶茶 / 熟成紅茶歐蕾" : "你買咗咩，例如 烏龍珍奶";
-        });
+        teaShop.addEventListener("change", () => {
+          const isCustom = teaShop.value === "新增別家";
+          teaCustom.classList.toggle("hidden", !isCustom);
+          teaDrink.placeholder = isCustom ? "你買咗咩，例如 絲襪奶茶 / 熟成紅茶歐蕾" : "你買咗咩，例如 烏龍珍奶";
+        });
 
-        document.getElementById("add-tea").addEventListener("click", () => {
-          const shopValue = teaShop.value;
-          const actualShop = shopValue === "新增別家" ? teaCustom.value.trim() : shopValue;
-          const drink = teaDrink.value.trim();
-          const price = document.getElementById("tea-price").value.trim();
-          const notes = document.getElementById("tea-notes").value.trim();
-            if (!actualShop && !drink && !price) {
-    alert("請填寫店名、飲品及價錢");
-    return;
-  }
+        document.getElementById("add-tea").addEventListener("click", () => {
+          const shopValue = teaShop.value;
+          const actualShop = shopValue === "新增別家" ? teaCustom.value.trim() : shopValue;
+          const drink = teaDrink.value.trim();
+          const price = document.getElementById("tea-price").value.trim();
+          const notes = document.getElementById("tea-notes").value.trim();
+            if (!actualShop && !drink && !price) {
+    alert("請填寫店名、飲品及價錢");
+    return;
+  }
 
-  if (!actualShop) {
-    alert("請選擇或輸入店名");
-    return;
-  }
+  if (!actualShop) {
+    alert("請選擇或輸入店名");
+    return;
+  }
 
-  if (!drink) {
-    alert("請輸入飲品名稱");
-    return;
-  }
+  if (!drink) {
+    alert("請輸入飲品名稱");
+    return;
+  }
 
-  if (!price) {
-    alert("請輸入價錢");
-    return;
-  }
+  if (!price) {
+    alert("請輸入價錢");
+    return;
+  }
 
-  const priceValue = Number(price);
-  if (Number.isNaN(priceValue) || priceValue <= 0) {
-    alert("請輸入有效價錢");
-    return;
-  }
-          state.milkTeaSpots.push({ id: uid(), shop: actualShop, drink, price, rating: newTeaRating, notes });
-          saveState();
-          renderMilkTeaPage();
-        });
+  const priceValue = Number(price);
+  if (Number.isNaN(priceValue) || priceValue <= 0) {
+    alert("請輸入有效價錢");
+    return;
+  }
+          state.milkTeaSpots.push({ id: uid(), shop: actualShop, drink, price, rating: newTeaRating, notes });
+          saveState();
+          renderMilkTeaPage();
+        });
 
-        ranking.forEach((spot) => {
-          const starsRoot = root.querySelector(`[data-rating-id='${spot.id}']`);
-          renderStars(starsRoot, spot.rating, (value) => {
-            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === spot.id ? { ...item, rating: value } : item);
-            saveState();
-            renderMilkTeaPage();
-          });
-        });
+        ranking.forEach((spot) => {
+          const starsRoot = root.querySelector(`[data-rating-id='${spot.id}']`);
+          renderStars(starsRoot, spot.rating, (value) => {
+            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === spot.id ? { ...item, rating: value } : item);
+            saveState();
+            renderMilkTeaPage();
+          });
+        });
 
-        root.querySelectorAll("[data-edit-drink]").forEach((input) => {
-          input.addEventListener("input", () => {
-            const id = Number(input.dataset.editDrink);
-            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === id ? { ...item, drink: input.value } : item);
-            saveState();
-          });
-        });
+        root.querySelectorAll("[data-edit-drink]").forEach((input) => {
+          input.addEventListener("input", () => {
+            const id = Number(input.dataset.editDrink);
+            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === id ? { ...item, drink: input.value } : item);
+            saveState();
+          });
+        });
 
-        root.querySelectorAll("[data-edit-price]").forEach((input) => {
-          input.addEventListener("input", () => {
-            const id = Number(input.dataset.editPrice);
-            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === id ? { ...item, price: input.value } : item);
-            saveState();
-          });
-        });
+        root.querySelectorAll("[data-edit-price]").forEach((input) => {
+          input.addEventListener("input", () => {
+            const id = Number(input.dataset.editPrice);
+            state.milkTeaSpots = state.milkTeaSpots.map((item) => item.id === id ? { ...item, price: input.value } : item);
+            saveState();
+          });
+        });
 
-        root.querySelectorAll("[data-remove-tea]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-                const id = Number(btn.dataset.removeTea);
-                const confirmed = window.confirm("你係咪真係要刪除呢間奶茶店紀錄？");
-                if (!confirmed) return;
+        root.querySelectorAll("[data-remove-tea]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+                const id = Number(btn.dataset.removeTea);
+                const confirmed = window.confirm("你係咪真係要刪除呢間奶茶店紀錄？");
+                if (!confirmed) return;
 
-            state.milkTeaSpots = state.milkTeaSpots.filter((item) => item.id !== id);
-            saveState();
-            renderMilkTeaPage();
-          });
-        });
-      }
+            state.milkTeaSpots = state.milkTeaSpots.filter((item) => item.id !== id);
+            saveState();
+            renderMilkTeaPage();
+          });
+        });
+      }
 
-      function renderInfoPage() {
-        const root = document.getElementById("page-info");
-        root.innerHTML = `
-          <div class="section-card glass">
-            <h3 class="panel-title">旅程資訊</h3>
-            <div style="display:grid;gap:12px;font-size:.95rem;line-height:1.75;">
-              <div><strong style="color:var(--text-strong);">住宿：</strong>Airbnb</div>
-              <a class="info-line map-link" href="https://maps.google.com/?q=${encodeURIComponent("台北市松山區復興北路469號")}" target="_blank" rel="noreferrer"><span>📍 台北市松山區復興北路469號</span></a>
-              <div><strong style="color:var(--text-strong);">去程：</strong>STARLUX JX234</div>
-              <div><strong style="color:var(--text-strong);">回程：</strong>STARLUX JX235</div>
-            </div>
-          </div>
-          <div class="section-card glass">
-            <h3 class="panel-title">全旅程步行統計</h3>
-            <div class="info-grid">
-              ${walkingStats.map((item) => `
-                <div class="mini-card">
-                  <small>${item.day}</small>
-                  <strong>${item.steps}</strong>
-                  <div style="font-size:.8rem;color:#9ba3b8;">步</div>
-                </div>
-              `).join("")}
-            </div>
-            <div style="margin-top:14px;" class="soft-pill">平均：約 5000 步 / 天</div>
-          </div>
-        `;
-      }
+      function renderInfoPage() {
+        const root = document.getElementById("page-info");
+        root.innerHTML = `
+          <div class="section-card glass">
+            <h3 class="panel-title">旅程資訊</h3>
+            <div style="display:grid;gap:12px;font-size:.95rem;line-height:1.75;">
+              <div><strong style="color:var(--text-strong);">住宿：</strong>Airbnb</div>
+              <a class="info-line map-link" href="https://maps.google.com/?q=${encodeURIComponent("台北市松山區復興北路469號")}" target="_blank" rel="noreferrer"><span>📍 台北市松山區復興北路469號</span></a>
+              <div><strong style="color:var(--text-strong);">去程：</strong>STARLUX JX234</div>
+              <div><strong style="color:var(--text-strong);">回程：</strong>STARLUX JX235</div>
+            </div>
+          </div>
+          <div class="section-card glass">
+            <h3 class="panel-title">全旅程步行統計</h3>
+            <div class="info-grid">
+              ${walkingStats.map((item) => `
+                <div class="mini-card">
+                  <small>${item.day}</small>
+                  <strong>${item.steps}</strong>
+                  <div style="font-size:.8rem;color:#9ba3b8;">步</div>
+                </div>
+              `).join("")}
+            </div>
+            <div style="margin-top:14px;" class="soft-pill">平均：約 5000 步 / 天</div>
+          </div>
+        `;
+      }
 
-      function setPage(page) {
-  currentPage = page;
+      function setPage(page) {
+  currentPage = page;
 
-  document.querySelectorAll(".page").forEach((el) => {
-    el.classList.remove("active");
-  });
+  document.querySelectorAll(".page").forEach((el) => {
+    el.classList.remove("active");
+  });
 
-  document.getElementById(`page-${page}`).classList.add("active");
+  document.getElementById(`page-${page}`).classList.add("active");
 
-  document.querySelectorAll(".nav-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.page === page);
-  });
+  document.querySelectorAll(".nav-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.page === page);
+  });
 
-  document.getElementById("day-row").style.display =
-    page === "itinerary" ? "flex" : "none";
+  document.getElementById("day-row").style.display =
+    page === "itinerary" ? "flex" : "none";
 }
-  
-      function renderStars(root, value, onClick) {
-        if (!root) return;
-        root.innerHTML = "";
-        for (let i = 1; i <= 5; i += 1) {
-          const btn = document.createElement("button");
-          btn.className = `star-btn ${i <= value ? "active" : ""}`;
-          btn.textContent = "★";
-          btn.addEventListener("click", () => onClick(i));
-          root.appendChild(btn);
-        }
-      }
+  
+      function renderStars(root, value, onClick) {
+        if (!root) return;
+        root.innerHTML = "";
+        for (let i = 1; i <= 5; i += 1) {
+          const btn = document.createElement("button");
+          btn.className = `star-btn ${i <= value ? "active" : ""}`;
+          btn.textContent = "★";
+          btn.addEventListener("click", () => onClick(i));
+          root.appendChild(btn);
+        }
+      }
 
-      function renderAll() {
-        renderDayRow();
-        renderItineraryPage();
-        renderExpensesPage();
-        renderShoppingPage();
-        renderMilkTeaPage();
-        renderInfoPage();
-        setPage(currentPage);
-      }
+      function renderAll() {
+        renderDayRow();
+        renderItineraryPage();
+        renderExpensesPage();
+        renderShoppingPage();
+        renderMilkTeaPage();
+        renderInfoPage();
+        setPage(currentPage);
+      }
 
-      document.querySelectorAll(".nav-btn").forEach((btn) => {
-        btn.addEventListener("click", () => setPage(btn.dataset.page));
-      });
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.addEventListener("click", () => setPage(btn.dataset.page));
+      });
 
-      function escapeHtml(str) {
-        return String(str)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#39;");
-      }
+      function escapeHtml(str) {
+        return String(str)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
 
-      function escapeAttr(str) {
-        return escapeHtml(str).replaceAll("`", "&#96;");
-      }
+      function escapeAttr(str) {
+        return escapeHtml(str).replaceAll("`", "&#96;");
+      }
 
-      subscribeTrip();
-    </script>
-  </body>
+      subscribeTrip();
+    </script>
+  </body>
 </html>
+
+
+
