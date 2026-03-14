@@ -959,6 +959,32 @@
     font-size: 0.7rem;
   }
 }
+      .people-check-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.people-check-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 10px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.9);
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.people-check-pill input {
+  width: 16px;
+  height: 16px;
+  accent-color: #ef78ab;
+}
+
 
       
     </style>
@@ -1440,6 +1466,9 @@ const paidByErnest = state.expenses
   .filter((item) => item.payer === "Ernest")
   .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
+const peopleBalance = calculatePeopleBalance(state.expenses);
+
+
   root.innerHTML = `
     <div class="expense-top-card">
       <div class="expense-total-label">總支出 (TWD)</div>
@@ -1462,20 +1491,21 @@ const paidByErnest = state.expenses
 
   <div class="people-paid-row">
 
-  <div class="people-paid-card">
-    <div class="name">Krince 已付</div>
-    <div class="money">$${paidByKrince}</div>
-  </div>
+<div class="people-paid-card">
+  <div class="name">Krince</div>
+  <div class="money">${Math.round(peopleBalance.Krince.net)} TWD</div>
+</div>
 
-  <div class="people-paid-card">
-    <div class="name">Silke 已付</div>
-    <div class="money">$${paidBySilke}</div>
-  </div>
+<div class="people-paid-card">
+  <div class="name">Silke</div>
+  <div class="money">${Math.round(peopleBalance.Silke.net)} TWD</div>
+</div>
 
-  <div class="people-paid-card">
-    <div class="name">Ernest 已付</div>
-    <div class="money">$${paidByErnest}</div>
-  </div>
+<div class="people-paid-card">
+  <div class="name">Ernest</div>
+  <div class="money">${Math.round(peopleBalance.Ernest.net)} TWD</div>
+</div>
+
 
 </div>
    
@@ -1508,12 +1538,46 @@ const paidByErnest = state.expenses
   <option>Silke</option>
   <option>Ernest</option>
 </select>
-        <select id="expense-split-count" class="input">
-          <option value="1">自己</option>
-          <option value="2">2人平分</option>
-          <option value="3">3人平分</option>
-        </select>
-      </div>
+<div class="input-grid two" style="margin-top:12px">
+  <select id="expense-payment-type" class="input">
+    <option value="cash">Cash</option>
+    <option value="card">Card</option>
+  </select>
+
+  <select id="expense-payer" class="input">
+    <option>Krince</option>
+    <option>Silke</option>
+    <option>Ernest</option>
+  </select>
+</div>
+
+<div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
+  <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+    Split with
+  </div>
+
+  <div id="expense-split-with" class="people-check-row">
+    <label class="people-check-pill">
+      <input type="checkbox" value="Krince">
+      <span>Krince</span>
+    </label>
+
+    <label class="people-check-pill">
+      <input type="checkbox" value="Silke">
+      <span>Silke</span>
+    </label>
+
+    <label class="people-check-pill">
+      <input type="checkbox" value="Ernest">
+      <span>Ernest</span>
+    </label>
+  </div>
+
+  <div style="font-size:.82rem;color:#8a92a8;margin-top:8px;">
+    勾選邊個，就代表邊個要承擔呢筆費用
+  </div>
+</div>
+
 
       <div style="margin-top:12px;">
         <button id="add-expense" class="btn">加入記帳</button>
@@ -1532,11 +1596,16 @@ const paidByErnest = state.expenses
           ? `<div class="section-card glass" style="text-align:center;color:#8a92a8;">沒有相關的支出紀錄</div>`
           : filteredExpenses
               .map((item) => {
-                const splitCount = Number(item.splitCount || 1);
-                const eachShare = Math.round(Number(item.amount || 0) / splitCount);
-                const paymentText = item.paymentType === "cash" ? "現金" : "信用卡";
-                const splitText =
-                  splitCount === 1 ? "自己買，不用 split" : `${splitCount}人平分 → 每人 $${eachShare}`;
+const participants = getExpenseParticipants(item);
+const eachShare = participants.length
+  ? Math.round(Number(item.amount || 0) / participants.length)
+  : Number(item.amount || 0);
+const paymentText = item.paymentType === "cash" ? "Cash" : "Card";
+const splitText =
+  participants.length <= 1
+    ? `For ${participants[0] || item.payer} · each ${eachShare} TWD`
+    : `Split with ${participants.join(", ")} · each ${eachShare} TWD`;
+
                 return `
                   <div class="expense-entry-card">
                     <div class="expense-entry-top">
@@ -1575,7 +1644,9 @@ const paidByErnest = state.expenses
       const category = document.getElementById("expense-category").value;
       const paymentType = document.getElementById("expense-payment-type").value;
       const payer = document.getElementById("expense-payer").value;
-      const splitCount = document.getElementById("expense-split-count").value;
+      const splitWith = Array.from(
+  document.querySelectorAll('#expense-split-with input[type="checkbox"]:checked')
+).map((input) => input.value);
 
       if (!title && !amount) {
       alert("請輸入項目名稱及金額");
@@ -1592,6 +1663,14 @@ const paidByErnest = state.expenses
       return;
       }
       
+      if (!title || !amount) return;
+
+      if (!splitWith.length) {
+      alert("請至少揀一個分攤人");
+      return;
+      }
+      
+      
       const amountValue = Number(amount);
       if (Number.isNaN(amountValue) || amountValue <= 0) {
       alert("請輸入有效金額");
@@ -1607,7 +1686,7 @@ const paidByErnest = state.expenses
         category,
         paymentType,
         payer,
-        splitCount: Number(splitCount),
+        splitWith,
       });
 
       saveState();
@@ -1973,6 +2052,56 @@ const paidByErnest = state.expenses
       function escapeAttr(str) {
         return escapeHtml(str).replaceAll("`", "&#96;");
       }
+
+      function getExpenseParticipants(item) {
+  if (Array.isArray(item.splitWith) && item.splitWith.length) {
+    return item.splitWith;
+  }
+
+  const count = Number(item.splitCount || 1);
+
+  if (count === 1) {
+    return item.payer ? [item.payer] : [];
+  }
+
+  if (count === 2) {
+    return ["Krince", "Silke"];
+  }
+
+  return ["Krince", "Silke", "Ernest"];
+}
+
+function calculatePeopleBalance(expenses) {
+  const people = {
+    Krince: { paid: 0, owed: 0, net: 0 },
+    Silke: { paid: 0, owed: 0, net: 0 },
+    Ernest: { paid: 0, owed: 0, net: 0 },
+  };
+
+  expenses.forEach((item) => {
+    const amount = Number(item.amount || 0);
+    const payer = item.payer;
+    const participants = getExpenseParticipants(item);
+    const share = participants.length ? amount / participants.length : 0;
+
+    if (people[payer]) {
+      people[payer].paid += amount;
+    }
+
+    participants.forEach((name) => {
+      if (people[name]) {
+        people[name].owed += share;
+      }
+    });
+  });
+
+  Object.keys(people).forEach((name) => {
+    people[name].net = people[name].paid - people[name].owed;
+  });
+
+  return people;
+}
+
 
       subscribeTrip();
     </script>
