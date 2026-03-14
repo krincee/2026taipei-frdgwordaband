@@ -984,6 +984,25 @@
   height: 16px;
   accent-color: #ef78ab;
 }
+.field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text-strong);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 16px rgba(145, 170, 235, 0.12);
+}
 
 
       
@@ -1529,16 +1548,24 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
       </div>
 
 <div class="input-grid two" style="margin-top:12px">
-  <select id="expense-payment-type" class="input">
-    <option value="cash">Cash</option>
-    <option value="card">Card</option>
-  </select>
+  <div class="field-box">
+    <div class="field-label">Payment type</div>
+    <select id="expense-payment-type" class="input">
+      <option value="">Select payment type</option>
+      <option value="cash">Cash</option>
+      <option value="card">Card</option>
+    </select>
+  </div>
 
-  <select id="expense-payer" class="input">
-    <option>Krince</option>
-    <option>Silke</option>
-    <option>Ernest</option>
-  </select>
+  <div class="field-box">
+    <div class="field-label">Paid by</div>
+    <select id="expense-payer" class="input">
+      <option value="">Select payer</option>
+      <option>Krince</option>
+      <option>Silke</option>
+      <option>Ernest</option>
+    </select>
+  </div>
 </div>
 
 <div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
