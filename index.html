@@ -1025,6 +1025,37 @@
   border: 1px solid rgba(239, 120, 171, 0.18);
 }
 
+.input-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-card-label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.82);
+  color: var(--text-strong);
+  font-size: 0.8rem;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(145,170,235,0.12);
+}
+
+.soft-input {
+  background: rgba(255,255,255,0.82);
+  border: 1px solid rgba(255,255,255,0.9);
+  box-shadow: 0 10px 24px rgba(145,170,235,0.08);
+}
+
+.soft-input:focus {
+  border-color: rgba(239,120,171,0.35);
+  box-shadow: 0 0 0 3px rgba(239,120,171,0.08), 0 10px 24px rgba(145,170,235,0.1);
+}
+
+
 
       
     </style>
@@ -1558,15 +1589,39 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
     <div id="expense-form-wrap" class="section-card glass">
       <h3 class="panel-title">新增消費</h3>
       <div class="input-grid four">
-        <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
-        <input id="expense-amount" class="input" placeholder="金額" />
-        <select id="expense-day" class="input">
-          <option>Day1</option><option>Day2</option><option>Day3</option><option>Day4</option><option>Day5</option>
-        </select>
-        <select id="expense-category" class="input">
-          <option>飲食</option><option>交通</option><option>購物</option><option>票券</option><option>珍奶</option>
-        </select>
-      </div>
+  <div class="input-card">
+    <div class="input-card-label">項目</div>
+    <input id="expense-title" class="input soft-input" placeholder="例如：鼎王宵夜" />
+  </div>
+
+  <div class="input-card">
+    <div class="input-card-label">金額</div>
+    <input id="expense-amount" class="input soft-input" placeholder="例如：500" />
+  </div>
+
+  <div class="input-card">
+    <div class="input-card-label">Day</div>
+    <select id="expense-day" class="input soft-input">
+      <option>Day1</option>
+      <option>Day2</option>
+      <option>Day3</option>
+      <option>Day4</option>
+      <option>Day5</option>
+    </select>
+  </div>
+
+  <div class="input-card">
+    <div class="input-card-label">分類</div>
+    <select id="expense-category" class="input soft-input">
+      <option>飲食</option>
+      <option>交通</option>
+      <option>購物</option>
+      <option>票券</option>
+      <option>珍奶</option>
+    </select>
+  </div>
+</div>
+
 
 <div class="input-grid two" style="margin-top:12px">
   <div class="section-card glass" style="padding:14px 16px;">
