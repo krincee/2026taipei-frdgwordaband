@@ -1004,6 +1004,27 @@
   box-shadow: 0 6px 16px rgba(145, 170, 235, 0.12);
 }
 
+      .people-check-row.two-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.radio-pill {
+  position: relative;
+}
+
+.radio-pill input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #ef78ab;
+}
+
+.radio-pill:has(input[type="radio"]:checked),
+.people-check-pill:has(input[type="checkbox"]:checked) {
+  background: white;
+  box-shadow: 0 8px 18px rgba(145,170,235,0.12);
+  border: 1px solid rgba(239, 120, 171, 0.18);
+}
+
 
       
     </style>
@@ -1548,25 +1569,48 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
       </div>
 
 <div class="input-grid two" style="margin-top:12px">
-  <div class="field-box">
-    <div class="field-label">Payment type</div>
-    <select id="expense-payment-type" class="input">
-      <option value="">Select payment type</option>
-      <option value="cash">Cash</option>
-      <option value="card">Card</option>
-    </select>
+  <div class="section-card glass" style="padding:14px 16px;">
+    <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+      Payment type
+    </div>
+
+    <div class="people-check-row two-col">
+      <label class="people-check-pill radio-pill">
+        <input type="radio" name="expense-payment-type" value="cash" checked>
+        <span>Cash</span>
+      </label>
+
+      <label class="people-check-pill radio-pill">
+        <input type="radio" name="expense-payment-type" value="card">
+        <span>Card</span>
+      </label>
+    </div>
   </div>
 
-  <div class="field-box">
-    <div class="field-label">Paid by</div>
-    <select id="expense-payer" class="input">
-      <option value="">Select payer</option>
-      <option>Krince</option>
-      <option>Silke</option>
-      <option>Ernest</option>
-    </select>
+  <div class="section-card glass" style="padding:14px 16px;">
+    <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+      Paid by
+    </div>
+
+    <div class="people-check-row">
+      <label class="people-check-pill radio-pill">
+        <input type="radio" name="expense-payer" value="Krince" checked>
+        <span>Krince</span>
+      </label>
+
+      <label class="people-check-pill radio-pill">
+        <input type="radio" name="expense-payer" value="Silke">
+        <span>Silke</span>
+      </label>
+
+      <label class="people-check-pill radio-pill">
+        <input type="radio" name="expense-payer" value="Ernest">
+        <span>Ernest</span>
+      </label>
+    </div>
   </div>
 </div>
+
 
 <div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
   <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
@@ -1659,8 +1703,8 @@ const splitText =
       const amount = document.getElementById("expense-amount").value.trim();
       const day = document.getElementById("expense-day").value;
       const category = document.getElementById("expense-category").value;
-const paymentType = document.getElementById("expense-payment-type").value;
-const payer = document.getElementById("expense-payer").value;
+const paymentType = document.querySelector('input[name="expense-payment-type"]:checked')?.value || "cash";
+const payer = document.querySelector('input[name="expense-payer"]:checked')?.value || "Krince";
 const splitWith = Array.from(
   document.querySelectorAll('#expense-split-with input[type="checkbox"]:checked')
 ).map((input) => input.value);
