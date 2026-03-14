@@ -1515,7 +1515,7 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
       <button id="toggle-expense-form" class="btn">＋ 記一筆</button>
     </div>
 
-    <div id="expense-form-wrap" class="section-card glass" style="display:none;">
+    <div id="expense-form-wrap" class="section-card glass">
       <h3 class="panel-title">新增消費</h3>
       <div class="input-grid four">
         <input id="expense-title" class="input" placeholder="例如：鼎王宵夜" />
@@ -1528,16 +1528,6 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
         </select>
       </div>
 
-      <div class="input-grid three" style="margin-top:12px;">
-        <select id="expense-payment-type" class="input">
-          <option value="cash">現金</option>
-          <option value="card">信用卡</option>
-        </select>
-   <select id="expense-payer" class="input">
-  <option>Krince</option>
-  <option>Silke</option>
-  <option>Ernest</option>
-</select>
 <div class="input-grid two" style="margin-top:12px">
   <select id="expense-payment-type" class="input">
     <option value="cash">Cash</option>
@@ -1550,6 +1540,28 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
     <option>Ernest</option>
   </select>
 </div>
+
+<div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
+  <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+    Split with
+  </div>
+
+  <div id="expense-split-with" class="people-check-row">
+    <label class="people-check-pill">
+      <input type="checkbox" value="Krince">
+      <span>Krince</span>
+    </label>
+    <label class="people-check-pill">
+      <input type="checkbox" value="Silke">
+      <span>Silke</span>
+    </label>
+    <label class="people-check-pill">
+      <input type="checkbox" value="Ernest">
+      <span>Ernest</span>
+    </label>
+  </div>
+</div>
+
 
 <div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
   <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
@@ -1642,11 +1654,12 @@ const splitText =
       const amount = document.getElementById("expense-amount").value.trim();
       const day = document.getElementById("expense-day").value;
       const category = document.getElementById("expense-category").value;
-      const paymentType = document.getElementById("expense-payment-type").value;
-      const payer = document.getElementById("expense-payer").value;
-      const splitWith = Array.from(
+const paymentType = document.getElementById("expense-payment-type").value;
+const payer = document.getElementById("expense-payer").value;
+const splitWith = Array.from(
   document.querySelectorAll('#expense-split-with input[type="checkbox"]:checked')
 ).map((input) => input.value);
+
 
       if (!title && !amount) {
       alert("請輸入項目名稱及金額");
