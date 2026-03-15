@@ -1514,12 +1514,21 @@ function renderDayRow() {
     function renderExpensesPage() {
   const root = document.getElementById("page-expenses");
 
-  const filteredExpenses = state.expenses.filter((item) => {
+const filteredExpenses = [...state.expenses]
+  .filter((item) => {
     if (expenseFilter === "all") return true;
     if (expenseFilter === "cash") return item.paymentType === "cash";
     if (expenseFilter === "card") return item.paymentType === "card";
     return true;
+  })
+  .sort((a, b) => {
+    const dayA = Number(String(a.day || "").replace("Day", ""));
+    const dayB = Number(String(b.day || "").replace("Day", ""));
+    if (dayB !== dayA) return dayB - dayA;
+    return Number(b.id) - Number(a.id);
   });
+
+
 
   const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
   const cashSpent = state.expenses
