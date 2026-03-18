@@ -11,12 +11,11 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Taipei Trip">
 <meta name="description" content="Taipei trip planner with itinerary, expenses, shopping list, milk tea spots, and travel info.">
-
 <link rel="icon" type="image/svg+xml"
-  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E🧋%3C/text%3E%3C/svg%3E'>
+  href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ctext y=".9em" font-size="90"%3E🧋%3C/text%3E%3C/svg%3E'>
 
 <link rel="apple-touch-icon"
-  href='image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" rx="36" fill="%23ffe7f1"/%3E%3Ctext x="50%25" y="56%25" text-anchor="middle" font-size="96"%3E🧋%3C/text%3E%3C/svg%3E'>
+  href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180"%3E%3Crect width="180" height="180" rx="36" fill="%23ffe7f1"/%3E%3Ctext x="50%25" y="56%25" text-anchor="middle" font-size="96"%3E🧋%3C/text%3E%3C/svg%3E'>
 
     <style>
       :root {
@@ -36,11 +35,9 @@
         --shadow: 0 18px 50px rgba(137, 167, 220, 0.16);
         --radius: 28px;
       }
-
       * {
         box-sizing: border-box;
       }
-
       body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
@@ -50,18 +47,15 @@
           radial-gradient(circle at top, rgba(255,255,255,0.98), rgba(255,237,248,0.95), rgba(232,243,255,0.95), rgba(232,229,255,0.93));
         min-height: 100vh;
       }
-
       a {
         color: inherit;
         text-decoration: none;
       }
-
       .app {
         max-width: 1120px;
         margin: 0 auto;
         padding: 20px 16px 110px;
       }
-
       .glass {
         background: var(--card);
         border: 1px solid rgba(255, 255, 255, 0.7);
@@ -69,14 +63,12 @@
         -webkit-backdrop-filter: blur(18px);
         box-shadow: var(--shadow);
       }
-
       .hero {
         position: relative;
         overflow: hidden;
         border-radius: 34px;
         padding: 24px;
       }
-
       .hero::before,
       .hero::after {
         content: "";
@@ -85,7 +77,6 @@
         filter: blur(44px);
         pointer-events: none;
       }
-
       .hero::before {
         width: 160px;
         height: 160px;
@@ -93,7 +84,6 @@
         right: -40px;
         background: rgba(255, 191, 214, 0.4);
       }
-
       .hero::after {
         width: 140px;
         height: 140px;
@@ -101,14 +91,12 @@
         bottom: -24px;
         background: rgba(185, 220, 255, 0.45);
       }
-
       .hero-top {
         position: relative;
         display: flex;
         flex-direction: column;
         gap: 18px;
       }
-
       .title {
         margin: 0;
         font-size: clamp(1.9rem, 4vw, 3.5rem);
@@ -117,13 +105,11 @@
         letter-spacing: 0.02em;
         font-weight: 900;
       }
-
       .sub {
         margin-top: 12px;
         font-size: 0.98rem;
         line-height: 1.7;
       }
-
       .rate-box {
         align-self: flex-start;
         background: rgba(255, 255, 255, 0.75);
@@ -131,7 +117,6 @@
         padding: 14px 16px;
         box-shadow: 0 10px 26px rgba(145, 170, 235, 0.12);
       }
-
       .rate-box small {
         display: block;
         letter-spacing: 0.18em;
@@ -140,21 +125,18 @@
         font-weight: 700;
         font-size: 0.72rem;
       }
-
       .rate-box strong {
         display: block;
         margin-top: 8px;
         color: var(--text-strong);
         font-size: 1.6rem;
       }
-
       .day-row {
         display: flex;
         gap: 12px;
         overflow-x: auto;
         padding: 18px 2px 2px;
       }
-
       .day-chip {
         min-width: 94px;
         border: 1px solid rgba(255,255,255,0.75);
@@ -166,40 +148,33 @@
         box-shadow: 0 10px 28px rgba(145, 170, 235, 0.1);
         cursor: pointer;
       }
-
       .day-chip.active {
         color: #fff;
         border-color: #b7d7ff;
         background: linear-gradient(180deg, #8ab6ff 0%, #6d95dc 100%);
         box-shadow: 0 14px 30px rgba(109, 149, 220, 0.3);
       }
-
       .day-chip .label {
         font-size: 0.92rem;
         font-weight: 700;
       }
-
       .day-chip .num {
         margin-top: 2px;
         font-size: 1.6rem;
         font-weight: 900;
       }
-
       .page {
         display: none;
         margin-top: 18px;
       }
-
       .page.active {
         display: block;
       }
-
       .section-card {
         border-radius: 30px;
         padding: 20px;
         margin-bottom: 18px;
       }
-
       .summary-card {
         display: flex;
         flex-direction: column;
@@ -208,19 +183,16 @@
         padding: 20px;
         background: linear-gradient(135deg, rgba(218,242,255,0.95), rgba(255,242,248,0.95));
       }
-
       .summary-head {
         display: flex;
         flex-direction: column;
         gap: 14px;
       }
-
       .summary-head h2 {
         margin: 0;
         font-size: 2rem;
         color: var(--text-strong);
       }
-
       .date-pill {
         display: inline-flex;
         align-items: center;
@@ -232,14 +204,12 @@
         box-shadow: 0 6px 18px rgba(145,170,235,0.12);
         width: fit-content;
       }
-
       .weather-box {
         border-radius: 24px;
         background: rgba(255,255,255,0.82);
         padding: 16px 18px;
         box-shadow: 0 10px 24px rgba(145, 170, 235, 0.12);
       }
-
       .weather-main {
         display: flex;
         align-items: center;
@@ -248,13 +218,11 @@
         font-weight: 800;
         color: var(--text-strong);
       }
-
       .weather-sub {
         margin-top: 8px;
         font-size: 0.92rem;
         color: #7b8399;
       }
-
       .itinerary-list,
       .record-list,
       .checklist-grid,
@@ -262,14 +230,12 @@
         display: grid;
         gap: 16px;
       }
-
       .itinerary-card {
         position: relative;
         overflow: hidden;
         border-radius: 30px;
         padding: 20px;
       }
-
       .stop-tag {
         position: absolute;
         top: 16px;
@@ -281,7 +247,6 @@
         font-size: 0.76rem;
         font-weight: 800;
       }
-
       .time-row {
         display: flex;
         align-items: center;
@@ -290,26 +255,22 @@
         font-weight: 700;
         font-size: 0.9rem;
       }
-
       .itinerary-card h3 {
         margin: 14px 0 0;
         font-size: 1.75rem;
         line-height: 1.15;
         color: var(--text-strong);
       }
-
       .desc {
         margin-top: 12px;
         line-height: 1.75;
         font-size: 0.95rem;
       }
-
       .info-blocks {
         display: grid;
         gap: 12px;
         margin-top: 16px;
       }
-
       .info-line,
       .milk-box,
       .transit-box,
@@ -323,7 +284,6 @@
       .challenge-card {
         border-radius: 20px;
       }
-
       .info-line,
       .photo-box,
       .row-card,
@@ -331,7 +291,6 @@
       .input {
         background: rgba(255,255,255,0.75);
       }
-
       .info-line,
       .photo-box,
       .row-card,
@@ -342,7 +301,6 @@
       .mini-card {
         box-shadow: 0 10px 24px rgba(145,170,235,0.1);
       }
-
       .info-line,
       .photo-box,
       .row-card,
@@ -352,23 +310,19 @@
       .king-card {
         padding: 14px 16px;
       }
-
       .info-line {
         display: flex;
         align-items: flex-start;
         gap: 10px;
       }
-
       .map-link span {
         text-decoration: underline;
         text-decoration-color: #8fd8ff;
         text-underline-offset: 3px;
       }
-
       .milk-box {
         background: linear-gradient(90deg, #fff4f9, #ffffff, #f7f3ff);
       }
-
       .block-title {
         font-size: 0.9rem;
         font-weight: 800;
@@ -378,51 +332,42 @@
         gap: 8px;
         margin-bottom: 10px;
       }
-
       .milk-items,
       .transit-items,
       .challenge-items {
         display: grid;
         gap: 8px;
       }
-
       .pill {
         padding: 10px 12px;
         background: rgba(255,255,255,0.74);
         border-radius: 16px;
         font-size: 0.92rem;
       }
-
       .transit-box {
         background: #f7fbff;
       }
-
       .return-card,
       .walk-card {
         border-radius: 28px;
         padding: 18px;
       }
-
       .walk-card {
         font-weight: 700;
       }
-
       .checklist-grid {
         grid-template-columns: 1fr;
       }
-
       .check-group h3,
       .panel-title {
         margin: 0 0 14px;
         font-size: 1.2rem;
         color: var(--text-strong);
       }
-
       .check-items {
         display: grid;
         gap: 10px;
       }
-
       .check-item {
         display: flex;
         align-items: center;
@@ -431,12 +376,10 @@
         background: rgba(255,255,255,0.75);
         cursor: pointer;
       }
-
       .check-item.done span:last-child {
         text-decoration: line-through;
         color: #a0a7ba;
       }
-
       .checkbox {
         width: 20px;
         height: 20px;
@@ -449,27 +392,22 @@
         font-size: 0.78rem;
         flex-shrink: 0;
       }
-
       .check-item.done .checkbox {
         background: var(--pink-strong);
         border-color: var(--pink-strong);
       }
-
       .stats-grid,
       .info-grid {
         display: grid;
         gap: 14px;
       }
-
       .stats-grid {
         grid-template-columns: 1fr;
       }
-
       .mini-card {
         padding: 18px;
         border: 1px solid rgba(255,255,255,0.65);
       }
-
       .mini-card small {
         display: block;
         color: #9ba3b8;
@@ -478,19 +416,16 @@
         letter-spacing: 0.18em;
         font-weight: 800;
       }
-
       .mini-card strong {
         display: block;
         margin-top: 10px;
         font-size: 1.95rem;
         color: var(--text-strong);
       }
-
       .input-grid {
         display: grid;
         gap: 12px;
       }
-
       .input,
       select,
       textarea {
@@ -502,12 +437,10 @@
         background: rgba(255,255,255,0.8);
         outline: none;
       }
-
       textarea {
         min-height: 88px;
         resize: vertical;
       }
-
       .btn {
         border: none;
         cursor: pointer;
@@ -517,26 +450,22 @@
         color: var(--text-strong);
         background: linear-gradient(90deg, #f7c6dd, #c8efff);
       }
-
       .btn-outline {
         background: rgba(255,255,255,0.85);
         border: 1px solid #dbe2f0;
         font-weight: 700;
       }
-
       .row-card {
         display: flex;
         flex-direction: column;
         gap: 12px;
         padding: 16px;
       }
-
       .row-top {
         display: flex;
         flex-direction: column;
         gap: 12px;
       }
-
       .amount-pill,
       .king-badge,
       .rank-dot,
@@ -545,22 +474,18 @@
         align-items: center;
         justify-content: center;
       }
-
       .amount-pill,
       .soft-pill {
         border-radius: 999px;
         padding: 10px 14px;
         font-weight: 800;
       }
-
       .amount-pill {
         background: #fff1f7;
       }
-
       .king-card {
         background: linear-gradient(90deg, #fff3ad, #ffe8f2, #dff7ff);
       }
-
       .king-title {
         display: flex;
         align-items: center;
@@ -570,26 +495,22 @@
         font-size: 0.8rem;
         font-weight: 800;
       }
-
       .king-card h2 {
         margin: 14px 0 0;
         color: var(--text-strong);
         font-size: 2rem;
       }
-
       .rank-item {
         display: flex;
         flex-direction: column;
         gap: 12px;
       }
-
       .rank-head {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 10px;
       }
-
       .rank-dot {
         width: 32px;
         height: 32px;
@@ -598,7 +519,6 @@
         font-weight: 800;
         color: var(--text-strong);
       }
-
       .king-badge {
         padding: 6px 10px;
         border-radius: 999px;
@@ -607,12 +527,10 @@
         font-size: 0.72rem;
         font-weight: 800;
       }
-
       .stars {
         display: flex;
         gap: 6px;
       }
-
       .star-btn {
         background: transparent;
         border: none;
@@ -621,11 +539,9 @@
         color: #d4d7e2;
         padding: 0;
       }
-
       .star-btn.active {
         color: #f6b41b;
       }
-
       .bottom-nav {
         position: fixed;
         left: 50%;
@@ -640,13 +556,11 @@
         box-shadow: 0 20px 60px rgba(145,170,235,0.2);
         z-index: 50;
       }
-
       .bottom-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 8px;
       }
-
       .nav-btn {
         border: none;
         border-radius: 22px;
@@ -658,23 +572,19 @@
         font-size: 0.78rem;
         font-weight: 700;
       }
-
       .nav-btn.active {
         background: linear-gradient(180deg, #f7d2e7, #fceef8, #dbf5ff);
         color: var(--text-strong);
         box-shadow: 0 10px 20px rgba(145,170,235,0.12);
       }
-
       .nav-icon {
         display: block;
         font-size: 1rem;
         margin-bottom: 4px;
       }
-
       .hidden {
         display: none !important;
       }
-
       .photo-preview {
         margin-top: 10px;
         width: 100%;
@@ -683,61 +593,49 @@
         background: #f8fbff;
         border: 1px solid rgba(255,255,255,0.75);
       }
-
       .photo-preview img {
         display: block;
         width: 100%;
         max-height: 240px;
         object-fit: cover;
       }
-
       @media (min-width: 760px) {
         .hero-top {
           flex-direction: row;
           justify-content: space-between;
           align-items: flex-start;
         }
-
         .summary-head {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
         }
-
         .checklist-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-
         .stats-grid {
           grid-template-columns: repeat(3, 1fr);
         }
-
         .info-grid {
           grid-template-columns: repeat(5, 1fr);
         }
-
         .input-grid.two {
           grid-template-columns: repeat(2, 1fr);
         }
-
         .input-grid.three {
           grid-template-columns: repeat(3, 1fr);
         }
-
         .input-grid.four {
           grid-template-columns: repeat(4, 1fr);
         }
-
         .row-card {
           flex-direction: row;
           justify-content: space-between;
           align-items: flex-start;
         }
-
         .row-top {
           flex: 1;
         }
-
         .row-side {
           width: 280px;
           display: grid;
@@ -752,60 +650,50 @@
   box-shadow: 0 18px 40px rgba(90, 120, 190, 0.22);
   margin-bottom: 16px;
 }
-
 .expense-total-label {
   text-align: center;
   font-size: 0.95rem;
   opacity: 0.9;
 }
-
 .expense-total-amount {
   text-align: center;
   font-size: 3.2rem;
   font-weight: 900;
   margin: 8px 0 4px;
 }
-
 .expense-total-sub {
   text-align: center;
   font-size: 0.95rem;
   opacity: 0.85;
 }
-
 .expense-line {
   height: 1px;
   background: rgba(255,255,255,0.22);
   margin: 18px 0;
 }
-
 .expense-type-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
 }
-
 .expense-type-box {
   text-align: center;
 }
-
 .expense-type-box .label {
   font-size: 0.95rem;
   opacity: 0.95;
   margin-bottom: 8px;
 }
-
 .expense-type-box .value {
   font-size: 2rem;
   font-weight: 800;
 }
-
 .people-paid-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin: 16px 0;
 }
-
 .people-paid-card {
   background: rgba(255,255,255,0.8);
   border-radius: 18px;
@@ -813,34 +701,29 @@
   text-align: center;
   box-shadow: 0 10px 24px rgba(145,170,235,0.1);
 }
-
 .people-paid-card .name {
   font-size: 0.9rem;
   color: var(--text-strong);
   font-weight: 700;
 }
-
 .people-paid-card .money {
   margin-top: 4px;
   font-size: 1.15rem;
   font-weight: 900;
   color: var(--text-strong);
 }
-
 .expense-header-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 18px 0 12px;
 }
-
 .expense-filter-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin-bottom: 14px;
 }
-
 .expense-filter-btn {
   border: none;
   border-radius: 16px;
@@ -851,53 +734,45 @@
   color: #6d758a;
   cursor: pointer;
 }
-
 .expense-filter-btn.active {
   background: white;
   color: var(--text-strong);
   box-shadow: 0 8px 18px rgba(145,170,235,0.12);
 }
-
 .expense-entry-card {
   background: rgba(255,255,255,0.84);
   border-radius: 24px;
   padding: 16px;
   box-shadow: 0 10px 24px rgba(145,170,235,0.1);
 }
-
 .expense-entry-top {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: flex-start;
 }
-
 .expense-entry-title {
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--text-strong);
 }
-
 .expense-entry-meta {
   margin-top: 4px;
   font-size: 0.9rem;
   color: #8a92a8;
 }
-
 .expense-entry-amount {
   font-size: 1.6rem;
   font-weight: 900;
   color: var(--text-strong);
   white-space: nowrap;
 }
-
 .expense-entry-note {
   margin-top: 10px;
   font-size: 0.92rem;
   color: #667085;
   line-height: 1.6;
 }
-
 .expense-actions {
   margin-top: 12px;
   display: flex;
@@ -912,11 +787,9 @@
   min-height: 64px;
   transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
 }
-
 .nav-btn:hover {
   transform: translateY(-1px);
 }
-
 .nav-icon {
   display: block;
   font-size: 1.18rem;
@@ -924,37 +797,30 @@
   margin-bottom: 2px;
   transition: transform 0.18s ease, filter 0.18s ease, opacity 0.18s ease;
 }
-
 .nav-label {
   display: block;
   font-size: 0.74rem;
   line-height: 1;
   letter-spacing: 0.01em;
 }
-
 .nav-btn.active .nav-icon {
   transform: scale(1.14);
   filter: saturate(1.15);
 }
-
 .nav-btn.active .nav-label {
   color: var(--text-strong);
 }
-
 @media (max-width: 520px) {
   .bottom-grid {
     gap: 6px;
   }
-
   .nav-btn {
     min-height: 60px;
     padding: 8px 4px;
   }
-
   .nav-icon {
     font-size: 1.08rem;
   }
-
   .nav-label {
     font-size: 0.7rem;
   }
@@ -964,7 +830,6 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
-
 .people-check-pill {
   display: flex;
   align-items: center;
@@ -978,7 +843,6 @@
   font-weight: 700;
   color: var(--text-strong);
 }
-
 .people-check-pill input {
   width: 16px;
   height: 16px;
@@ -989,7 +853,6 @@
   flex-direction: column;
   gap: 8px;
 }
-
 .field-label {
   display: inline-flex;
   align-items: center;
@@ -1003,28 +866,23 @@
   letter-spacing: 0.02em;
   box-shadow: 0 6px 16px rgba(145, 170, 235, 0.12);
 }
-
       .people-check-row.two-col {
   grid-template-columns: repeat(2, 1fr);
 }
-
 .radio-pill {
   position: relative;
 }
-
 .radio-pill input[type="radio"] {
   width: 16px;
   height: 16px;
   accent-color: #ef78ab;
 }
-
 .radio-pill:has(input[type="radio"]:checked),
 .people-check-pill:has(input[type="checkbox"]:checked) {
   background: white;
   box-shadow: 0 8px 18px rgba(145,170,235,0.12);
   border: 1px solid rgba(239, 120, 171, 0.18);
 }
-
 .input-card {
   display: flex;
   flex-direction: column;
@@ -1033,8 +891,6 @@
   border-radius: 18px;
   background: rgba(255,255,255,0.45);
 }
-
-
 .input-card-label {
   display: inline-flex;
   align-items: center;
@@ -1047,20 +903,107 @@
   font-weight: 800;
   box-shadow: 0 6px 16px rgba(145,170,235,0.12);
 }
-
 .soft-input {
   background: rgba(255,255,255,0.82);
   border: 1px solid rgba(255,255,255,0.9);
   box-shadow: 0 10px 24px rgba(145,170,235,0.08);
 }
-
 .soft-input:focus {
   border-color: rgba(239,120,171,0.35);
   box-shadow: 0 0 0 3px rgba(239,120,171,0.08), 0 10px 24px rgba(145,170,235,0.1);
 }
-
-
-
+.expense-bottom-summary {
+  margin-top: 18px;
+  border-radius: 30px;
+  padding: 18px;
+  background: linear-gradient(135deg, rgba(255,245,250,0.92), rgba(240,248,255,0.92));
+  box-shadow: 0 16px 34px rgba(145,170,235,0.12);
+}
+.expense-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.expense-summary-panel {
+  background: rgba(255,255,255,0.78);
+  border: 1px solid rgba(255,255,255,0.85);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(145,170,235,0.08);
+}
+.expense-summary-title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary-person-list,
+.settlement-list {
+  display: grid;
+  gap: 10px;
+}
+.summary-person-item,
+.settlement-item {
+  background: rgba(255,255,255,0.88);
+  border-radius: 18px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 18px rgba(145,170,235,0.08);
+}
+.summary-person-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.summary-person-name {
+  font-weight: 800;
+  color: var(--text-strong);
+}
+.summary-person-money {
+  font-weight: 900;
+  color: var(--text-strong);
+}
+.summary-person-sub {
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: #8a92a8;
+}
+.settlement-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settlement-main {
+  font-weight: 800;
+  color: var(--text-strong);
+  line-height: 1.5;
+}
+.settlement-amount {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffe3ef, #e1f5ff);
+  font-weight: 900;
+  color: var(--text-strong);
+}
+.settlement-empty {
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.8);
+  color: #7e879b;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+@media (min-width: 760px) {
+  .expense-bottom-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
       
     </style>
   </head>
@@ -1077,47 +1020,38 @@
             <strong id="exchange-rate">1 TWD ≈ 0.24 HKD</strong>
           </div>
         </div>
-
       <div id="day-row" class="day-row"></div>
       </section>
-
       <section id="page-itinerary" class="page active"></section>
       <section id="page-expenses" class="page"></section>
       <section id="page-shopping" class="page"></section>
       <section id="page-milktea" class="page"></section>
       <section id="page-info" class="page"></section>
     </div>
-
 <nav class="bottom-nav">
   <div class="bottom-grid">
     <button class="nav-btn active" data-page="itinerary" aria-label="Itinerary">
       <span class="nav-icon">🗓️</span>
       <span class="nav-label">Plan</span>
     </button>
-
     <button class="nav-btn" data-page="expenses" aria-label="Expenses">
       <span class="nav-icon">💸</span>
       <span class="nav-label">Spend</span>
     </button>
-
     <button class="nav-btn" data-page="shopping" aria-label="Shopping">
       <span class="nav-icon">🛍️</span>
       <span class="nav-label">Shop</span>
     </button>
-
     <button class="nav-btn" data-page="milktea" aria-label="Milk Tea">
       <span class="nav-icon">🧋</span>
       <span class="nav-label">Tea</span>
     </button>
-
     <button class="nav-btn" data-page="info" aria-label="Info">
       <span class="nav-icon">📍</span>
       <span class="nav-label">Info</span>
     </button>
   </div>
 </nav>
-
-
     <script>
 const firebaseConfig = {
   apiKey: "AIzaSyAbxUxzXOdfwgSI9Gy4HcgPTlHJaKoCFjE",
@@ -1128,13 +1062,10 @@ const firebaseConfig = {
   appId: "1:567273297143:web:d97c0c2d53d12ea4e92ff2",
   measurementId: "G-X3GF14KBMR"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
 const TRIP_CODE = "FRDGWORDABAND";
       const STORAGE_KEY = "taipei_trip_app_html_v1";
-
       const defaultData = {
         selectedDay: "pre",
         checklistState: {},
@@ -1146,12 +1077,10 @@ const TRIP_CODE = "FRDGWORDABAND";
           { id: 3, shop: "龜記茗品", drink: "紅柚翡翠", price: "65", rating: 4, notes: "穩陣型" },
         ],
       };
-
       const milkTeaMapList = [
         "青山青茶","五桐號","再睡5分鐘","得正","可不可熟成紅茶","迷客夏","麻古茶坊",
         "先喝道","一沐日","鶴茶樓","珍煮丹","春水堂","50嵐","龜記茗品","老賴茶棧","約翰紅茶公司","UG","新增別家"
       ];
-
       const packingChecklistData = {
         "證件與財務": ["身分證","護照","簽證","銀包","當地流通貨幣","信用卡","提款卡（記得開通海外提款）"],
         "電子用品": ["當地通用電話卡","iPhone SIM 卡針","充電線","轉插","拖板","尿袋","耳機","手提電腦 / 平板 / 電子書閱讀器","相機"],
@@ -1160,7 +1089,6 @@ const TRIP_CODE = "FRDGWORDABAND";
         "保養與清潔": ["護膚品","化妝品","油","身體 lotion","portable 花灑"],
         "醫藥與急救": ["藥品","包紮傷口需要用的"]
       };
-
       const itinerary = {
         pre: { label: "旅行前" },
         Day1: {
@@ -1273,7 +1201,6 @@ const TRIP_CODE = "FRDGWORDABAND";
           ]
         }
       };
-
       const walkingStats = [
         { day: "Day1", steps: "4500" },
         { day: "Day2", steps: "5500" },
@@ -1281,11 +1208,9 @@ const TRIP_CODE = "FRDGWORDABAND";
         { day: "Day4", steps: "4000" },
         { day: "Day5", steps: "3000" },
       ];
-
       let state = loadState();
 let currentPage = "itinerary";
 let expenseFilter = "all";
-
       function buildChecklistDefault() {
         const checklistState = {};
         Object.entries(packingChecklistData).forEach(([category, items]) => {
@@ -1295,7 +1220,6 @@ let expenseFilter = "all";
         });
         return checklistState;
       }
-
       function loadState() {
         const checklistState = buildChecklistDefault();
         try {
@@ -1311,12 +1235,10 @@ let expenseFilter = "all";
           return { ...defaultData, checklistState };
         }
       }
-
      async function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   await db.collection("trips").doc(TRIP_CODE).set(state);
 }
-
 function subscribeTrip() {
   db.collection("trips").doc(TRIP_CODE).onSnapshot((doc) => {
     if (doc.exists) {
@@ -1335,11 +1257,9 @@ function subscribeTrip() {
     }
   });
 }
-
 function uid() {
   return Date.now() + Math.floor(Math.random() * 1000);
 }
-
 function renderDayRow() {
         const dayRow = document.getElementById("day-row");
         const days = [
@@ -1350,7 +1270,6 @@ function renderDayRow() {
           ["Day4", "Day 4", "17"],
           ["Day5", "Day 5", "18"],
         ];
-
         dayRow.innerHTML = days
           .map(([key, label, num]) => `
             <button class="day-chip ${state.selectedDay === key ? "active" : ""}" data-day="${key}">
@@ -1359,7 +1278,6 @@ function renderDayRow() {
             </button>
           `)
           .join("");
-
         dayRow.querySelectorAll(".day-chip").forEach((btn) => {
           btn.addEventListener("click", () => {
             state.selectedDay = btn.dataset.day;
@@ -1368,14 +1286,11 @@ function renderDayRow() {
           });
         });
       }
-
       function renderItineraryPage() {
         const root = document.getElementById("page-itinerary");
-
         if (state.selectedDay === "pre") {
           const totalChecklist = Object.keys(state.checklistState).length;
           const doneCount = Object.values(state.checklistState).filter(Boolean).length;
-
           root.innerHTML = `
             <div class="section-card glass">
               <div style="display:flex;flex-direction:column;gap:14px;">
@@ -1410,7 +1325,6 @@ function renderDayRow() {
                 .join("")}
             </div>
           `;
-
           root.querySelectorAll("[data-check]").forEach((item) => {
             item.addEventListener("click", (e) => {
               e.preventDefault();
@@ -1422,7 +1336,6 @@ function renderDayRow() {
           });
           return;
         }
-
         const day = itinerary[state.selectedDay];
         root.innerHTML = `
           <div class="summary-card glass">
@@ -1441,7 +1354,6 @@ function renderDayRow() {
               </div>
             </div>
           </div>
-
           <div class="itinerary-list">
             ${day.places
               .map((item, index) => `
@@ -1494,7 +1406,6 @@ function renderDayRow() {
           ` : ""}
           <div class="walk-card glass">🚶 今日步行量：${escapeHtml(day.stepCount)}</div>
         `;
-
         root.querySelectorAll("input[type='file'][data-photo-day]").forEach((input) => {
           input.addEventListener("change", (e) => {
             const file = e.target.files && e.target.files[0];
@@ -1510,26 +1421,21 @@ function renderDayRow() {
           });
         });
       }
-
-    function renderExpensesPage() {
+  function renderExpensesPage() {
   const root = document.getElementById("page-expenses");
-
-const filteredExpenses = [...state.expenses]
-  .filter((item) => {
-    if (expenseFilter === "all") return true;
-    if (expenseFilter === "cash") return item.paymentType === "cash";
-    if (expenseFilter === "card") return item.paymentType === "card";
-    return true;
-  })
-  .sort((a, b) => {
-    const dayA = Number(String(a.day || "").replace("Day", ""));
-    const dayB = Number(String(b.day || "").replace("Day", ""));
-    if (dayB !== dayA) return dayB - dayA;
-    return Number(b.id) - Number(a.id);
-  });
-
-
-
+  const filteredExpenses = [...state.expenses]
+    .filter((item) => {
+      if (expenseFilter === "all") return true;
+      if (expenseFilter === "cash") return item.paymentType === "cash";
+      if (expenseFilter === "card") return item.paymentType === "card";
+      return true;
+    })
+    .sort((a, b) => {
+      const dayA = Number(String(a.day || "").replace("Day", ""));
+      const dayB = Number(String(b.day || "").replace("Day", ""));
+      if (dayB !== dayA) return dayB - dayA;
+      return Number(b.id) - Number(a.id);
+    });
   const totalSpent = state.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
   const cashSpent = state.expenses
     .filter((item) => item.paymentType === "cash")
@@ -1537,30 +1443,14 @@ const filteredExpenses = [...state.expenses]
   const cardSpent = state.expenses
     .filter((item) => item.paymentType === "card")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-const paidByKrince = state.expenses
-  .filter((item) => item.payer === "Krince")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-const paidBySilke = state.expenses
-  .filter((item) => item.payer === "Silke")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-const paidByErnest = state.expenses
-  .filter((item) => item.payer === "Ernest")
-  .reduce((sum, item) => sum + Number(item.amount || 0), 0);
-
-const peopleBalance = calculatePeopleBalance(state.expenses);
-
-
+  const peopleBalance = calculatePeopleBalance(state.expenses);
+  const settlements = calculateSettlements(peopleBalance);
   root.innerHTML = `
     <div class="expense-top-card">
       <div class="expense-total-label">總支出 (TWD)</div>
       <div class="expense-total-amount">$${totalSpent}</div>
-      <div class="expense-total-sub">已記錄 ${state.expenses.length} 筆支出</div>
-
+      <div class="expense-total-sub">約 HKD ${formatHKDFromTWD(totalSpent)} ・ 已記錄 ${state.expenses.length} 筆支出</div>
       <div class="expense-line"></div>
-
       <div class="expense-type-row">
         <div class="expense-type-box">
           <div class="label">💵 現金</div>
@@ -1572,169 +1462,148 @@ const peopleBalance = calculatePeopleBalance(state.expenses);
         </div>
       </div>
     </div>
-
   <div class="people-paid-row">
-
-<div class="people-paid-card">
-  <div class="name">Krince</div>
-  <div class="money">${Math.round(peopleBalance.Krince.net)} TWD</div>
+  ${["Krince", "Silke", "Ernest"].map((name) => {
+    const net = peopleBalance[name].net;
+    const isPositive = net >= 0;
+    return `
+      <div class="people-paid-card" style="
+        background: ${isPositive ? "linear-gradient(135deg, rgba(232,255,244,0.95), rgba(245,255,250,0.92))" : "linear-gradient(135deg, rgba(255,241,246,0.95), rgba(255,248,251,0.92))"};
+        border: 1px solid ${isPositive ? "rgba(120, 210, 160, 0.22)" : "rgba(239,120,171,0.16)"};
+      ">
+        <div class="name">${name}</div>
+        <div class="money" style="color:${isPositive ? "#1f8f5f" : "#d85b8d"};">
+          ${isPositive ? "可收回" : "需支付"}
+        </div>
+        <div style="margin-top:4px;font-size:1.05rem;font-weight:900;color:var(--text-strong);">
+          ${Math.round(Math.abs(net))} TWD
+        </div>
+        <div style="margin-top:4px;font-size:.8rem;color:#8a92a8;">
+          約 HKD ${formatHKDFromTWD(Math.abs(net))}
+        </div>
+      </div>
+    `;
+  }).join("")}
 </div>
-
-<div class="people-paid-card">
-  <div class="name">Silke</div>
-  <div class="money">${Math.round(peopleBalance.Silke.net)} TWD</div>
-</div>
-
-<div class="people-paid-card">
-  <div class="name">Ernest</div>
-  <div class="money">${Math.round(peopleBalance.Ernest.net)} TWD</div>
-</div>
-
-
-</div>
-   
 
     <div class="expense-header-row">
       <h3 class="panel-title" style="margin:0;">支出明細</h3>
       <button id="toggle-expense-form" class="btn">＋ 記一筆</button>
     </div>
-
     <div id="expense-form-wrap" class="section-card glass">
       <h3 class="panel-title">新增消費</h3>
       <div class="input-grid four">
-  <div class="input-card">
-    <div class="input-card-label">項目</div>
-    <input id="expense-title" class="input soft-input" placeholder="例如：鼎王宵夜" />
-  </div>
-
-  <div class="input-card">
-    <div class="input-card-label">金額</div>
-    <input id="expense-amount" class="input soft-input" placeholder="例如：500" />
-  </div>
-
-  <div class="input-card">
-    <div class="input-card-label">Day</div>
-    <select id="expense-day" class="input soft-input">
-      <option>Day1</option>
-      <option>Day2</option>
-      <option>Day3</option>
-      <option>Day4</option>
-      <option>Day5</option>
-    </select>
-  </div>
-
-  <div class="input-card">
-    <div class="input-card-label">分類</div>
-    <select id="expense-category" class="input soft-input">
-      <option>飲食</option>
-      <option>交通</option>
-      <option>購物</option>
-      <option>票券</option>
-      <option>珍奶</option>
-    </select>
-  </div>
-</div>
-
-
-<div class="input-grid two" style="margin-top:12px">
-  <div class="section-card glass" style="padding:14px 16px;">
-    <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
-      Payment type
-    </div>
-
-    <div class="people-check-row two-col">
-      <label class="people-check-pill radio-pill">
-        <input type="radio" name="expense-payment-type" value="cash" checked>
-        <span>Cash</span>
-      </label>
-
-      <label class="people-check-pill radio-pill">
-        <input type="radio" name="expense-payment-type" value="card">
-        <span>Card</span>
-      </label>
-    </div>
-  </div>
-
-  <div class="section-card glass" style="padding:14px 16px;">
-    <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
-      Paid by
-    </div>
-
-    <div class="people-check-row">
-      <label class="people-check-pill radio-pill">
-        <input type="radio" name="expense-payer" value="Krince" checked>
-        <span>Krince</span>
-      </label>
-
-      <label class="people-check-pill radio-pill">
-        <input type="radio" name="expense-payer" value="Silke">
-        <span>Silke</span>
-      </label>
-
-      <label class="people-check-pill radio-pill">
-        <input type="radio" name="expense-payer" value="Ernest">
-        <span>Ernest</span>
-      </label>
-    </div>
-  </div>
-</div>
-
-
-<div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
-  <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
-    Split with
-  </div>
-
-  <div id="expense-split-with" class="people-check-row">
-    <label class="people-check-pill">
-      <input type="checkbox" value="Krince">
-      <span>Krince</span>
-    </label>
-
-    <label class="people-check-pill">
-      <input type="checkbox" value="Silke">
-      <span>Silke</span>
-    </label>
-
-    <label class="people-check-pill">
-      <input type="checkbox" value="Ernest">
-      <span>Ernest</span>
-    </label>
-  </div>
-
-  <div style="font-size:.82rem;color:#8a92a8;margin-top:8px;">
-    勾選邊個，就代表邊個要承擔呢筆費用
-  </div>
-</div>
-
-
+        <div class="input-card">
+          <div class="input-card-label">項目</div>
+          <input id="expense-title" class="input soft-input" placeholder="例如：鼎王宵夜" />
+        </div>
+        <div class="input-card">
+          <div class="input-card-label">金額</div>
+          <input id="expense-amount" class="input soft-input" placeholder="例如：500" />
+        </div>
+        <div class="input-card">
+          <div class="input-card-label">Day</div>
+          <select id="expense-day" class="input soft-input">
+            <option>Day1</option>
+            <option>Day2</option>
+            <option>Day3</option>
+            <option>Day4</option>
+            <option>Day5</option>
+          </select>
+        </div>
+        <div class="input-card">
+          <div class="input-card-label">分類</div>
+          <select id="expense-category" class="input soft-input">
+            <option>飲食</option>
+            <option>交通</option>
+            <option>購物</option>
+            <option>票券</option>
+            <option>珍奶</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-grid two" style="margin-top:12px">
+        <div class="section-card glass" style="padding:14px 16px;">
+          <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+            Payment type
+          </div>
+          <div class="people-check-row two-col">
+            <label class="people-check-pill radio-pill">
+              <input type="radio" name="expense-payment-type" value="cash" checked>
+              <span>Cash</span>
+            </label>
+            <label class="people-check-pill radio-pill">
+              <input type="radio" name="expense-payment-type" value="card">
+              <span>Card</span>
+            </label>
+          </div>
+        </div>
+        <div class="section-card glass" style="padding:14px 16px;">
+          <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+            Paid by
+          </div>
+          <div class="people-check-row">
+            <label class="people-check-pill radio-pill">
+              <input type="radio" name="expense-payer" value="Krince" checked>
+              <span>Krince</span>
+            </label>
+            <label class="people-check-pill radio-pill">
+              <input type="radio" name="expense-payer" value="Silke">
+              <span>Silke</span>
+            </label>
+            <label class="people-check-pill radio-pill">
+              <input type="radio" name="expense-payer" value="Ernest">
+              <span>Ernest</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="section-card glass" style="margin-top:12px;padding:14px 16px;">
+        <div style="font-size:.92rem;font-weight:700;color:var(--text-strong);margin-bottom:10px;">
+          Split with
+        </div>
+        <div id="expense-split-with" class="people-check-row">
+          <label class="people-check-pill">
+            <input type="checkbox" value="Krince">
+            <span>Krince</span>
+          </label>
+          <label class="people-check-pill">
+            <input type="checkbox" value="Silke">
+            <span>Silke</span>
+          </label>
+          <label class="people-check-pill">
+            <input type="checkbox" value="Ernest">
+            <span>Ernest</span>
+          </label>
+        </div>
+        <div style="font-size:.82rem;color:#8a92a8;margin-top:8px;">
+          勾選邊個，就代表邊個要承擔呢筆費用
+        </div>
+      </div>
       <div style="margin-top:12px;">
         <button id="add-expense" class="btn">加入記帳</button>
       </div>
     </div>
-
     <div class="expense-filter-row">
       <button class="expense-filter-btn ${expenseFilter === "all" ? "active" : ""}" data-expense-filter="all">全部</button>
       <button class="expense-filter-btn ${expenseFilter === "cash" ? "active" : ""}" data-expense-filter="cash">現金</button>
       <button class="expense-filter-btn ${expenseFilter === "card" ? "active" : ""}" data-expense-filter="card">信用卡</button>
     </div>
-
     <div class="record-list">
       ${
         filteredExpenses.length === 0
           ? `<div class="section-card glass" style="text-align:center;color:#8a92a8;">沒有相關的支出紀錄</div>`
           : filteredExpenses
               .map((item) => {
-const participants = getExpenseParticipants(item);
-const eachShare = participants.length
-  ? Math.round(Number(item.amount || 0) / participants.length)
-  : Number(item.amount || 0);
-const paymentText = item.paymentType === "cash" ? "Cash" : "Card";
-const splitText =
-  participants.length <= 1
-    ? `For ${participants[0] || item.payer} · each ${eachShare} TWD`
-    : `Split with ${participants.join(", ")} · each ${eachShare} TWD`;
-
+                const participants = getExpenseParticipants(item);
+                const eachShare = participants.length
+                  ? Math.round(Number(item.amount || 0) / participants.length)
+                  : Number(item.amount || 0);
+                const paymentText = item.paymentType === "cash" ? "Cash" : "Card";
+                const splitText =
+                  participants.length <= 1
+                    ? `For ${participants[0] || item.payer} · each ${eachShare} TWD`
+                    : `Split with ${participants.join(", ")} · each ${eachShare} TWD`;
                 return `
                   <div class="expense-entry-card">
                     <div class="expense-entry-top">
@@ -1757,13 +1626,60 @@ const splitText =
               .join("")
       }
     </div>
+    <div class="expense-bottom-summary glass">
+      <div class="expense-bottom-grid">
+        <div class="expense-summary-panel">
+          <h3 class="expense-summary-title">💖 每人已付</h3>
+          <div class="summary-person-list">
+            <div class="summary-person-item">
+              <div>
+                <div class="summary-person-name">Krince</div>
+                <div class="summary-person-sub">約 HKD ${formatHKDFromTWD(peopleBalance.Krince.paid)}</div>
+              </div>
+              <div class="summary-person-money">${Math.round(peopleBalance.Krince.paid)} TWD</div>
+            </div>
+            <div class="summary-person-item">
+              <div>
+                <div class="summary-person-name">Silke</div>
+                <div class="summary-person-sub">約 HKD ${formatHKDFromTWD(peopleBalance.Silke.paid)}</div>
+              </div>
+              <div class="summary-person-money">${Math.round(peopleBalance.Silke.paid)} TWD</div>
+            </div>
+            <div class="summary-person-item">
+              <div>
+                <div class="summary-person-name">Ernest</div>
+                <div class="summary-person-sub">約 HKD ${formatHKDFromTWD(peopleBalance.Ernest.paid)}</div>
+              </div>
+              <div class="summary-person-money">${Math.round(peopleBalance.Ernest.paid)} TWD</div>
+            </div>
+          </div>
+        </div>
+        <div class="expense-summary-panel">
+          <h3 class="expense-summary-title">💸 Settlement</h3>
+          <div class="settlement-list">
+            ${
+              settlements.length
+                ? settlements.map((item) => `
+                  <div class="settlement-item">
+                    <div class="settlement-main">
+                      ${escapeHtml(item.from)} → ${escapeHtml(item.to)}
+                    </div>
+                    <div class="settlement-amount">
+                      ${Math.round(item.amount)} TWD ・ 約 HKD ${formatHKDFromTWD(item.amount)}
+                    </div>
+                  </div>
+                `).join("")
+                : `<div class="settlement-empty">大家已經清晒數喇 ✨</div>`
+            }
+          </div>
+        </div>
+      </div>
+    </div>
   `;
-
   document.getElementById("toggle-expense-form").addEventListener("click", () => {
     const form = document.getElementById("expense-form-wrap");
     form.style.display = form.style.display === "none" ? "block" : "none";
   });
-
   const addBtn = document.getElementById("add-expense");
   if (addBtn) {
     addBtn.addEventListener("click", () => {
@@ -1771,43 +1687,32 @@ const splitText =
       const amount = document.getElementById("expense-amount").value.trim();
       const day = document.getElementById("expense-day").value;
       const category = document.getElementById("expense-category").value;
-const paymentType = document.querySelector('input[name="expense-payment-type"]:checked')?.value || "cash";
-const payer = document.querySelector('input[name="expense-payer"]:checked')?.value || "Krince";
-const splitWith = Array.from(
-  document.querySelectorAll('#expense-split-with input[type="checkbox"]:checked')
-).map((input) => input.value);
-
-
+      const paymentType = document.querySelector('input[name="expense-payment-type"]:checked')?.value || "cash";
+      const payer = document.querySelector('input[name="expense-payer"]:checked')?.value || "Krince";
+      const splitWith = Array.from(
+        document.querySelectorAll('#expense-split-with input[type="checkbox"]:checked')
+      ).map((input) => input.value);
       if (!title && !amount) {
-      alert("請輸入項目名稱及金額");
-      return;
+        alert("請輸入項目名稱及金額");
+        return;
       }
-
       if (!title) {
-      alert("請輸入項目名稱");
-      return;
+        alert("請輸入項目名稱");
+        return;
       }
-
       if (!amount) {
-      alert("請輸入金額");
-      return;
+        alert("請輸入金額");
+        return;
       }
-      
-      if (!title || !amount) return;
-
       if (!splitWith.length) {
-      alert("請至少揀一個分攤人");
-      return;
+        alert("請至少揀一個分攤人");
+        return;
       }
-      
-      
       const amountValue = Number(amount);
       if (Number.isNaN(amountValue) || amountValue <= 0) {
-      alert("請輸入有效金額");
-      return;
+        alert("請輸入有效金額");
+        return;
       }
-
-
       state.expenses.push({
         id: uid(),
         title,
@@ -1818,40 +1723,35 @@ const splitWith = Array.from(
         payer,
         splitWith,
       });
-
       saveState();
       renderExpensesPage();
     });
   }
-
   root.querySelectorAll("[data-expense-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
       expenseFilter = btn.dataset.expenseFilter;
       renderExpensesPage();
     });
   });
-
   root.querySelectorAll("[data-remove-expense]").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    if (!confirm("確定要刪除呢條記錄？")) return;
-    const id = Number(btn.dataset.removeExpense);
-    state.expenses = state.expenses.filter(item => item.id !== id);
-    saveState();
-    renderExpensesPage();
+    btn.addEventListener("click", () => {
+      if (!confirm("確定要刪除呢條記錄？")) return;
+      const id = Number(btn.dataset.removeExpense);
+      state.expenses = state.expenses.filter(item => item.id !== id);
+      saveState();
+      renderExpensesPage();
     });
   });
 }
-      function renderShoppingPage() {
+       function renderShoppingPage() {
         const root = document.getElementById("page-shopping");
         const boughtCount = state.shoppingList.filter((item) => item.bought).length;
-
         root.innerHTML = `
           <div class="stats-grid">
             <div class="mini-card glass"><small>總項目</small><strong>${state.shoppingList.length}</strong></div>
             <div class="mini-card glass"><small>已買</small><strong>${boughtCount}</strong></div>
             <div class="mini-card glass"><small>未買</small><strong>${state.shoppingList.length - boughtCount}</strong></div>
           </div>
-
           <div class="section-card glass" style="margin-top: 16px;">
             <h3 class="panel-title">新增購物項目</h3>
             <div class="input-grid three">
@@ -1862,7 +1762,6 @@ const splitWith = Array.from(
               <button id="add-shopping" class="btn">加入清單</button>
             </div>
           </div>
-
           <div class="record-list">
             ${state.shoppingList
               .map((item) => `
@@ -1888,7 +1787,6 @@ const splitWith = Array.from(
               .join("")}
           </div>
         `;
-
         document.getElementById("add-shopping").addEventListener("click", () => {
           const name = document.getElementById("shopping-name").value.trim();
           const area = document.getElementById("shopping-area").value;
@@ -1897,12 +1795,10 @@ const splitWith = Array.from(
             alert("請填寫購物項目名稱及地區");
             return;
            }
-
           if (!name) {
           alert("請填寫購物項目名稱");
           return;
           }
-
         if (!area) {
           alert("請選擇地區");
           return;
@@ -1911,7 +1807,6 @@ const splitWith = Array.from(
           saveState();
           renderShoppingPage();
         });
-
         root.querySelectorAll("[data-toggle-shopping]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const id = Number(btn.dataset.toggleShopping);
@@ -1920,7 +1815,6 @@ const splitWith = Array.from(
             renderShoppingPage();
           });
         });
-
         root.querySelectorAll("[data-shopping-photo]").forEach((input) => {
           input.addEventListener("change", (e) => {
             const file = e.target.files && e.target.files[0];
@@ -1935,7 +1829,6 @@ const splitWith = Array.from(
             reader.readAsDataURL(file);
           });
         });
-
         root.querySelectorAll("[data-remove-shopping]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const id = Number(btn.dataset.removeShopping);
@@ -1947,12 +1840,10 @@ const splitWith = Array.from(
           });
         });
       }
-
       function renderMilkTeaPage() {
         const root = document.getElementById("page-milktea");
         const ranking = [...state.milkTeaSpots].sort((a, b) => (b.rating !== a.rating ? b.rating - a.rating : (Number(a.price) || 9999) - (Number(b.price) || 9999)));
         const king = ranking.find((item) => item.rating > 0);
-
         root.innerHTML = `
           ${king ? `
             <div class="king-card glass">
@@ -1961,7 +1852,6 @@ const splitWith = Array.from(
               <div style="margin-top:8px;font-size:.95rem;">${king.drink ? `目前領先飲品：${escapeHtml(king.drink)}` : "目前衝上第一位"}</div>
             </div>
           ` : ""}
-
           <div class="section-card glass">
             <h3 class="panel-title">新增珍奶店</h3>
             <div class="input-grid two">
@@ -1980,7 +1870,6 @@ const splitWith = Array.from(
             </div>
             <div style="margin-top:12px;"><button id="add-tea" class="btn">加入排行榜</button></div>
           </div>
-
           <div class="milk-list">
             ${ranking
               .map((spot, index) => `
@@ -2004,7 +1893,6 @@ const splitWith = Array.from(
               .join("")}
           </div>
         `;
-
         let newTeaRating = 0;
         const newStarsRoot = document.getElementById("new-tea-stars");
         renderStars(newStarsRoot, newTeaRating, (value) => {
@@ -2014,17 +1902,14 @@ const splitWith = Array.from(
             renderStars(newStarsRoot, newTeaRating, arguments.callee);
           });
         });
-
         const teaShop = document.getElementById("tea-shop");
         const teaCustom = document.getElementById("tea-custom-shop");
         const teaDrink = document.getElementById("tea-drink");
-
         teaShop.addEventListener("change", () => {
           const isCustom = teaShop.value === "新增別家";
           teaCustom.classList.toggle("hidden", !isCustom);
           teaDrink.placeholder = isCustom ? "你買咗咩，例如 絲襪奶茶 / 熟成紅茶歐蕾" : "你買咗咩，例如 烏龍珍奶";
         });
-
         document.getElementById("add-tea").addEventListener("click", () => {
           const shopValue = teaShop.value;
           const actualShop = shopValue === "新增別家" ? teaCustom.value.trim() : shopValue;
@@ -2035,22 +1920,18 @@ const splitWith = Array.from(
     alert("請填寫店名、飲品及價錢");
     return;
   }
-
   if (!actualShop) {
     alert("請選擇或輸入店名");
     return;
   }
-
   if (!drink) {
     alert("請輸入飲品名稱");
     return;
   }
-
   if (!price) {
     alert("請輸入價錢");
     return;
   }
-
   const priceValue = Number(price);
   if (Number.isNaN(priceValue) || priceValue <= 0) {
     alert("請輸入有效價錢");
@@ -2060,7 +1941,6 @@ const splitWith = Array.from(
           saveState();
           renderMilkTeaPage();
         });
-
         ranking.forEach((spot) => {
           const starsRoot = root.querySelector(`[data-rating-id='${spot.id}']`);
           renderStars(starsRoot, spot.rating, (value) => {
@@ -2069,7 +1949,6 @@ const splitWith = Array.from(
             renderMilkTeaPage();
           });
         });
-
         root.querySelectorAll("[data-edit-drink]").forEach((input) => {
           input.addEventListener("input", () => {
             const id = Number(input.dataset.editDrink);
@@ -2077,7 +1956,6 @@ const splitWith = Array.from(
             saveState();
           });
         });
-
         root.querySelectorAll("[data-edit-price]").forEach((input) => {
           input.addEventListener("input", () => {
             const id = Number(input.dataset.editPrice);
@@ -2085,20 +1963,17 @@ const splitWith = Array.from(
             saveState();
           });
         });
-
         root.querySelectorAll("[data-remove-tea]").forEach((btn) => {
           btn.addEventListener("click", () => {
                 const id = Number(btn.dataset.removeTea);
                 const confirmed = window.confirm("你係咪真係要刪除呢間奶茶店紀錄？");
                 if (!confirmed) return;
-
             state.milkTeaSpots = state.milkTeaSpots.filter((item) => item.id !== id);
             saveState();
             renderMilkTeaPage();
           });
         });
       }
-
       function renderInfoPage() {
         const root = document.getElementById("page-info");
         root.innerHTML = `
@@ -2126,20 +2001,15 @@ const splitWith = Array.from(
           </div>
         `;
       }
-
       function setPage(page) {
   currentPage = page;
-
   document.querySelectorAll(".page").forEach((el) => {
     el.classList.remove("active");
   });
-
   document.getElementById(`page-${page}`).classList.add("active");
-
   document.querySelectorAll(".nav-btn").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.page === page);
   });
-
   document.getElementById("day-row").style.display =
     page === "itinerary" ? "flex" : "none";
 }
@@ -2155,7 +2025,6 @@ const splitWith = Array.from(
           root.appendChild(btn);
         }
       }
-
       function renderAll() {
         renderDayRow();
         renderItineraryPage();
@@ -2165,11 +2034,9 @@ const splitWith = Array.from(
         renderInfoPage();
         setPage(currentPage);
       }
-
       document.querySelectorAll(".nav-btn").forEach((btn) => {
         btn.addEventListener("click", () => setPage(btn.dataset.page));
       });
-
       function escapeHtml(str) {
         return String(str)
           .replaceAll("&", "&amp;")
@@ -2178,29 +2045,22 @@ const splitWith = Array.from(
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#39;");
       }
-
       function escapeAttr(str) {
         return escapeHtml(str).replaceAll("`", "&#96;");
       }
-
       function getExpenseParticipants(item) {
   if (Array.isArray(item.splitWith) && item.splitWith.length) {
     return item.splitWith;
   }
-
   const count = Number(item.splitCount || 1);
-
   if (count === 1) {
     return item.payer ? [item.payer] : [];
   }
-
   if (count === 2) {
     return ["Krince", "Silke"];
   }
-
   return ["Krince", "Silke", "Ernest"];
 }
-
 function calculatePeopleBalance(expenses) {
   const people = {
     Krince: { paid: 0, owed: 0, net: 0 },
@@ -2232,11 +2092,53 @@ function calculatePeopleBalance(expenses) {
   return people;
 }
 
+function formatHKDFromTWD(amount) {
+  const rateText = document.getElementById("exchange-rate")?.textContent || "";
+  const match = rateText.match(/([0-9]+(?:\.[0-9]+)?)/g);
+  const rate = match && match.length ? Number(match[match.length - 1]) : 0.24;
+  return (amount * rate).toFixed(2);
+}
 
-      subscribeTrip();
+function calculateSettlements(peopleBalance) {
+  const debtors = [];
+  const creditors = [];
+
+  Object.entries(peopleBalance).forEach(([name, data]) => {
+    const net = Number(data.net || 0);
+
+    if (net > 0.0001) {
+      creditors.push({ name, amount: net });
+    } else if (net < -0.0001) {
+      debtors.push({ name, amount: -net });
+    }
+  });
+
+  const settlements = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < debtors.length && j < creditors.length) {
+    const payAmount = Math.min(debtors[i].amount, creditors[j].amount);
+
+    settlements.push({
+      from: debtors[i].name,
+      to: creditors[j].name,
+      amount: payAmount,
+    });
+
+    debtors[i].amount -= payAmount;
+    creditors[j].amount -= payAmount;
+
+    if (debtors[i].amount < 0.0001) i += 1;
+    if (creditors[j].amount < 0.0001) j += 1;
+  }
+
+  return settlements;
+}
+    renderAll();
+subscribeTrip();
+
     </script>
   </body>
 </html>
-
-
 
